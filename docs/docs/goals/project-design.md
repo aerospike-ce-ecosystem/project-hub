@@ -191,6 +191,46 @@ Logging + Metrics + Tracing 3계층 관측성:
 - Prometheus exposition format 호환 metrics
 - OpenTelemetry distributed tracing
 
+### 3-5-7. CRD Rename (AerospikeCluster)
+
+> Reference: [ADR-0011: CRD Rename](/docs/architecture/adr/crd-rename-aerospikecluster)
+
+AerospikeCluster CRD에서 불필요한 CE 접두사를 제거하여 API 표면을 간소화:
+- Short name: `asc`, `ascluster`
+- Breaking change: 기존 CR 재생성 필요
+
+### 3-5-8. Pod Readiness Gates
+
+> Reference: [ADR-0012: Pod Readiness Gates](/docs/architecture/adr/pod-readiness-gates)
+
+`acko.io/aerospike-ready` 커스텀 readiness gate:
+- 클러스터 mesh 합류 + 마이그레이션 완료 시에만 Service endpoints에 포함
+- Rolling update 시 zero downtime 보장
+
+### 3-5-9. Reconciliation Circuit Breaker
+
+> Reference: [ADR-0013: Reconciliation Circuit Breaker](/docs/architecture/adr/reconciliation-circuit-breaker)
+
+5분 context timeout + 지수 백오프 + 10회 연속 실패 시 circuit breaker:
+- API server 과부하 방지
+- 자동 복구 가능한 operator self-healing
+
+### 3-5-10. PostgreSQL Migration
+
+> Reference: [ADR-0014: SQLite → PostgreSQL Migration](/docs/architecture/adr/postgresql-migration)
+
+Cluster Manager 백엔드를 asyncpg 기반 PostgreSQL로 마이그레이션:
+- SQLite 개발용 fallback 유지
+- `DatabaseBackend` 프로토콜로 dual-backend dispatch
+
+### 3-5-11. asinfo Health Checks
+
+> Reference: [ADR-0015: asinfo 기반 Health Check](/docs/architecture/adr/asinfo-health-checks)
+
+TCP probe 대신 asinfo 기반 health check:
+- Liveness: `asinfo -v 'build'` (프로세스 생존 확인)
+- Readiness: `asinfo -v 'cluster-size'` (클러스터 합류 확인)
+
 ### 3-6. Docusaurus
 
 모든 프로젝트의 문서 플랫폼으로 Docusaurus를 선택했습니다:

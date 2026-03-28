@@ -251,4 +251,9 @@ Cluster Manager의 대규모 UI 전환과 프로젝트 허브 생성.
 | 2026-03-08 | Cluster-scoped Template | [ADR-0007](/docs/architecture/adr/cluster-scoped-template) |
 | 2026-03-16 | Semaphore Backpressure | [ADR-0006](/docs/architecture/adr/backpressure-semaphore) |
 | 2026-03-25 | DaisyUI -> Tailwind CSS 4 | [ADR-0005](/docs/architecture/adr/daisyui-removal) |
+| 2026-03-02 | CRD Rename: AerospikeCluster | [ADR-0011](/docs/architecture/adr/crd-rename-aerospikecluster) |
+| 2026-03-01 | Pod Readiness Gates | [ADR-0012](/docs/architecture/adr/pod-readiness-gates) |
+| 2026-03-02 | Reconciliation Circuit Breaker | [ADR-0013](/docs/architecture/adr/reconciliation-circuit-breaker) |
+| 2026-02-26 | SQLite → PostgreSQL Migration | [ADR-0014](/docs/architecture/adr/postgresql-migration) |
+| 2026-03-02 | asinfo 기반 Health Check | [ADR-0015](/docs/architecture/adr/asinfo-health-checks) |
 | 2026-03-29 | Project Hub (Docusaurus) | Centralized documentation |
