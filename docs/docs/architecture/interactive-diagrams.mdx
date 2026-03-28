@@ -1,0 +1,94 @@
+---
+title: Interactive Architecture Diagrams
+description: ReactFlow 기반 인터랙티브 아키텍처 다이어그램. 레포 간 의존성과 각 레포 내부 모듈 구성을 시각적으로 탐색.
+sidebar_position: 4
+scope: ecosystem
+repos: [aerospike-py, acko, cluster-manager, plugins]
+tags: [architecture, reactflow, interactive, diagrams]
+last_updated: 2026-03-29
+---
+
+import ReactFlowWrapper from '@site/src/components/architecture/ReactFlowWrapper';
+import EcosystemDependencyGraph from '@site/src/components/architecture/EcosystemDependencyGraph';
+import AerospikePyModuleGraph from '@site/src/components/architecture/AerospikePyModuleGraph';
+import ACKOModuleGraph from '@site/src/components/architecture/ACKOModuleGraph';
+import ClusterManagerModuleGraph from '@site/src/components/architecture/ClusterManagerModuleGraph';
+
+# Interactive Architecture Diagrams
+
+Aerospike CE Ecosystem의 아키텍처를 인터랙티브 다이어그램으로 탐색할 수 있습니다.
+각 다이어그램은 드래그, 줌, 패닝을 지원하며 노드 위에 마우스를 올리면 하이라이트됩니다.
+
+:::tip 조작 방법
+- **드래그**: 캔버스를 클릭하고 끌어서 이동
+- **줌**: 마우스 휠 또는 컨트롤 버튼 사용
+- **미니맵**: 우측 하단의 미니맵으로 전체 구조 확인
+- **노드 클릭**: GitHub 링크가 있는 노드는 클릭하면 해당 레포로 이동
+:::
+
+---
+
+## 1. Ecosystem Dependency Graph
+
+4개 핵심 레포와 외부 의존성 간의 관계를 보여줍니다.
+
+| 레포 | 색상 | 역할 |
+|------|------|------|
+| aerospike-py | Purple | Rust/PyO3 Python client |
+| ACKO | Green | Kubernetes Operator |
+| Cluster Manager | Blue | Web UI |
+| Ecosystem Plugins | Orange | Claude Code skills/agents |
+
+<ReactFlowWrapper height={650}>
+  <EcosystemDependencyGraph />
+</ReactFlowWrapper>
+
+---
+
+## 2. aerospike-py Module Structure
+
+aerospike-py의 내부 모듈 구조입니다. Python API 레이어에서 PyO3 브릿지를 거쳐 Rust 코어까지의
+계층 구조를 보여줍니다.
+
+- **Python Layer**: Client API, CDT operations, Expression filters, NumPy batch
+- **PyO3 Bridge**: Python-Rust 바인딩 (pyo3 0.28.2)
+- **Rust Core**: 비동기 클라이언트, wire protocol, backpressure
+- **External**: aerospike-client-rust v2, Tokio runtime
+
+<ReactFlowWrapper height={620}>
+  <AerospikePyModuleGraph />
+</ReactFlowWrapper>
+
+---
+
+## 3. ACKO Module Structure
+
+Aerospike CE Kubernetes Operator(ACKO)의 내부 모듈 구조입니다.
+CRD 정의에서 Controller reconciliation loop, Helm chart, 관리되는 K8s 리소스까지의
+전체 아키텍처를 보여줍니다.
+
+- **CRD Layer**: AerospikeCluster custom resource definition
+- **Controller Layer**: 16개의 reconciler 모듈
+- **Internal Packages**: configdiff, configgen, metrics 등 10개 패키지
+- **Helm Charts**: Operator chart, CRD subchart
+- **Managed Resources**: StatefulSet, Service, PVC, ConfigMap, PDB, NetworkPolicy
+
+<ReactFlowWrapper height={650}>
+  <ACKOModuleGraph />
+</ReactFlowWrapper>
+
+---
+
+## 4. Cluster Manager Module Structure
+
+Aerospike Cluster Manager의 프론트엔드/백엔드 아키텍처입니다.
+Next.js 16 기반 프론트엔드와 FastAPI 백엔드 간의 API 경계, 그리고 외부 의존성까지
+보여줍니다.
+
+- **Frontend**: Next.js 16 App Router, 14 Radix UI primitives, 11 Zustand stores
+- **Backend**: FastAPI, 11 router groups, 15+ Pydantic models
+- **Dependencies**: aerospike-py (Aerospike 연결), Kubernetes client (K8s 관리)
+
+<ReactFlowWrapper height={650}>
+  <ClusterManagerModuleGraph />
+</ReactFlowWrapper>
