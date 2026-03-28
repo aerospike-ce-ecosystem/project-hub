@@ -16,6 +16,24 @@ last_updated: 2026-03-29
 
 # Cluster Manager Changelog
 
+## Unreleased (latest)
+
+### Features
+- **Drop DaisyUI**: Complete UI overhaul removing DaisyUI, adopting pure Tailwind CSS 4 design system (PR #153)
+- **OOM prevention**: Added memory usage monitoring and prevention mechanisms (PR #152)
+- **Unified overview**: Merged Overview + Namespaces into single cluster overview page
+- **Create Set / Sample Data**: Added Set creation flow and Sample Data button
+
+### Bug Fixes
+- **UI improvements**: Made cluster cards clickable, custom bin type dropdown, ARIA attributes (PR #154)
+- **Sidebar fixes**: Improved sidebar browser position and tree toggle behavior
+- **Mobile responsive**: Made unified overview responsive for mobile screens
+
+### Documentation
+- **README screenshots**: Updated screenshots to reflect current UI (PR #155)
+
+---
+
 Aerospike Cluster Manager 릴리스별 변경 사항을 기록합니다.
 
 ---

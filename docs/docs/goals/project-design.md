@@ -165,7 +165,33 @@ aerospike-py의 모든 반환값은 NamedTuple 패턴을 사용합니다:
 
 AerospikeClusterTemplate을 cluster-scoped CRD로 변환하여 namespace 간 재사용 가능:
 
-### 3-5. Docusaurus
+### 3-5-4. IssueOps CI 워크플로우
+
+> Reference: [ADR-0008: IssueOps 기반 CI 워크플로우](/docs/architecture/adr/issueops-ci-workflow)
+
+GitHub Issues에서 AI 에이전트(claude-code-action)가 코드를 생성하는 자동화 워크플로우:
+- Plan-first: 구현 전 반드시 계획 생성 및 리뷰
+- IssueOps: Issue → Plan → Implement → PR 전체 흐름 자동화
+- 에코시스템 전체 레포에 동일 패턴 적용
+
+### 3-5-5. Unified BatchRecords API
+
+> Reference: [ADR-0009: Unified BatchRecords API](/docs/architecture/adr/unified-batch-records-api)
+
+모든 batch 연산의 반환 타입을 `BatchRecords` NamedTuple로 통일:
+- per-record `result_code`로 개별 레코드 성공/실패 추적
+- `succeeded`/`failed` 카운트로 빠른 성공률 확인
+
+### 3-5-6. 3-Layer Observability Stack
+
+> Reference: [ADR-0010: 3-Layer Observability Stack](/docs/architecture/adr/observability-stack)
+
+Logging + Metrics + Tracing 3계층 관측성:
+- Rust tracing → Python logging bridge
+- Prometheus exposition format 호환 metrics
+- OpenTelemetry distributed tracing
+
+### 3-6. Docusaurus
 
 모든 프로젝트의 문서 플랫폼으로 Docusaurus를 선택했습니다:
 

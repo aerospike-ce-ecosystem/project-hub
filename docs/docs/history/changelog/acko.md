@@ -16,6 +16,24 @@ last_updated: 2026-03-29
 
 # ACKO Changelog
 
+## Unreleased (after v0.1.7)
+
+### Features
+- **Metric labels fix**: Fixed Prometheus metric label inconsistencies (PR #202)
+- **Priority class name**: Added PriorityClassName support for Aerospike pods (PR #193)
+- **Helm RBAC fix**: Fixed RBAC permissions in Helm chart (PR #194)
+
+### Testing
+- **E2E monitoring sample**: Added monitoring configuration for E2E tests (PR #195)
+- **E2E deploy sync**: Fixed deployment synchronization in E2E tests (PR #197)
+- **E2E test improvements**: Added timeout and retry for flaky E2E tests
+
+### Bug Fixes
+- **Operator stability**: Multiple stability improvements for reconciliation loops (PR #183)
+- **Migration status**: Improved migration status tracking (PR #180)
+
+---
+
 Aerospike CE Kubernetes Operator (ACKO) 릴리스별 변경 사항을 기록합니다.
 
 ---

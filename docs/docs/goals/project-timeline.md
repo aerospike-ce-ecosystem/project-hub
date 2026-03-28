@@ -227,12 +227,13 @@ Cluster Manager의 대규모 UI 전환과 프로젝트 허브 생성.
 | 총 개발 기간 | 53 days (Feb 5 - Mar 29) |
 | 프로젝트 수 | 4 repos + 1 hub |
 | 총 릴리스 수 | 28 releases |
-| aerospike-py PRs | 154+ |
-| ACKO PRs | 122+ |
-| Cluster Manager PRs | 143+ |
-| 총 PR 수 | 420+ |
-| ACKO 릴리스 속도 | 16 releases / 23 days |
-| aerospike-py 릴리스 속도 | 10 releases / 50 days |
+| aerospike-py | 178 PRs, 4 releases (v0.0.1-v0.0.4), ~377 commits |
+| ACKO | 200+ PRs, 17 releases (v0.0.1-v0.1.7), ~378 commits |
+| Cluster Manager | 155+ PRs, active development |
+| Plugins | 1.0.0 release (5 skills + 1 agent) |
+| 총 PR 수 | 530+ |
+| ACKO 릴리스 속도 | 17 releases / 27 days |
+| aerospike-py 릴리스 속도 | 14 releases / 50 days |
 
 ---
 

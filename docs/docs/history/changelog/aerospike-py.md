@@ -16,6 +16,24 @@ last_updated: 2026-03-29
 
 # aerospike-py Changelog
 
+## Unreleased (after v0.0.4)
+
+### Features
+- **Consolidated improvements**: Exception handler, backpressure retry, observability endpoints (PR #232)
+- **Unified BatchRecords API**: All batch operations now return `BatchRecords` NamedTuple with per-record result codes (PR #239)
+
+### Bug Fixes
+- **Batch result codes**: Preserve per-record result codes in batch operations (PR #239)
+- **NumPy key digest**: Fix numpy key digest issues for bytes keys (PR #239)
+- **Test cluster_name**: Make test cluster_name configurable via env var (PR #230)
+
+### CI/CD
+- **IssueOps redesign**: Plan-first IssueOps/CommentOps workflow (PR #216)
+- **gh-aw upgrade**: Upgraded claude-code-action from 0.43.4 to 0.64.0
+- **Docs memory**: Increase Node.js memory for docs build
+
+---
+
 aerospike-py 릴리스별 변경 사항을 기록합니다.
 
 ---

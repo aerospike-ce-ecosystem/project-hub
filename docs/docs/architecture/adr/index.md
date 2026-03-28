@@ -25,6 +25,9 @@ Architecture Decision Record(ADR)는 프로젝트의 중요한 아키텍처 결�
 | [ADR-0005](./daisyui-removal.md) | DaisyUI 제거 및 Pure Tailwind CSS 4 전환 | **Accepted** | cluster-manager |
 | [ADR-0006](./backpressure-semaphore.md) | Semaphore 기반 Backpressure 메커니즘 | **Accepted** | aerospike-py |
 | [ADR-0007](./cluster-scoped-template.md) | Cluster-scoped AerospikeClusterTemplate | **Accepted** | acko |
+| [ADR-0008](./issueops-ci-workflow.md) | IssueOps 기반 CI 워크플로우 | **Accepted** | aerospike-py, acko, cluster-manager |
+| [ADR-0009](./unified-batch-records-api.md) | Unified BatchRecords API | **Accepted** | aerospike-py |
+| [ADR-0010](./observability-stack.md) | 3-Layer Observability Stack | **Accepted** | aerospike-py |
 
 ## 상태 정의
 
