@@ -106,7 +106,7 @@ const initialNodes: Node<ModuleNodeData>[] = [
     position: { x: 0, y: 0 },
     data: {
       label: 'App Router (Next.js 16)',
-      items: ['27 page routes', 'app/ directory', 'RSC', 'streaming'],
+      items: ['16 page routes', 'app/ directory', 'RSC', 'streaming'],
       icon: '\uD83C\uDF10',
       ...BLUE,
     },
@@ -118,11 +118,14 @@ const initialNodes: Node<ModuleNodeData>[] = [
     data: {
       label: 'Components',
       items: [
-        'ui/ (14 Radix)',
-        'common/ (20+)',
-        'k8s/ (50+)',
+        'ui/ (16 Radix)',
+        'common/ (35+)',
+        'k8s/ (60+)',
         'browser/',
         'cluster/',
+        'cluster-list/',
+        'connection/',
+        'admin/',
         'layout/',
       ],
       icon: '\uD83E\uDDE9',
@@ -154,7 +157,7 @@ const initialNodes: Node<ModuleNodeData>[] = [
       label: 'Hooks & Types',
       items: [
         '6 custom hooks',
-        '8 API type modules',
+        '9 API type modules',
         '8 Zod schemas',
       ],
       icon: '\uD83D\uDD17',
@@ -200,12 +203,13 @@ const initialNodes: Node<ModuleNodeData>[] = [
     data: {
       label: 'Services & Utils',
       items: [
-        'k8s_client',
+        'k8s_service',
+        'metrics_service',
         'client_manager',
-        'sample_data_generator',
         'expression_builder',
         'converters',
         'rate_limit',
+        'info_parser',
       ],
       icon: '\uD83D\uDD27',
       ...TEAL,

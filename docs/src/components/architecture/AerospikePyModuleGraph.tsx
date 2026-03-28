@@ -101,7 +101,7 @@ const initialNodes: Node<LayerNodeData>[] = [
     position: { x: 0, y: 0 },
     data: {
       label: 'Python Client API',
-      items: ['Client', 'AsyncClient', 'type stubs (.pyi)'],
+      items: ['Client', 'AsyncClient', 'type stubs (.pyi)', 'exception', 'types'],
       icon: '\uD83D\uDC0D',
       ...PURPLE,
     },
@@ -161,10 +161,11 @@ const initialNodes: Node<LayerNodeData>[] = [
     data: {
       label: 'Rust Core',
       items: [
-        'client.rs', 'async_client.rs', 'client_ops.rs',
+        'lib.rs', 'client.rs', 'async_client.rs', 'client_ops.rs',
         'client_common.rs', 'operations.rs', 'expressions.rs',
         'query.rs', 'numpy_support.rs', 'batch_types.rs',
         'backpressure.rs', 'record_helpers.rs', 'runtime.rs',
+        'errors.rs', 'constants.rs',
       ],
       icon: '\uD83E\uDD80',
       ...RED,
@@ -200,8 +201,8 @@ const initialNodes: Node<LayerNodeData>[] = [
     type: 'layerNode',
     position: { x: 860, y: 300 },
     data: {
-      label: 'Types & Errors',
-      items: ['key.rs', 'value.rs', 'record.rs', 'bin.rs', 'host.rs', 'errors.rs', 'constants.rs'],
+      label: 'Types',
+      items: ['key.rs', 'value.rs', 'record.rs', 'bin.rs', 'host.rs'],
       icon: '\uD83D\uDCDD',
       ...BLUE,
     },
