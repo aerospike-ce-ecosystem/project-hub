@@ -1,0 +1,38 @@
+name: ADR Proposal
+description: Architecture Decision Record 제안
+labels: ["adr", "discussion"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: 컨텍스트
+      description: 결정이 필요한 배경과 기술적 맥락
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: 대안들
+      description: 검토한 옵션들을 나열
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: 추천안 및 이유
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: 결과 (trade-offs)
+      description: 이 결정의 긍정적/부정적 결과
+  - type: checkboxes
+    id: repos
+    attributes:
+      label: 관련 레포
+      options:
+        - label: aerospike-py
+        - label: aerospike-ce-kubernetes-operator (ACKO)
+        - label: aerospike-cluster-manager
+        - label: aerospike-ce-ecosystem-plugins

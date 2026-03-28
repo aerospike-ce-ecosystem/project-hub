@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: aerospike-py Issues
+    url: https://github.com/aerospike-ce-ecosystem/aerospike-py/issues
+    about: aerospike-py 관련 이슈는 해당 레포에서 생성하세요
+  - name: ACKO Issues
+    url: https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/issues
+    about: ACKO 관련 이슈는 해당 레포에서 생성하세요
+  - name: Cluster Manager Issues
+    url: https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/issues
+    about: Cluster Manager 관련 이슈는 해당 레포에서 생성하세요

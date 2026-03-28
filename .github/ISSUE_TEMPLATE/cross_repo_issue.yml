@@ -1,0 +1,36 @@
+name: Cross-Repo Issue
+description: 여러 레포에 걸친 이슈
+labels: ["cross-repo"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 설명
+      description: 이슈에 대한 상세 설명
+    validations:
+      required: true
+  - type: checkboxes
+    id: repos
+    attributes:
+      label: 관련 레포
+      options:
+        - label: aerospike-py
+        - label: aerospike-ce-kubernetes-operator (ACKO)
+        - label: aerospike-cluster-manager
+        - label: aerospike-ce-ecosystem-plugins
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options:
+        - P0 - Critical
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+    validations:
+      required: true
+  - type: textarea
+    id: related
+    attributes:
+      label: 관련 이슈 링크
+      description: 서브-레포 이슈를 org/repo#number 형식으로 링크

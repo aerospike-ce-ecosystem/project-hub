@@ -1,0 +1,29 @@
+name: Epic
+description: 여러 레포에 걸친 대형 작업 단위
+labels: ["epic"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Epic 설명
+    validations:
+      required: true
+  - type: textarea
+    id: success-criteria
+    attributes:
+      label: 성공 기준
+      description: 체크리스트 형태로 작성
+  - type: textarea
+    id: subtasks
+    attributes:
+      label: 하위 태스크
+      description: 서브-레포 이슈를 org/repo#number 형식으로 링크
+  - type: checkboxes
+    id: repos
+    attributes:
+      label: 관련 레포
+      options:
+        - label: aerospike-py
+        - label: aerospike-ce-kubernetes-operator (ACKO)
+        - label: aerospike-cluster-manager
+        - label: aerospike-ce-ecosystem-plugins
