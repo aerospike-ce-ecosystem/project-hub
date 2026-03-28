@@ -168,6 +168,21 @@ const initialNodes: Node<RepoNodeData>[] = [
       url: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins',
     },
   },
+  // Project Hub
+  {
+    id: 'project-hub',
+    type: 'repoNode',
+    position: { x: 310, y: 50 },
+    data: {
+      label: 'Project Hub',
+      description: 'Central docs, ADR, roadmap, PR history',
+      badges: ['Docusaurus', 'ReactFlow', 'ADR', 'Coordination'],
+      color: '#fce4ec',
+      borderColor: '#c62828',
+      icon: '\uD83C\uDFDB\uFE0F',
+      url: 'https://github.com/aerospike-ce-ecosystem/project-hub',
+    },
+  },
   // External deps
   {
     id: 'aerospike-server',
@@ -289,6 +304,38 @@ const initialEdges: Edge[] = [
     labelStyle: { fontSize: 10, fill: '#666' },
     labelBgStyle: { fill: '#fff', fillOpacity: 0.85 },
   },
+  // project-hub -> all repos (documents)
+  {
+    id: 'hub-py',
+    source: 'project-hub',
+    target: 'aerospike-py',
+    label: 'documents',
+    style: { stroke: '#c62828', strokeDasharray: '3 3' },
+    markerEnd: { type: MarkerType.ArrowClosed, color: '#c62828' },
+    labelStyle: { fontSize: 10, fill: '#666' },
+    labelBgStyle: { fill: '#fff', fillOpacity: 0.85 },
+  },
+  {
+    id: 'hub-acko',
+    source: 'project-hub',
+    target: 'acko',
+    style: { stroke: '#c62828', strokeDasharray: '3 3' },
+    markerEnd: { type: MarkerType.ArrowClosed, color: '#c62828' },
+  },
+  {
+    id: 'hub-cm',
+    source: 'project-hub',
+    target: 'cluster-manager',
+    style: { stroke: '#c62828', strokeDasharray: '3 3' },
+    markerEnd: { type: MarkerType.ArrowClosed, color: '#c62828' },
+  },
+  {
+    id: 'hub-plugins',
+    source: 'project-hub',
+    target: 'plugins',
+    style: { stroke: '#c62828', strokeDasharray: '3 3' },
+    markerEnd: { type: MarkerType.ArrowClosed, color: '#c62828' },
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -334,6 +381,13 @@ function Legend() {
           <polygon points="28,4 30,7 28,10" fill="#666" />
         </svg>
         <span>animated = runtime connection</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <svg width="30" height="10">
+          <line x1="0" y1="5" x2="30" y2="5" stroke="#c62828" strokeWidth="2" strokeDasharray="3 3" />
+          <polygon points="28,2 30,5 28,8" fill="#c62828" />
+        </svg>
+        <span>documents / coordinates</span>
       </div>
     </div>
   );

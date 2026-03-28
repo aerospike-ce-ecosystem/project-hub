@@ -112,6 +112,7 @@ const initialNodes: Node<ModuleNodeData>[] = [
         'defaulting',
         'types_monitoring',
         'types_network',
+        'types_networkpolicy',
         'types_storage',
         'types_rack',
         'types_pod',
@@ -226,6 +227,7 @@ const initialNodes: Node<ModuleNodeData>[] = [
       items: [
         'StatefulSet', 'Service', 'PVC',
         'ConfigMap', 'PDB', 'NetworkPolicy',
+        'ServiceMonitor', 'PrometheusRule',
       ],
       icon: '\uD83C\uDFD7\uFE0F',
       ...TEAL,

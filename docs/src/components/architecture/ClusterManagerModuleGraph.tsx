@@ -119,8 +119,8 @@ const initialNodes: Node<ModuleNodeData>[] = [
       label: 'Components',
       items: [
         'ui/ (16 Radix)',
-        'common/ (35+)',
-        'k8s/ (60+)',
+        'common/ (24)',
+        'k8s/ (27)',
         'browser/',
         'cluster/',
         'cluster-list/',
@@ -221,7 +221,7 @@ const initialNodes: Node<ModuleNodeData>[] = [
     position: { x: 900, y: 150 },
     data: {
       label: 'Database Layer',
-      items: ['SQLite', 'PostgreSQL', 'SQLAlchemy'],
+      items: ['aiosqlite (SQLite)', 'asyncpg (PostgreSQL)', 'dual-backend dispatch'],
       icon: '\uD83D\uDDC3\uFE0F',
       ...TEAL,
     },

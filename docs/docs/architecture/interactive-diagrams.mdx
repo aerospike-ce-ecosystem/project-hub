@@ -13,6 +13,7 @@ import EcosystemDependencyGraph from '@site/src/components/architecture/Ecosyste
 import AerospikePyModuleGraph from '@site/src/components/architecture/AerospikePyModuleGraph';
 import ACKOModuleGraph from '@site/src/components/architecture/ACKOModuleGraph';
 import ClusterManagerModuleGraph from '@site/src/components/architecture/ClusterManagerModuleGraph';
+import PluginsModuleGraph from '@site/src/components/architecture/PluginsModuleGraph';
 
 # Interactive Architecture Diagrams
 
@@ -34,6 +35,7 @@ Aerospike CE Ecosystem의 아키텍처를 인터랙티브 다이어그램으로 
 
 | 레포 | 색상 | 역할 |
 |------|------|------|
+| Project Hub | Red | Central docs, ADR, coordination |
 | aerospike-py | Purple | Rust/PyO3 Python client |
 | ACKO | Green | Kubernetes Operator |
 | Cluster Manager | Blue | Web UI |
@@ -91,4 +93,21 @@ Next.js 16 기반 프론트엔드와 FastAPI 백엔드 간의 API 경계, 그리
 
 <ReactFlowWrapper height={650}>
   <ClusterManagerModuleGraph />
+</ReactFlowWrapper>
+
+---
+
+## 5. Ecosystem Plugins Module Structure
+
+Claude Code 플러그인 패키지의 내부 구조입니다. Skills, Agent, Reference Documents의 관계와
+각 컴포넌트가 대상 레포에 어떤 가이드를 제공하는지 보여줍니다.
+
+- **Plugin Manifest**: plugin.json, marketplace.json
+- **ACKO Skills**: deploy(8 YAML examples), operations(troubleshooting), config-reference
+- **Python Skills**: aerospike-py-api, aerospike-py-fastapi
+- **Agent**: acko-cluster-debugger (39 issue-fix mappings)
+- **Reference Docs**: 24 reference documents
+
+<ReactFlowWrapper height={700}>
+  <PluginsModuleGraph />
 </ReactFlowWrapper>
