@@ -25,12 +25,8 @@ const config: Config = {
   themes: ['@docusaurus/theme-mermaid'],
 
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'ko'],
-    localeConfigs: {
-      en: {label: 'English'},
-      ko: {label: '한국어'},
-    },
+    defaultLocale: 'ko',
+    locales: ['ko'],
   },
 
   presets: [
@@ -62,10 +58,6 @@ const config: Config = {
           sidebarId: 'docsSidebar',
           position: 'left',
           label: 'Docs',
-        },
-        {
-          type: 'localeDropdown',
-          position: 'right',
         },
         {
           href: 'https://github.com/aerospike-ce-ecosystem',
