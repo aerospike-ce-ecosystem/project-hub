@@ -162,8 +162,9 @@ const initialNodes: Node<LayerNodeData>[] = [
       label: 'Rust Core',
       items: [
         'client.rs', 'async_client.rs', 'client_ops.rs',
-        'operations.rs', 'expressions.rs', 'query.rs',
-        'numpy_support.rs', 'batch_types.rs', 'backpressure.rs',
+        'client_common.rs', 'operations.rs', 'expressions.rs',
+        'query.rs', 'numpy_support.rs', 'batch_types.rs',
+        'backpressure.rs', 'record_helpers.rs', 'runtime.rs',
       ],
       icon: '\uD83E\uDD80',
       ...RED,
@@ -199,8 +200,8 @@ const initialNodes: Node<LayerNodeData>[] = [
     type: 'layerNode',
     position: { x: 860, y: 300 },
     data: {
-      label: 'Types',
-      items: ['key.rs', 'value.rs', 'record.rs', 'bin.rs', 'host.rs'],
+      label: 'Types & Errors',
+      items: ['key.rs', 'value.rs', 'record.rs', 'bin.rs', 'host.rs', 'errors.rs', 'constants.rs'],
       icon: '\uD83D\uDCDD',
       ...BLUE,
     },

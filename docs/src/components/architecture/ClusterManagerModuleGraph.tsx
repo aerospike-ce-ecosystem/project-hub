@@ -170,9 +170,9 @@ const initialNodes: Node<ModuleNodeData>[] = [
     data: {
       label: 'FastAPI Routers',
       items: [
-        'admin', 'clusters', 'connections',
-        'indexes', 'k8s', 'metrics',
-        'query', 'records', 'sample_data', 'udfs',
+        'admin_users', 'admin_roles', 'clusters',
+        'connections', 'indexes', 'k8s_clusters',
+        'metrics', 'query', 'records', 'sample_data', 'udfs',
       ],
       icon: '\u26A1',
       ...GREEN,
@@ -198,11 +198,14 @@ const initialNodes: Node<ModuleNodeData>[] = [
     type: 'moduleNode',
     position: { x: 900, y: 0 },
     data: {
-      label: 'Services',
+      label: 'Services & Utils',
       items: [
-        'k8s_service',
-        'metrics_service',
-        'sample_data_service',
+        'k8s_client',
+        'client_manager',
+        'sample_data_generator',
+        'expression_builder',
+        'converters',
+        'rate_limit',
       ],
       icon: '\uD83D\uDD27',
       ...TEAL,

@@ -21,6 +21,10 @@ Architecture Decision Record(ADR)는 프로젝트의 중요한 아키텍처 결�
 | [ADR-0001](./pyo3-over-cffi.md) | CFFI 대신 Rust/PyO3 선택 | **Accepted** | aerospike-py |
 | [ADR-0002](./kubebuilder-v4.md) | Kubebuilder v4 + controller-runtime 선택 | **Accepted** | acko |
 | [ADR-0003](./podman-over-docker.md) | Docker 대신 Podman 선택 | **Accepted** | cluster-manager, acko |
+| [ADR-0004](./namedtuple-over-dict.md) | Dict 대신 NamedTuple 반환 선택 | **Accepted** | aerospike-py |
+| [ADR-0005](./daisyui-removal.md) | DaisyUI 제거 및 Pure Tailwind CSS 4 전환 | **Accepted** | cluster-manager |
+| [ADR-0006](./backpressure-semaphore.md) | Semaphore 기반 Backpressure 메커니즘 | **Accepted** | aerospike-py |
+| [ADR-0007](./cluster-scoped-template.md) | Cluster-scoped AerospikeClusterTemplate | **Accepted** | acko |
 
 ## 상태 정의
 

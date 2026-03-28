@@ -227,10 +227,10 @@ Cluster Manager의 대규모 UI 전환과 프로젝트 허브 생성.
 | 총 개발 기간 | 53 days (Feb 5 - Mar 29) |
 | 프로젝트 수 | 4 repos + 1 hub |
 | 총 릴리스 수 | 28 releases |
-| aerospike-py PRs | 155+ |
-| ACKO PRs | 50+ |
-| Cluster Manager PRs | 79+ |
-| 총 PR 수 | 430+ |
+| aerospike-py PRs | 154+ |
+| ACKO PRs | 122+ |
+| Cluster Manager PRs | 143+ |
+| 총 PR 수 | 420+ |
 | ACKO 릴리스 속도 | 16 releases / 23 days |
 | aerospike-py 릴리스 속도 | 10 releases / 50 days |
 
@@ -246,4 +246,8 @@ Cluster Manager의 대규모 UI 전환과 프로젝트 허브 생성.
 | 2026-03-05 | FastAPI + Next.js for CM | Performance + DX |
 | 2026-03-12 | Claude Code Plugins | AI-assisted development |
 | 2026-03-25 | DaisyUI -> Tailwind CSS 4 | Customization + control |
+| 2026-02-15 | NamedTuple over Dict | [ADR-0004](/docs/architecture/adr/namedtuple-over-dict) |
+| 2026-03-08 | Cluster-scoped Template | [ADR-0007](/docs/architecture/adr/cluster-scoped-template) |
+| 2026-03-16 | Semaphore Backpressure | [ADR-0006](/docs/architecture/adr/backpressure-semaphore) |
+| 2026-03-25 | DaisyUI -> Tailwind CSS 4 | [ADR-0005](/docs/architecture/adr/daisyui-removal) |
 | 2026-03-29 | Project Hub (Docusaurus) | Centralized documentation |

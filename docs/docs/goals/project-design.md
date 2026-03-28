@@ -141,6 +141,30 @@ Cluster Manager의 기술 스택 선택 이유:
 - **Tailwind CSS 4**: 유틸리티 퍼스트, 커스텀 디자인 시스템 구축 용이
 - **Radix UI**: 접근성(a11y) 기반 헤드리스 컴포넌트, DaisyUI 대비 유연성
 
+> Reference: [ADR-0005: DaisyUI 제거 및 Pure Tailwind CSS 4 전환](/docs/architecture/adr/daisyui-removal)
+
+### 3-5-1. NamedTuple 반환 패턴
+
+> Reference: [ADR-0004: Dict 대신 NamedTuple 반환 선택](/docs/architecture/adr/namedtuple-over-dict)
+
+aerospike-py의 모든 반환값은 NamedTuple 패턴을 사용합니다:
+- `record.bins`, `record.meta.gen`, `record.meta.ttl` — 속성 접근 방식
+- IDE 자동완성과 타입 검사 지원
+
+### 3-5-2. Semaphore Backpressure
+
+> Reference: [ADR-0006: Semaphore 기반 Backpressure](/docs/architecture/adr/backpressure-semaphore)
+
+동시 요청 과부하 방지를 위한 operation-level Semaphore:
+- `BackpressureError` 예외로 즉시 피드백
+- 서버 보호와 예측 가능한 에러 처리
+
+### 3-5-3. Cluster-scoped Template
+
+> Reference: [ADR-0007: Cluster-scoped AerospikeClusterTemplate](/docs/architecture/adr/cluster-scoped-template)
+
+AerospikeClusterTemplate을 cluster-scoped CRD로 변환하여 namespace 간 재사용 가능:
+
 ### 3-5. Docusaurus
 
 모든 프로젝트의 문서 플랫폼으로 Docusaurus를 선택했습니다:
