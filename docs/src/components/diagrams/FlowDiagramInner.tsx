@@ -4,8 +4,9 @@ import {
   ReactFlowProvider,
   Background,
   Controls,
-  MiniMap,
   MarkerType,
+  useNodesState,
+  useEdgesState,
   type Node,
   type Edge,
 } from '@xyflow/react';
@@ -15,6 +16,7 @@ import { getColors } from './themes/colors';
 import { DefaultNode } from './nodes/DefaultNode';
 import { StateNode } from './nodes/StateNode';
 import { Legend } from './Legend';
+import { useExpandable } from './ExpandButton';
 import { applyDagreLayout } from './layout/dagre';
 
 const nodeTypes = { default: DefaultNode, state: StateNode };
@@ -26,11 +28,12 @@ export default function FlowDiagramInner(props: FlowDiagramProps) {
     height = 600,
     layout = 'dagre-TB',
     legend,
-    showMiniMap = true,
     showControls = true,
   } = props;
 
-  const { rfNodes, rfEdges } = useMemo(() => {
+  const { containerRef, containerClassName, button } = useExpandable();
+
+  const { initialNodes, initialEdges } = useMemo(() => {
     const hasStateNodes = simpleNodes.some(
       (n) => n.group === 'state' || n.group === 'state-start' || n.group === 'state-end',
     );
@@ -90,18 +93,23 @@ export default function FlowDiagramInner(props: FlowDiagramProps) {
         rankSep: hasStateNodes ? 60 : 80,
         nodeSep: 40,
       });
-      return { rfNodes: laid, rfEdges: edges };
+      return { initialNodes: laid, initialEdges: edges };
     }
 
-    return { rfNodes: mapped, rfEdges: edges };
+    return { initialNodes: mapped, initialEdges: edges };
   }, [simpleNodes, simpleEdges, layout]);
+
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges] = useEdgesState(initialEdges);
 
   return (
     <ReactFlowProvider>
-      <div style={{ width: '100%', height, position: 'relative' }}>
+      <div ref={containerRef} className={containerClassName} style={{ width: '100%', height, position: 'relative' }}>
+        {button}
         <ReactFlow
-          nodes={rfNodes}
-          edges={rfEdges}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
           nodeTypes={nodeTypes}
           fitView
           fitViewOptions={{ padding: 0.2 }}
@@ -111,14 +119,7 @@ export default function FlowDiagramInner(props: FlowDiagramProps) {
           defaultEdgeOptions={{ type: 'smoothstep' }}
         >
           <Background gap={20} size={1} color="#e0e0e0" />
-          {showControls && <Controls showInteractive={false} />}
-          {showMiniMap && (
-            <MiniMap
-              nodeStrokeWidth={3}
-              nodeColor={(node) => (node.data as { borderColor?: string })?.borderColor ?? '#aaa'}
-              style={{ borderRadius: 8 }}
-            />
-          )}
+          {showControls && <Controls />}
         </ReactFlow>
         {legend && <Legend items={legend} />}
       </div>

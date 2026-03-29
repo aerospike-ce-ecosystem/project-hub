@@ -29,7 +29,6 @@ export interface FlowDiagramProps {
   height?: number;
   layout?: 'dagre-TB' | 'dagre-LR' | 'manual';
   legend?: Record<string, string>;
-  showMiniMap?: boolean;
   showControls?: boolean;
 }
 

@@ -8,12 +8,7 @@ tags: [architecture, reactflow, interactive, diagrams]
 last_updated: 2026-03-29
 ---
 
-import ReactFlowWrapper from '@site/src/components/architecture/ReactFlowWrapper';
-import EcosystemDependencyGraph from '@site/src/components/architecture/EcosystemDependencyGraph';
-import AerospikePyModuleGraph from '@site/src/components/architecture/AerospikePyModuleGraph';
-import ACKOModuleGraph from '@site/src/components/architecture/ACKOModuleGraph';
-import ClusterManagerModuleGraph from '@site/src/components/architecture/ClusterManagerModuleGraph';
-import PluginsModuleGraph from '@site/src/components/architecture/PluginsModuleGraph';
+import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Interactive Architecture Diagrams
 
@@ -21,10 +16,11 @@ Aerospike CE Ecosystem의 아키텍처를 인터랙티브 다이어그램으로 
 각 다이어그램은 드래그, 줌, 패닝을 지원하며 노드 위에 마우스를 올리면 하이라이트됩니다.
 
 :::tip 조작 방법
-- **드래그**: 캔버스를 클릭하고 끌어서 이동
+- **드래그**: 노드를 클릭하고 끌어서 위치 조정
 - **줌**: 마우스 휠 또는 컨트롤 버튼 사용
 - **미니맵**: 우측 하단의 미니맵으로 전체 구조 확인
 - **노드 클릭**: GitHub 링크가 있는 노드는 클릭하면 해당 레포로 이동
+- **확대**: 우측 상단 확대 버튼으로 전체 화면 보기
 :::
 
 ---
@@ -41,9 +37,33 @@ Aerospike CE Ecosystem의 아키텍처를 인터랙티브 다이어그램으로 
 | Cluster Manager | Blue | Web UI |
 | Ecosystem Plugins | Orange | Claude Code skills/agents |
 
-<ReactFlowWrapper height={650}>
-  <EcosystemDependencyGraph />
-</ReactFlowWrapper>
+<FlowDiagram
+  height={650}
+  layout="manual"
+  nodes={[
+    { id: 'cluster-manager', label: 'Cluster Manager', description: 'Web UI for Aerospike cluster management', icon: '🖥️', group: 'blue', items: ['Next.js 16', 'FastAPI', 'Zustand', 'Tailwind 4'], url: 'https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager', position: { x: 100, y: 50 } },
+    { id: 'project-hub', label: 'Project Hub', description: 'Central docs, ADR, roadmap, PR history', icon: '🏛️', group: 'pink', items: ['Docusaurus', 'ReactFlow', 'ADR', 'Coordination'], url: 'https://github.com/aerospike-ce-ecosystem/project-hub', position: { x: 310, y: 50 } },
+    { id: 'plugins', label: 'Ecosystem Plugins', description: 'Claude Code skills, agents, hooks', icon: '🧩', group: 'orange', items: ['Claude Code', 'Skills', 'Agents', 'Hooks'], url: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins', position: { x: 520, y: 50 } },
+    { id: 'aerospike-py', label: 'aerospike-py', description: 'Rust/PyO3 Python client for Aerospike CE', icon: '🐍', group: 'purple', items: ['Python', 'Rust', 'PyO3', 'Async'], url: 'https://github.com/aerospike-ce-ecosystem/aerospike-py', position: { x: 100, y: 250 } },
+    { id: 'acko', label: 'ACKO', description: 'Aerospike CE Kubernetes Operator', icon: '☸️', group: 'green', items: ['Go', 'K8s Operator', 'Helm', 'CRD'], url: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator', position: { x: 520, y: 250 } },
+    { id: 'aerospike-server', label: 'Aerospike Server CE', description: 'Aerospike Community Edition database server', icon: '🗄️', group: 'red', items: ['CE 8.1', 'NoSQL', 'C'], position: { x: 310, y: 480 } },
+    { id: 'kubernetes', label: 'Kubernetes', description: 'Container orchestration platform', icon: '⚙️', group: 'grey', items: ['K8s API', 'CRD', 'StatefulSet'], position: { x: 660, y: 480 } },
+  ]}
+  edges={[
+    { from: 'aerospike-py', to: 'aerospike-server', label: 'protocol', animated: true },
+    { from: 'cluster-manager', to: 'aerospike-py', label: 'uses (backend)' },
+    { from: 'cluster-manager', to: 'kubernetes', label: 'manages', dashed: true },
+    { from: 'acko', to: 'aerospike-server', label: 'manages', animated: true },
+    { from: 'acko', to: 'kubernetes', label: 'extends', animated: true },
+    { from: 'plugins', to: 'aerospike-py', label: 'guides', dashed: true },
+    { from: 'plugins', to: 'acko', label: 'guides', dashed: true },
+    { from: 'plugins', to: 'cluster-manager', label: 'references', dashed: true },
+    { from: 'project-hub', to: 'aerospike-py', label: 'documents', dashed: true, color: '#c62828' },
+    { from: 'project-hub', to: 'acko', dashed: true, color: '#c62828' },
+    { from: 'project-hub', to: 'cluster-manager', dashed: true, color: '#c62828' },
+    { from: 'project-hub', to: 'plugins', dashed: true, color: '#c62828' },
+  ]}
+/>
 
 ---
 
@@ -57,17 +77,41 @@ aerospike-py의 내부 모듈 구조입니다. Python API 레이어에서 PyO3 �
 - **Rust Core**: 비동기 클라이언트, wire protocol, backpressure
 - **External**: aerospike-client-rust v2, Tokio runtime
 
-<ReactFlowWrapper height={620}>
-  <AerospikePyModuleGraph />
-</ReactFlowWrapper>
+<FlowDiagram
+  height={620}
+  layout="manual"
+  nodes={[
+    { id: 'py-client', label: 'Python Client API', icon: '🐍', group: 'purple', items: ['Client', 'AsyncClient', 'type stubs (.pyi)', 'exception', 'types'], position: { x: 0, y: 0 } },
+    { id: 'py-cdt', label: 'CDT Operations', icon: '📦', group: 'purple', items: ['list_ops', 'map_ops', 'bit_ops', 'hll_ops'], position: { x: 300, y: 0 } },
+    { id: 'py-expr', label: 'Expressions & Filters', icon: '🔍', group: 'purple', items: ['exp module', 'Predicates', 'Filter expressions'], position: { x: 560, y: 0 } },
+    { id: 'py-numpy', label: 'NumPy Batch', icon: '📊', group: 'purple', items: ['batch_read', 'batch_write', 'numpy_support'], position: { x: 810, y: 0 } },
+    { id: 'pyo3-bridge', label: 'PyO3 Bridge', icon: '🔗', group: 'orange', items: ['pyo3 0.28.2', '#[pyclass]', '#[pymethods]', 'GIL management'], position: { x: 330, y: 150 } },
+    { id: 'rust-core', label: 'Rust Core', icon: '🦀', group: 'red', items: ['lib.rs', 'client.rs', 'async_client.rs', 'client_ops.rs', 'operations.rs', 'expressions.rs', 'backpressure.rs', 'errors.rs'], position: { x: 0, y: 300 } },
+    { id: 'rust-observability', label: 'Observability', icon: '📊', group: 'green', items: ['metrics.rs', 'tracing.rs', 'logging.rs', 'bug_report.rs'], position: { x: 350, y: 300 } },
+    { id: 'rust-policy', label: 'Policies', icon: '📋', group: 'teal', items: ['admin_policy', 'batch_policy', 'client_policy', 'query_policy', 'read_policy', 'write_policy'], position: { x: 610, y: 300 } },
+    { id: 'rust-types', label: 'Types', icon: '📝', group: 'blue', items: ['key.rs', 'value.rs', 'record.rs', 'bin.rs', 'host.rs'], position: { x: 860, y: 300 } },
+    { id: 'tokio', label: 'Tokio Runtime', icon: '⚡', group: 'grey', items: ['async runtime', 'multi-thread scheduler'], position: { x: 150, y: 470 } },
+    { id: 'rust-client', label: 'aerospike-client-rust v2', icon: '📡', group: 'red', items: ['alpha.10', 'wire protocol', 'connection pool'], position: { x: 510, y: 470 } },
+  ]}
+  edges={[
+    { from: 'py-client', to: 'pyo3-bridge' },
+    { from: 'py-cdt', to: 'pyo3-bridge' },
+    { from: 'py-expr', to: 'pyo3-bridge' },
+    { from: 'py-numpy', to: 'pyo3-bridge' },
+    { from: 'pyo3-bridge', to: 'rust-core', label: 'binds' },
+    { from: 'pyo3-bridge', to: 'rust-observability' },
+    { from: 'pyo3-bridge', to: 'rust-policy' },
+    { from: 'pyo3-bridge', to: 'rust-types' },
+    { from: 'rust-core', to: 'tokio', label: 'async runtime', animated: true },
+    { from: 'rust-core', to: 'rust-client', label: 'wire protocol', animated: true },
+  ]}
+/>
 
 ---
 
 ## 3. ACKO Module Structure
 
 Aerospike CE Kubernetes Operator(ACKO)의 내부 모듈 구조입니다.
-CRD 정의에서 Controller reconciliation loop, Helm chart, 관리되는 K8s 리소스까지의
-전체 아키텍처를 보여줍니다.
 
 - **CRD Layer**: AerospikeCluster custom resource definition
 - **Controller Layer**: 22개의 controller 파일 (reconciler, aero_client, events 등)
@@ -75,25 +119,78 @@ CRD 정의에서 Controller reconciliation loop, Helm chart, 관리되는 K8s �
 - **Helm Charts**: Operator chart, CRD subchart
 - **Managed Resources**: StatefulSet, Service, PVC, ConfigMap, PDB, NetworkPolicy
 
-<ReactFlowWrapper height={650}>
-  <ACKOModuleGraph />
-</ReactFlowWrapper>
+<FlowDiagram
+  height={650}
+  layout="manual"
+  nodes={[
+    { id: 'crd', label: 'CRD (api/v1alpha1)', icon: '📜', group: 'green', items: ['AerospikeCluster types', 'AerospikeClusterTemplate', 'webhook validation', 'defaulting', 'types_monitoring', 'types_network', 'types_storage', 'types_rack', 'types_pod'], position: { x: 320, y: 0 } },
+    { id: 'controller-core', label: 'Controller Core', icon: '🎯', group: 'blue', items: ['reconciler.go', 'reconciler_statefulset.go', 'reconciler_status.go', 'reconciler_restart.go', 'reconciler_acl.go', 'reconciler_helpers.go', 'events.go'], position: { x: 0, y: 160 } },
+    { id: 'controller-config', label: 'Controller Config', icon: '⚙️', group: 'blue', items: ['reconciler_config.go', 'reconciler_dynamic_config.go', 'reconciler_monitoring.go', 'reconciler_services.go', 'aero_client.go', 'aero_info.go', 'retry.go'], position: { x: 310, y: 160 } },
+    { id: 'controller-resources', label: 'Controller Resources', icon: '🔧', group: 'blue', items: ['reconciler_pdb.go', 'reconciler_cleanup.go', 'reconciler_operations.go', 'reconciler_networkpolicy.go', 'reconciler_scaledown.go', 'reconciler_warm_restart.go', 'reconciler_pod_service.go', 'reconciler_readiness_gate.go'], position: { x: 620, y: 160 } },
+    { id: 'internal', label: 'Internal Packages', icon: '📦', group: 'purple', items: ['configdiff', 'configgen', 'errors', 'initcontainer', 'metrics', 'podutil', 'storage', 'template', 'utils', 'version'], position: { x: 0, y: 340 } },
+    { id: 'helm', label: 'Helm Charts', icon: '☸️', group: 'orange', items: ['operator chart', 'CRD subchart', 'UI templates', 'values.yaml'], position: { x: 350, y: 340 } },
+    { id: 'k8s-resources', label: 'Managed K8s Resources', icon: '🏗️', group: 'teal', items: ['StatefulSet', 'Service', 'PVC', 'ConfigMap', 'PDB', 'NetworkPolicy', 'ServiceMonitor', 'PrometheusRule'], position: { x: 630, y: 340 } },
+    { id: 'controller-runtime', label: 'controller-runtime v0.23', icon: '📚', group: 'grey', items: ['sigs.k8s.io/controller-runtime', 'client-go'], position: { x: 100, y: 510 } },
+    { id: 'as-go-client', label: 'aerospike-client-go v8.6', icon: '📡', group: 'red', items: ['info commands', 'cluster status', 'admin ops'], position: { x: 450, y: 510 } },
+  ]}
+  edges={[
+    { from: 'crd', to: 'controller-core', label: 'watches' },
+    { from: 'crd', to: 'controller-config' },
+    { from: 'crd', to: 'controller-resources' },
+    { from: 'controller-core', to: 'internal', label: 'imports' },
+    { from: 'controller-config', to: 'internal' },
+    { from: 'controller-core', to: 'k8s-resources', label: 'creates/updates', dashed: true },
+    { from: 'controller-resources', to: 'k8s-resources', dashed: true },
+    { from: 'helm', to: 'crd', label: 'installs', dashed: true },
+    { from: 'controller-core', to: 'controller-runtime', label: 'framework', animated: true },
+    { from: 'controller-core', to: 'as-go-client', label: 'info/admin', animated: true },
+    { from: 'controller-config', to: 'as-go-client' },
+  ]}
+/>
 
 ---
 
 ## 4. Cluster Manager Module Structure
 
 Aerospike Cluster Manager의 프론트엔드/백엔드 아키텍처입니다.
-Next.js 16 기반 프론트엔드와 FastAPI 백엔드 간의 API 경계, 그리고 외부 의존성까지
-보여줍니다.
 
 - **Frontend**: Next.js 16 App Router, Tailwind CSS 4 custom design system, 11 Zustand stores
 - **Backend**: FastAPI, 11 router modules, 15+ Pydantic models, 6 service/utility modules
 - **Dependencies**: aerospike-py (Aerospike 연결), Kubernetes client (K8s 관리)
 
-<ReactFlowWrapper height={650}>
-  <ClusterManagerModuleGraph />
-</ReactFlowWrapper>
+<FlowDiagram
+  height={650}
+  layout="manual"
+  nodes={[
+    { id: 'fe-router', label: 'App Router (Next.js 16)', icon: '🌐', group: 'blue', items: ['16 page routes', 'app/ directory', 'RSC', 'streaming'], position: { x: 0, y: 0 } },
+    { id: 'fe-components', label: 'Components', icon: '🧩', group: 'blue', items: ['ui/ (custom)', 'common/ (24)', 'k8s/ (27)', 'browser/', 'cluster/', 'admin/', 'layout/'], position: { x: 300, y: 0 } },
+    { id: 'fe-stores', label: 'State (Zustand)', icon: '💾', group: 'indigo', items: ['11 stores', 'clusterStore', 'k8sStore', 'connectionStore', 'uiStore'], position: { x: 0, y: 150 } },
+    { id: 'fe-hooks', label: 'Hooks & Types', icon: '🔗', group: 'indigo', items: ['6 custom hooks', '9 API type modules', '8 Zod schemas'], position: { x: 280, y: 150 } },
+    { id: 'be-routers', label: 'FastAPI Routers', icon: '⚡', group: 'green', items: ['admin_users', 'admin_roles', 'clusters', 'connections', 'indexes', 'k8s_clusters', 'metrics', 'query', 'records', 'sample_data', 'udfs'], position: { x: 610, y: 0 } },
+    { id: 'be-models', label: 'Pydantic Models', icon: '📋', group: 'green', items: ['15+ model files', 'k8s/ subpackage', 'request/response schemas'], position: { x: 610, y: 160 } },
+    { id: 'be-services', label: 'Services & Utils', icon: '🔧', group: 'teal', items: ['k8s_service', 'metrics_service', 'client_manager', 'expression_builder', 'converters', 'rate_limit', 'info_parser'], position: { x: 900, y: 0 } },
+    { id: 'be-db', label: 'Database Layer', icon: '🗄️', group: 'teal', items: ['aiosqlite (SQLite)', 'asyncpg (PostgreSQL)', 'dual-backend dispatch'], position: { x: 900, y: 150 } },
+    { id: 'dep-aspy', label: 'aerospike-py', icon: '🐍', group: 'purple', items: ['AsyncClient', 'query', 'batch', 'CDT ops'], position: { x: 200, y: 330 } },
+    { id: 'dep-k8s-client', label: 'Kubernetes Client', icon: '☸️', group: 'orange', items: ['kubernetes-python', 'kubectl proxy'], position: { x: 510, y: 330 } },
+    { id: 'ext-as', label: 'Aerospike Server', icon: '🗄️', group: 'red', items: ['CE 8.1', 'wire protocol'], position: { x: 200, y: 480 } },
+    { id: 'ext-k8s', label: 'Kubernetes API', icon: '⚙️', group: 'grey', items: ['cluster', 'pods', 'services'], position: { x: 510, y: 480 } },
+  ]}
+  edges={[
+    { from: 'fe-router', to: 'fe-components', label: 'renders' },
+    { from: 'fe-router', to: 'fe-stores' },
+    { from: 'fe-components', to: 'fe-hooks' },
+    { from: 'fe-components', to: 'fe-stores' },
+    { from: 'fe-hooks', to: 'be-routers', label: 'fetch API', dashed: true },
+    { from: 'fe-stores', to: 'be-routers', dashed: true },
+    { from: 'be-routers', to: 'be-models' },
+    { from: 'be-routers', to: 'be-services', label: 'calls' },
+    { from: 'be-services', to: 'be-db' },
+    { from: 'be-routers', to: 'dep-aspy', label: 'aerospike-py' },
+    { from: 'be-services', to: 'dep-k8s-client', label: 'k8s ops' },
+    { from: 'dep-aspy', to: 'ext-as', animated: true },
+    { from: 'dep-k8s-client', to: 'ext-k8s', animated: true },
+  ]}
+/>
 
 ---
 
@@ -108,6 +205,39 @@ Claude Code 플러그인 패키지의 내부 구조입니다. Skills, Agent, Ref
 - **Agent**: acko-cluster-debugger (39 issue-fix mappings)
 - **Reference Docs**: 24 reference documents
 
-<ReactFlowWrapper height={700}>
-  <PluginsModuleGraph />
-</ReactFlowWrapper>
+<FlowDiagram
+  height={700}
+  layout="manual"
+  nodes={[
+    { id: 'manifest', label: 'Plugin Manifest', icon: '📋', group: 'orange', items: ['plugin.json', 'marketplace.json', 'v1.0.0'], position: { x: 310, y: 0 } },
+    { id: 'skill-deploy', label: 'acko-deploy', icon: '☸️', group: 'green', items: ['8 YAML examples', 'CE constraints', 'quick deploy'], position: { x: 0, y: 130 } },
+    { id: 'skill-ops', label: 'acko-operations', icon: '🔧', group: 'green', items: ['scale', 'upgrade', 'restart', 'ACL', 'troubleshooting'], position: { x: 270, y: 130 } },
+    { id: 'skill-config', label: 'acko-config-reference', icon: '📜', group: 'green', items: ['CE 8.1 params', 'CRD mapping', 'breaking changes'], position: { x: 540, y: 130 } },
+    { id: 'skill-py-api', label: 'aerospike-py-api', icon: '🐍', group: 'purple', items: ['CRUD', 'batch', 'CDT', 'expression', 'admin', 'observability'], position: { x: 60, y: 280 } },
+    { id: 'skill-py-fastapi', label: 'aerospike-py-fastapi', icon: '⚡', group: 'purple', items: ['AsyncClient lifespan', 'DI pattern', 'error mapping'], position: { x: 380, y: 280 } },
+    { id: 'agent-debugger', label: 'acko-cluster-debugger', icon: '🔍', group: 'blue', items: ['autonomous agent', 'kubectl diagnostics', '39 issue-fix mappings', 'CE pitfalls'], position: { x: 200, y: 420 } },
+    { id: 'ref-docs', label: 'Reference Documents', icon: '📚', group: 'teal', items: ['24 files', 'parameters', 'validation', 'diagnostic commands'], position: { x: 530, y: 420 } },
+    { id: 'target-acko', label: 'ACKO Repo', icon: '⚙️', group: 'grey', items: ['CRD', 'Controller', 'Helm'], position: { x: 60, y: 560 } },
+    { id: 'target-py', label: 'aerospike-py Repo', icon: '🦀', group: 'grey', items: ['Client API', 'AsyncClient', 'CDT ops'], position: { x: 330, y: 560 } },
+    { id: 'target-cm', label: 'Cluster Manager Repo', icon: '🖥️', group: 'grey', items: ['FastAPI', 'Next.js'], position: { x: 590, y: 560 } },
+  ]}
+  edges={[
+    { from: 'manifest', to: 'skill-deploy' },
+    { from: 'manifest', to: 'skill-ops' },
+    { from: 'manifest', to: 'skill-config' },
+    { from: 'manifest', to: 'skill-py-api' },
+    { from: 'manifest', to: 'skill-py-fastapi' },
+    { from: 'skill-deploy', to: 'ref-docs', label: 'includes', dashed: true },
+    { from: 'skill-ops', to: 'ref-docs', dashed: true },
+    { from: 'skill-config', to: 'ref-docs', dashed: true },
+    { from: 'skill-py-api', to: 'ref-docs', dashed: true },
+    { from: 'skill-ops', to: 'agent-debugger', label: 'informs' },
+    { from: 'skill-config', to: 'agent-debugger' },
+    { from: 'skill-deploy', to: 'target-acko', label: 'guides', animated: true },
+    { from: 'skill-ops', to: 'target-acko' },
+    { from: 'agent-debugger', to: 'target-acko', label: 'debugs', animated: true },
+    { from: 'skill-py-api', to: 'target-py', label: 'guides', animated: true },
+    { from: 'skill-py-fastapi', to: 'target-py' },
+    { from: 'skill-py-fastapi', to: 'target-cm', label: 'references', dashed: true },
+  ]}
+/>

@@ -20,3 +20,50 @@
   --ifm-color-primary-lightest: #dbeafe;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* Diagram expand mode: hide all Docusaurus chrome */
+html.diagram-expanded {
+  overflow: hidden;
+}
+
+html.diagram-expanded .navbar,
+html.diagram-expanded .theme-doc-sidebar-container,
+html.diagram-expanded .theme-doc-toc-desktop,
+html.diagram-expanded .theme-doc-breadcrumbs,
+html.diagram-expanded .pagination-nav,
+html.diagram-expanded .footer {
+  display: none !important;
+}
+
+html.diagram-expanded .main-wrapper {
+  display: block !important;
+}
+
+html.diagram-expanded .main-wrapper > div {
+  max-width: 100% !important;
+}
+
+html.diagram-expanded .container {
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+html.diagram-expanded article {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Expanded diagram container */
+.diagram-expanded-container {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #fff !important;
+}
+
+[data-theme='dark'] .diagram-expanded-container {
+  background: #1b1b1d !important;
+}
