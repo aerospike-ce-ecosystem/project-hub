@@ -138,8 +138,8 @@ Cluster Manager의 기술 스택 선택 이유:
 
 - **Next.js**: SSR/SSG, App Router, React Server Components, 최적화된 번들링
 - **FastAPI**: Python async 네이티브, 자동 OpenAPI 문서, aerospike-py와 직접 통합
-- **Tailwind CSS 4**: 유틸리티 퍼스트, 커스텀 디자인 시스템 구축 용이
-- **Radix UI**: 접근성(a11y) 기반 헤드리스 컴포넌트, DaisyUI 대비 유연성
+- **Tailwind CSS 4**: 유틸리티 퍼스트, CSS 변수 기반 커스텀 디자인 시스템 (DaisyUI 제거 후 순수 Tailwind 전환)
+- **Custom UI Components**: 접근성(a11y) 기반 자체 UI 컴포넌트, 외부 컴포넌트 라이브러리 의존 없음
 
 > Reference: [ADR-0005: DaisyUI 제거 및 Pure Tailwind CSS 4 전환](/docs/architecture/adr/daisyui-removal)
 

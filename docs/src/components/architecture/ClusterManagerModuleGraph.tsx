@@ -118,7 +118,7 @@ const initialNodes: Node<ModuleNodeData>[] = [
     data: {
       label: 'Components',
       items: [
-        'ui/ (16 Radix)',
+        'ui/ (custom)',
         'common/ (24)',
         'k8s/ (27)',
         'browser/',

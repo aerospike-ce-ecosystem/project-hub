@@ -147,7 +147,7 @@ const initialNodes: Node<RepoNodeData>[] = [
     data: {
       label: 'Cluster Manager',
       description: 'Web UI for Aerospike cluster management',
-      badges: ['Next.js', 'FastAPI', 'Zustand', 'Radix UI'],
+      badges: ['Next.js 16', 'FastAPI', 'Zustand', 'Tailwind 4'],
       color: '#e1f5fe',
       borderColor: '#0288d1',
       icon: '\uD83D\uDDA5\uFE0F',

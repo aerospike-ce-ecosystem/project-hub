@@ -24,13 +24,18 @@ last_updated: 2026-03-29
 - **Helm RBAC fix**: Fixed RBAC permissions in Helm chart (PR #194)
 
 ### Testing
+- **E2E reliability**: Podman auto-detect, multi-node cluster support, improved timeouts (PR #201)
+- **E2E Podman compat**: Fixed status assertion race conditions and Podman compatibility (PR #200)
 - **E2E monitoring sample**: Added monitoring configuration for E2E tests (PR #195)
 - **E2E deploy sync**: Fixed deployment synchronization in E2E tests (PR #197)
-- **E2E test improvements**: Added timeout and retry for flaky E2E tests
 
 ### Bug Fixes
 - **Operator stability**: Multiple stability improvements for reconciliation loops (PR #183)
 - **Migration status**: Improved migration status tracking (PR #180)
+
+### CI/CD
+- **Agentic workflows**: Added claude-code-action for issue planning, implementation, and PR review
+- **gh-aw integration**: IssueOps + CommentOps based CI automation
 
 ---
 
