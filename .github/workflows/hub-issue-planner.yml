@@ -143,9 +143,9 @@ jobs:
                - DEFER: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-deferred"`
                - POSITIVE REVIEW: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-positive"`
 
-            7. **[POSITIVE REVIEW only] Create ADR document and PR**
+            7. **[ALL VERDICTS] Create ADR document and PR**
 
-               If your verdict is POSITIVE REVIEW, you MUST also create an ADR markdown document and submit it as a Pull Request:
+               Regardless of your verdict (REJECT, DEFER, or POSITIVE), you MUST create an ADR markdown document and submit it as a Pull Request. All architectural decisions — including rejections and deferrals — are valuable project history.
 
                a. **Determine the next ADR number**: List existing files in `docs/docs/architecture/adr/` and find the highest number. The existing files follow the pattern `YYYY-MM-DD-slug.md` with ADR numbers in the title (e.g., "ADR-0009"). Assign the next sequential number.
 
@@ -154,7 +154,12 @@ jobs:
                   git checkout -b adr/issue-${{ github.event.issue.number }}-<short-slug>
                   ```
 
-               c. **Create the ADR file** at `docs/docs/architecture/adr/YYYY-MM-DD-<slug>.md` using today's date. The file MUST follow this exact structure:
+               c. **Create the ADR file** at `docs/docs/architecture/adr/YYYY-MM-DD-<slug>.md` using today's date. Set the **상태** field based on your verdict:
+                  - REJECT → `**Rejected**`
+                  - DEFER → `**Deferred**`
+                  - POSITIVE REVIEW → `**Proposed**`
+
+                  The file MUST follow this exact structure:
 
                   ```markdown
                   ---
@@ -171,10 +176,12 @@ jobs:
 
                   ## 상태
 
-                  **Proposed**
+                  **Proposed / Rejected / Deferred**
 
                   - 제안일: YYYY-MM-DD
                   - 관련 이슈: aerospike-ce-ecosystem/project-hub#${{ github.event.issue.number }}
+                  - 검토 결과: REJECT / DEFER / POSITIVE REVIEW
+                  - 기각/보류 사유: [IF REJECT or DEFER: 1-2 sentence reason]
 
                   ## 맥락 (Context)
 
@@ -182,9 +189,11 @@ jobs:
 
                   ## 결정 (Decision)
 
-                  > **[Clear statement of the decision from the recommendation]**
+                  > **[For POSITIVE: Clear statement of the decision]**
+                  > **[For REJECT: 기각됨 — reason]**
+                  > **[For DEFER: 보류됨 — what needs to be resolved first]**
 
-                  [Detailed explanation of the chosen approach]
+                  [Detailed explanation]
 
                   ## 대안 (Alternatives Considered)
 
@@ -206,32 +215,32 @@ jobs:
                d. **Commit and push**:
                   ```bash
                   git add docs/docs/architecture/adr/
-                  git commit -m "docs(adr): add ADR-NNNN <title> (proposed)"
+                  git commit -m "docs(adr): add ADR-NNNN <title> (<status>)"
+                  # where <status> is "proposed", "rejected", or "deferred"
                   git push origin adr/issue-${{ github.event.issue.number }}-<short-slug>
                   ```
 
-               e. **Create PR**:
+               e. **Create PR** (adjust title/body based on verdict):
                   ```bash
                   gh pr create \
-                    --title "docs(adr): ADR-NNNN <title>" \
-                    --body "## ADR 문서 초안
+                    --title "docs(adr): ADR-NNNN <title> [<VERDICT>]" \
+                    --body "## ADR 문서
 
-                  Issue #${{ github.event.issue.number }} 의 ADR Proposal에 대한 긍정적 검토 결과, ADR 문서 초안을 자동 생성했습니다.
+                  Issue #${{ github.event.issue.number }} 의 ADR Proposal 검토 결과를 문서화합니다.
 
-                  - **상태**: Proposed (인간 리뷰 후 Accepted로 변경)
+                  - **검토 결과**: <REJECT / DEFER / POSITIVE REVIEW>
+                  - **상태**: <Rejected / Deferred / Proposed>
                   - **관련 Issue**: #${{ github.event.issue.number }}
 
                   ## 체크리스트
                   - [ ] ADR 내용 검토 완료
-                  - [ ] 상태를 Accepted로 변경
                   - [ ] \`npm run build\` 성공 확인" \
                     --label "adr"
                   ```
 
             ## Constraints
-            - For REJECT and DEFER verdicts: Do NOT create branches, pull requests, or modify files
-            - For POSITIVE REVIEW: You MUST create the ADR document and PR in addition to the review comment
-            - Human makes the final decision on ALL verdicts — ADR PR status is "Proposed" not "Accepted"
+            - You MUST create an ADR document and PR for ALL verdicts (REJECT, DEFER, POSITIVE)
+            - Human makes the final decision on ALL verdicts
             - Use Korean for all review content and ADR document, English for technical terms
             - Only include `<!-- repo-plan:... -->` sections for repos that are checked in the issue
             - The `<!-- repo-list: ... -->` line must list repos using their GitHub repository names (e.g., `aerospike-py`, `aerospike-ce-kubernetes-operator`, `aerospike-cluster-manager`, `aerospike-ce-ecosystem-plugins`)
