@@ -1,0 +1,53 @@
+---
+title: "ACKO"
+description: ACKO(Aerospike CE Kubernetes Operator) 내부 아키텍처. CRD, Controller, Webhook, 관리 리소스 구조.
+sidebar_position: 2
+scope: single-repo
+repos: [acko]
+tags: [architecture, component-diagram, acko, kubernetes]
+last_updated: 2026-03-29
+---
+
+import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
+
+# ACKO Component Diagram
+
+Kubernetes 위에서 Aerospike CE 클러스터를 선언적으로 관리하는 Operator입니다.
+
+<FlowDiagram
+  height={500}
+  layout="dagre-TB"
+  nodes={[
+    { id: 'cr', label: 'AerospikeCluster CR', group: 'green' },
+    { id: 'spec', label: 'spec:', description: 'image, size, aerospikeConfig, rackConfig, storage', group: 'green' },
+    { id: 'status', label: 'status:', description: 'phase, conditions, pods', group: 'green' },
+    { id: 'reconciler', label: 'Reconciler', group: 'teal' },
+    { id: 'validator', label: 'Admission Webhook', group: 'teal' },
+    { id: 'finalizer', label: 'Finalizer', description: 'Cleanup', group: 'teal' },
+    { id: 'sts', label: 'StatefulSet', group: 'grey' },
+    { id: 'svc', label: 'Headless Service', group: 'grey' },
+    { id: 'pvc', label: 'PVC', description: 'Storage', group: 'grey' },
+    { id: 'cm', label: 'ConfigMap', description: 'aerospike.conf', group: 'grey' },
+  ]}
+  edges={[
+    { from: 'cr', to: 'spec' },
+    { from: 'cr', to: 'status' },
+    { from: 'cr', to: 'reconciler', label: 'Watch' },
+    { from: 'reconciler', to: 'validator' },
+    { from: 'reconciler', to: 'sts', label: 'Create/Update' },
+    { from: 'reconciler', to: 'svc', label: 'Create/Update' },
+    { from: 'reconciler', to: 'pvc', label: 'Create/Update' },
+    { from: 'reconciler', to: 'cm', label: 'Generate' },
+    { from: 'reconciler', to: 'finalizer' },
+  ]}
+/>
+
+| 컴포넌트 | 역할 |
+|----------|------|
+| AerospikeCluster CRD | 클러스터의 원하는 상태를 선언적으로 정의 |
+| Controller (Reconciler) | CR 변경 감지 후 실제 상태를 원하는 상태로 수렴 |
+| Admission Webhook | CR 생성/수정 시 CE 제약 조건 검증 |
+| StatefulSet | 안정적인 네트워크 ID와 순차적 배포 보장 |
+| Headless Service | Pod 간 직접 DNS 해결 |
+| PVC | 영구 스토리지 관리 |
+| ConfigMap | aerospike.conf 자동 생성 |

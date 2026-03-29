@@ -1,0 +1,53 @@
+---
+title: "Cluster Manager"
+description: Cluster Manager 내부 아키텍처. Next.js Frontend, FastAPI Backend, aerospike-py/K8s 연동 구조.
+sidebar_position: 3
+scope: single-repo
+repos: [cluster-manager]
+tags: [architecture, component-diagram, cluster-manager]
+last_updated: 2026-03-29
+---
+
+import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
+
+# Cluster Manager Component Diagram
+
+웹 기반 Aerospike 클러스터 관리 UI입니다.
+
+<FlowDiagram
+  height={500}
+  layout="dagre-TB"
+  nodes={[
+    { id: 'approuter', label: 'App Router', group: 'blue' },
+    { id: 'pages', label: 'Pages', group: 'blue' },
+    { id: 'components', label: 'React Components', group: 'blue' },
+    { id: 'nodeview', label: 'Node View', group: 'blue' },
+    { id: 'nsview', label: 'Namespace View', group: 'blue' },
+    { id: 'setview', label: 'Set View', group: 'blue' },
+    { id: 'api', label: 'REST API', group: 'teal' },
+    { id: 'aeroservice', label: 'Aerospike Service', group: 'teal' },
+    { id: 'k8sservice', label: 'K8s Service', group: 'teal' },
+    { id: 'aeropy', label: 'aerospike-py', group: 'purple' },
+    { id: 'k8sapi', label: 'Kubernetes API', group: 'grey' },
+  ]}
+  edges={[
+    { from: 'approuter', to: 'pages' },
+    { from: 'pages', to: 'components' },
+    { from: 'components', to: 'nodeview' },
+    { from: 'components', to: 'nsview' },
+    { from: 'components', to: 'setview' },
+    { from: 'pages', to: 'api', label: 'fetch' },
+    { from: 'api', to: 'aeroservice' },
+    { from: 'api', to: 'k8sservice' },
+    { from: 'aeroservice', to: 'aeropy' },
+    { from: 'k8sservice', to: 'k8sapi' },
+  ]}
+/>
+
+| 컴포넌트 | 역할 |
+|----------|------|
+| Next.js Frontend | App Router 기반 SPA, 클러스터 상태 시각화 |
+| React Components | 노드, Namespace, Set 등의 뷰 컴포넌트 |
+| FastAPI Backend | REST API 서버, 비즈니스 로직 처리 |
+| Aerospike Service | aerospike-py를 사용한 데이터 접근 계층 |
+| K8s Service | Kubernetes API를 통한 클러스터 관리 기능 |

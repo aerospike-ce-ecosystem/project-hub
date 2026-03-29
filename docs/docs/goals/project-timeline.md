@@ -63,7 +63,7 @@ gantt
 | 02-07 | Basic CRUD | put, get, delete, exists 기본 연산 |
 | 02-08 | **v0.0.1.dev2 release** | 첫 번째 릴리스, 기본 기능 검증 |
 
-**핵심 결정**: Rust/PyO3 over CFFI ([ADR-0001](/docs/architecture/adr/pyo3-over-cffi))
+**핵심 결정**: Rust/PyO3 over CFFI ([ADR-0001](/docs/architecture/adr/2026-01-15-pyo3-over-cffi))
 
 ---
 
@@ -139,7 +139,7 @@ gantt
 
 **하이라이트**: 6일 만에 ACKO 9개 릴리스, Cluster Manager MVP 완성
 
-**핵심 결정**: Kubebuilder v4 ([ADR-0002](/docs/architecture/adr/kubebuilder-v4)), Podman ([ADR-0003](/docs/architecture/adr/podman-over-docker))
+**핵심 결정**: Kubebuilder v4 ([ADR-0002](/docs/architecture/adr/2026-01-18-kubebuilder-v4)), Podman ([ADR-0003](/docs/architecture/adr/2026-02-01-podman-over-docker))
 
 ---
 
@@ -241,19 +241,19 @@ Cluster Manager의 대규모 UI 전환과 프로젝트 허브 생성.
 
 | Date | Decision | Reference |
 |------|----------|-----------|
-| 2026-02-05 | Rust/PyO3 over CFFI | [ADR-0001](/docs/architecture/adr/pyo3-over-cffi) |
-| 2026-03-03 | Kubebuilder v4 for ACKO | [ADR-0002](/docs/architecture/adr/kubebuilder-v4) |
-| 2026-03-03 | Podman over Docker | [ADR-0003](/docs/architecture/adr/podman-over-docker) |
+| 2026-02-05 | Rust/PyO3 over CFFI | [ADR-0001](/docs/architecture/adr/2026-01-15-pyo3-over-cffi) |
+| 2026-03-03 | Kubebuilder v4 for ACKO | [ADR-0002](/docs/architecture/adr/2026-01-18-kubebuilder-v4) |
+| 2026-03-03 | Podman over Docker | [ADR-0003](/docs/architecture/adr/2026-02-01-podman-over-docker) |
 | 2026-03-05 | FastAPI + Next.js for CM | Performance + DX |
 | 2026-03-12 | Claude Code Plugins | AI-assisted development |
 | 2026-03-25 | DaisyUI -> Tailwind CSS 4 | Customization + control |
-| 2026-02-15 | NamedTuple over Dict | [ADR-0004](/docs/architecture/adr/namedtuple-over-dict) |
-| 2026-03-08 | Cluster-scoped Template | [ADR-0007](/docs/architecture/adr/cluster-scoped-template) |
-| 2026-03-16 | Semaphore Backpressure | [ADR-0006](/docs/architecture/adr/backpressure-semaphore) |
-| 2026-03-25 | DaisyUI -> Tailwind CSS 4 | [ADR-0005](/docs/architecture/adr/daisyui-removal) |
-| 2026-03-02 | CRD Rename: AerospikeCluster | [ADR-0011](/docs/architecture/adr/crd-rename-aerospikecluster) |
-| 2026-03-01 | Pod Readiness Gates | [ADR-0012](/docs/architecture/adr/pod-readiness-gates) |
-| 2026-03-02 | Reconciliation Circuit Breaker | [ADR-0013](/docs/architecture/adr/reconciliation-circuit-breaker) |
-| 2026-02-26 | SQLite → PostgreSQL Migration | [ADR-0014](/docs/architecture/adr/postgresql-migration) |
-| 2026-03-02 | asinfo 기반 Health Check | [ADR-0015](/docs/architecture/adr/asinfo-health-checks) |
+| 2026-02-15 | NamedTuple over Dict | [ADR-0004](/docs/architecture/adr/2026-02-10-namedtuple-over-dict) |
+| 2026-03-08 | Cluster-scoped Template | [ADR-0007](/docs/architecture/adr/2026-03-12-cluster-scoped-template) |
+| 2026-03-16 | Semaphore Backpressure | [ADR-0006](/docs/architecture/adr/2026-03-05-backpressure-semaphore) |
+| 2026-03-25 | DaisyUI -> Tailwind CSS 4 | [ADR-0005](/docs/architecture/adr/2026-02-25-daisyui-removal) |
+| 2026-03-02 | CRD Rename: AerospikeCluster | [ADR-0011](/docs/architecture/adr/2026-03-10-crd-rename-aerospikecluster) |
+| 2026-03-01 | Pod Readiness Gates | [ADR-0012](/docs/architecture/adr/2026-02-20-pod-readiness-gates) |
+| 2026-03-02 | Reconciliation Circuit Breaker | [ADR-0013](/docs/architecture/adr/2026-03-01-reconciliation-circuit-breaker) |
+| 2026-02-26 | SQLite → PostgreSQL Migration | [ADR-0014](/docs/architecture/adr/2026-02-10-postgresql-migration) |
+| 2026-03-02 | asinfo 기반 Health Check | [ADR-0015](/docs/architecture/adr/2026-03-05-asinfo-health-checks) |
 | 2026-03-29 | Project Hub (Docusaurus) | Centralized documentation |
