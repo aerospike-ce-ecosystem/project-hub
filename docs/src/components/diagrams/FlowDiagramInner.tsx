@@ -15,11 +15,12 @@ import type { FlowDiagramProps, SimpleNode, SimpleEdge } from './types';
 import { getColors } from './themes/colors';
 import { DefaultNode } from './nodes/DefaultNode';
 import { StateNode } from './nodes/StateNode';
+import { GroupNode } from './nodes/GroupNode';
 import { Legend } from './Legend';
 import { useExpandable } from './ExpandButton';
 import { applyDagreLayout } from './layout/dagre';
 
-const nodeTypes = { default: DefaultNode, state: StateNode };
+const nodeTypes = { default: DefaultNode, state: StateNode, group: GroupNode };
 
 export default function FlowDiagramInner(props: FlowDiagramProps) {
   const {
@@ -38,17 +39,20 @@ export default function FlowDiagramInner(props: FlowDiagramProps) {
       (n) => n.group === 'state' || n.group === 'state-start' || n.group === 'state-end',
     );
 
+    // Separate parent (group) nodes and regular nodes
+    // Parent nodes: nodes that have width AND height AND are referenced by other nodes' parent field
+    const parentIds = new Set(simpleNodes.filter((n) => n.parent).map((n) => n.parent!));
+
     const mapped: Node[] = simpleNodes.map((n: SimpleNode) => {
       const isState =
         n.group === 'state' || n.group === 'state-start' || n.group === 'state-end';
+      const isGroupNode = parentIds.has(n.id) && n.width && n.height;
       const colors = isState ? getColors('indigo') : getColors(n.group);
 
-      return {
+      const node: Node = {
         id: n.id,
-        type: isState ? 'state' : 'default',
+        type: isGroupNode ? 'group' : isState ? 'state' : 'default',
         position: n.position ?? { x: 0, y: 0 },
-        width: n.width,
-        height: n.height,
         data: {
           label: n.label,
           description: n.description,
@@ -60,7 +64,25 @@ export default function FlowDiagramInner(props: FlowDiagramProps) {
           isStart: n.group === 'state-start',
           isEnd: n.group === 'state-end',
         },
-      } as Node;
+      };
+
+      if (isGroupNode) {
+        node.style = { width: n.width, height: n.height };
+      }
+
+      if (n.parent) {
+        node.parentId = n.parent;
+        node.extent = 'parent';
+      }
+
+      return node;
+    });
+
+    // Sort: parent nodes must come before their children
+    mapped.sort((a, b) => {
+      if (a.parentId && !b.parentId) return 1;
+      if (!a.parentId && b.parentId) return -1;
+      return 0;
     });
 
     const edges: Edge[] = simpleEdges.map((e: SimpleEdge, i: number) => {

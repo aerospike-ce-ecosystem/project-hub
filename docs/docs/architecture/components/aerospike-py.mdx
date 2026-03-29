@@ -1,6 +1,6 @@
 ---
 title: "aerospike-py"
-description: aerospike-py의 내부 아키텍처. Python API → PyO3 → Rust Core → tokio 계층 구조.
+description: aerospike-py 아키텍처. Python API → PyO3 → Rust Core 계층과 K8s/Bare Metal 양쪽 Aerospike 클러스터 연결.
 sidebar_position: 1
 scope: single-repo
 repos: [aerospike-py]
@@ -12,35 +12,38 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # aerospike-py Component Diagram
 
-Rust 기반 고성능 Aerospike Python 클라이언트입니다.
+Rust/PyO3 기반 고성능 Aerospike Python 클라이언트. Cluster Manager의 backend에 내장되며, 독립적으로도 Bare Metal 클러스터에 직접 연결합니다.
 
 <FlowDiagram
-  height={400}
-  layout="dagre-LR"
+  height={1000}
+  layout="manual"
   nodes={[
-    { id: 'client', label: 'Client', description: '동기', group: 'purple' },
-    { id: 'asyncclient', label: 'AsyncClient', description: '비동기', group: 'purple' },
-    { id: 'bindings', label: 'PyO3 Bindings', description: '#[pyclass], #[pymethods]', group: 'indigo' },
-    { id: 'rustclient', label: 'aerospike-client-rust v2', group: 'teal' },
-    { id: 'connpool', label: 'Connection Pool', group: 'teal' },
-    { id: 'cluster', label: 'Cluster Discovery', group: 'teal' },
-    { id: 'batch', label: 'Batch Operations', group: 'teal' },
-    { id: 'tokiort', label: 'tokio Runtime', group: 'grey' },
+    { id: 'cm-be', label: 'Cluster Manager Backend', group: 'blue', description: 'aerospike-py 내장', position: { x: 20, y: 0 } },
+    { id: 'app', label: 'User Application', group: 'grey', description: 'Python 앱', position: { x: 550, y: 0 } },
+    { id: 'aspy', label: 'aerospike-py', group: 'purple', width: 650, height: 550, position: { x: 50, y: 110 } },
+    { id: 'client', label: 'Client / AsyncClient', group: 'purple', items: ['CRUD', 'batch', 'admin', 'query'], parent: 'aspy', position: { x: 40, y: 50 } },
+    { id: 'cdt', label: 'CDT', group: 'purple', items: ['list', 'map', 'bit', 'hll'], parent: 'aspy', position: { x: 380, y: 50 } },
+    { id: 'pyo3', label: 'PyO3 Bridge', group: 'orange', items: ['pyo3 0.28', 'GIL-free async'], parent: 'aspy', position: { x: 190, y: 210 } },
+    { id: 'rust', label: 'Rust Core + aerospike-client-rust v2', group: 'red', items: ['wire protocol', 'connection pool', 'backpressure', 'observability'], parent: 'aspy', position: { x: 140, y: 370 } },
+    { id: 'acko-group', label: 'ACKO', group: 'green', width: 560, height: 140, position: { x: 90, y: 780 } },
+    { id: 'k8s-aero', label: 'Aerospike CE (K8s)', group: 'green', parent: 'acko-group', position: { x: 30, y: 50 } },
+    { id: 'bm-aero', label: 'Aerospike CE (Bare Metal)', group: 'indigo', parent: 'acko-group', position: { x: 300, y: 50 } },
   ]}
   edges={[
-    { from: 'client', to: 'bindings' },
-    { from: 'asyncclient', to: 'bindings' },
-    { from: 'bindings', to: 'rustclient' },
-    { from: 'rustclient', to: 'connpool' },
-    { from: 'rustclient', to: 'cluster' },
-    { from: 'rustclient', to: 'batch' },
-    { from: 'connpool', to: 'tokiort' },
+    { from: 'cm-be', to: 'client', label: '내장' },
+    { from: 'app', to: 'client', label: 'import' },
+    { from: 'app', to: 'cdt', label: 'import' },
+    { from: 'client', to: 'pyo3' },
+    { from: 'cdt', to: 'pyo3' },
+    { from: 'pyo3', to: 'rust', label: 'binds' },
+    { from: 'rust', to: 'k8s-aero', label: 'Protocol', dashed: true, color: '#e53935' },
+    { from: 'rust', to: 'bm-aero', label: 'Protocol', dashed: true, color: '#e53935' },
   ]}
 />
 
-| 컴포넌트 | 역할 |
-|----------|------|
-| Python API Layer | `Client` (동기) / `AsyncClient` (비동기) 인터페이스 제공 |
-| PyO3 Bindings | Rust 코드를 Python에서 호출 가능하게 변환 |
-| aerospike-client-rust v2 | 핵심 Aerospike 프로토콜 구현 (연결 관리, 클러스터 디스커버리, 배치 처리) |
-| tokio Runtime | 비동기 I/O 런타임으로 높은 동시성 지원 |
+| 계층 | 역할 |
+|------|------|
+| Python API | `Client` (동기) / `AsyncClient` (비동기) + CDT, Expression, Query |
+| PyO3 Bridge | Rust ↔ Python 바인딩, GIL-free 비동기 지원 |
+| Rust Core | wire protocol, connection pool, backpressure, OpenTelemetry |
+| 연결 대상 | ACKO 관리 K8s Pod 또는 Bare Metal 서버 모두 지원 |

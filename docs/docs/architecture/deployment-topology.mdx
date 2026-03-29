@@ -17,50 +17,51 @@ Aerospike CE Ecosystem의 배포 환경을 로컬 개발부터 프로덕션까�
 ## 환경별 토폴로지
 
 <FlowDiagram
-  height={650}
-  layout="dagre-TB"
+  height={500}
+  layout="manual"
   nodes={[
-    { id: 'podman', label: 'Podman Compose', icon: '🐳', group: 'orange' },
-    { id: 'cmlocal', label: 'Cluster Manager', group: 'orange' },
-    { id: 'aerolocal', label: 'Aerospike Server CE', description: '1 Node', group: 'orange' },
-    { id: 'acko1', label: 'ACKO', group: 'green' },
-    { id: 'sts1', label: 'StatefulSet', description: '1 Replica', group: 'green' },
-    { id: 'pod1', label: 'Aerospike Pod', group: 'green' },
-    { id: 'acko2', label: 'ACKO', group: 'blue' },
-    { id: 'sts2', label: 'StatefulSet', description: 'N Replicas', group: 'blue' },
-    { id: 'pod2a', label: 'Pod (Rack 1)', group: 'blue' },
-    { id: 'pod2b', label: 'Pod (Rack 2)', group: 'blue' },
-    { id: 'node2', label: '1 Node', group: 'blue' },
-    { id: 'acko3', label: 'ACKO', group: 'pink' },
-    { id: 'sts3', label: 'StatefulSet', description: 'N Replicas', group: 'pink' },
-    { id: 'pod3a', label: 'Pod (Rack 1)', group: 'pink' },
-    { id: 'pod3b', label: 'Pod (Rack 2)', group: 'pink' },
-    { id: 'node3a', label: 'Node A', group: 'pink' },
-    { id: 'node3b', label: 'Node B', group: 'pink' },
+    { id: 'local-group', label: 'Local Dev', icon: '🐳', group: 'orange', description: 'Podman Compose', width: 210, height: 350, position: { x: 0, y: 0 } },
+    { id: 'podman', label: 'Podman Compose', group: 'orange', parent: 'local-group', position: { x: 20, y: 45 } },
+    { id: 'cmlocal', label: 'Cluster Manager', group: 'orange', parent: 'local-group', position: { x: 20, y: 130 } },
+    { id: 'aerolocal', label: 'Aerospike CE', group: 'orange', description: '1 Node', parent: 'local-group', position: { x: 20, y: 230 } },
+
+    { id: 'k8s-dev-group', label: 'K8s Dev', group: 'green', width: 210, height: 230, position: { x: 240, y: 0 } },
+    { id: 'acko1', label: 'ACKO', group: 'green', parent: 'k8s-dev-group', position: { x: 25, y: 45 } },
+    { id: 'pod1', label: 'Pod (1)', group: 'green', parent: 'k8s-dev-group', position: { x: 25, y: 135 } },
+
+    { id: 'k8s-staging-group', label: 'K8s Staging', group: 'blue', width: 350, height: 320, position: { x: 480, y: 0 } },
+    { id: 'acko2', label: 'ACKO', group: 'blue', parent: 'k8s-staging-group', position: { x: 90, y: 45 } },
+    { id: 'pod2a', label: 'Pod (R1)', group: 'blue', parent: 'k8s-staging-group', position: { x: 15, y: 135 } },
+    { id: 'pod2b', label: 'Pod (R2)', group: 'blue', parent: 'k8s-staging-group', position: { x: 180, y: 135 } },
+    { id: 'node2', label: '1 Node', group: 'blue', parent: 'k8s-staging-group', position: { x: 90, y: 230 } },
+
+    { id: 'k8s-prod-group', label: 'K8s Production', group: 'pink', width: 370, height: 320, position: { x: 860, y: 0 } },
+    { id: 'acko3', label: 'ACKO', group: 'pink', parent: 'k8s-prod-group', position: { x: 100, y: 45 } },
+    { id: 'pod3a', label: 'Pod (R1)', group: 'pink', parent: 'k8s-prod-group', position: { x: 15, y: 135 } },
+    { id: 'pod3b', label: 'Pod (R2)', group: 'pink', parent: 'k8s-prod-group', position: { x: 190, y: 135 } },
+    { id: 'node3a', label: 'Node A', group: 'pink', parent: 'k8s-prod-group', position: { x: 15, y: 230 } },
+    { id: 'node3b', label: 'Node B', group: 'pink', parent: 'k8s-prod-group', position: { x: 190, y: 230 } },
+
+    { id: 'bm-group', label: 'Bare Metal', icon: '🖥️', group: 'indigo', width: 350, height: 230, position: { x: 1260, y: 0 } },
+    { id: 'py', label: 'aerospike-py', group: 'purple', parent: 'bm-group', position: { x: 90, y: 45 } },
+    { id: 'bm1', label: 'Server 1', group: 'indigo', parent: 'bm-group', position: { x: 15, y: 140 } },
+    { id: 'bm2', label: 'Server 2', group: 'indigo', parent: 'bm-group', position: { x: 180, y: 140 } },
   ]}
   edges={[
     { from: 'podman', to: 'cmlocal' },
-    { from: 'podman', to: 'aerolocal' },
     { from: 'cmlocal', to: 'aerolocal', label: 'aerospike-py' },
-    { from: 'acko1', to: 'sts1' },
-    { from: 'sts1', to: 'pod1' },
-    { from: 'acko2', to: 'sts2' },
-    { from: 'sts2', to: 'pod2a' },
-    { from: 'sts2', to: 'pod2b' },
+    { from: 'acko1', to: 'pod1', animated: true },
+    { from: 'acko2', to: 'pod2a', animated: true },
+    { from: 'acko2', to: 'pod2b', animated: true },
     { from: 'pod2a', to: 'node2' },
     { from: 'pod2b', to: 'node2' },
-    { from: 'acko3', to: 'sts3' },
-    { from: 'sts3', to: 'pod3a' },
-    { from: 'sts3', to: 'pod3b' },
+    { from: 'acko3', to: 'pod3a', animated: true },
+    { from: 'acko3', to: 'pod3b', animated: true },
     { from: 'pod3a', to: 'node3a' },
     { from: 'pod3b', to: 'node3b' },
+    { from: 'py', to: 'bm1', animated: true },
+    { from: 'py', to: 'bm2', animated: true },
   ]}
-  legend={{
-    '#fff3e0': '로컬 개발 환경',
-    '#e8f5e9': 'K8s 개발 (minimal)',
-    '#e1f5fe': 'K8s 스테이징 (soft-rack)',
-    '#fce4ec': 'K8s 프로덕션 (hard-rack)',
-  }}
 />
 
 ## 로컬 개발 환경
@@ -238,12 +239,62 @@ spec:
     { from: 'hnodeb', to: 'h3' },
     { from: 'hnodeb', to: 'h4' },
   ]}
-  legend={{
-    '#e8f5e9': 'minimal (dev)',
-    '#e1f5fe': 'soft-rack (stage)',
-    '#fce4ec': 'hard-rack (prod)',
-  }}
 />
+
+## Bare Metal 배포 (aerospike-py)
+
+Kubernetes 없이 물리 서버에 직접 Aerospike CE를 설치하고, aerospike-py로 연결하는 구조입니다.
+
+<FlowDiagram
+  height={350}
+  layout="manual"
+  nodes={[
+    { id: 'app', label: 'Application', group: 'purple', items: ['aerospike-py', 'AsyncClient'], position: { x: 220, y: 0 } },
+
+    { id: 'bm-cluster', label: 'Bare Metal Cluster', icon: '🖥️', group: 'indigo', width: 620, height: 180, position: { x: 30, y: 130 } },
+    { id: 'n1', label: 'Server 1', group: 'indigo', items: ['Aerospike Node', 'Rack 1', 'metrics exporter'], parent: 'bm-cluster', position: { x: 15, y: 45 } },
+    { id: 'n2', label: 'Server 2', group: 'indigo', items: ['Aerospike Node', 'Rack 1', 'metrics exporter'], parent: 'bm-cluster', position: { x: 220, y: 45 } },
+    { id: 'n3', label: 'Server 3', group: 'indigo', items: ['Aerospike Node', 'Rack 2', 'metrics exporter'], parent: 'bm-cluster', position: { x: 430, y: 45 } },
+  ]}
+  edges={[
+    { from: 'app', to: 'bm-cluster', label: 'Protocol', animated: true },
+  ]}
+/>
+
+### 구성
+
+| 항목 | 값 |
+|------|-----|
+| 용도 | K8s 없는 환경, 레거시 인프라 |
+| 설치 방법 | 패키지 매니저 또는 tarball |
+| 연결 방법 | aerospike-py `Client(hosts=[...])` |
+| Rack 구성 | aerospike.conf에서 직접 설정 |
+| Metrics | Aerospike Prometheus Exporter |
+
+### 연결 예시
+
+```python
+from aerospike_py import Client
+
+client = Client(hosts=[
+    ("server1.example.com", 3000),
+    ("server2.example.com", 3000),
+    ("server3.example.com", 3000),
+])
+```
+
+## K8s vs Bare Metal 비교
+
+| | Kubernetes (ACKO) | Bare Metal (aerospike-py) |
+|---|---|---|
+| **배포 방식** | `kubectl apply` CRD | 수동 설치 / 패키지 |
+| **관리 도구** | ACKO Operator + Cluster Manager | aerospike-py 직접 연결 |
+| **Rack 설정** | CRD `rackConfig` 자동 | aerospike.conf 수동 |
+| **스케일링** | CR `size` 변경 → 자동 | 서버 추가 후 수동 Join |
+| **모니터링** | Pod metrics exporter + ServiceMonitor | Prometheus Exporter 수동 설정 |
+| **Rolling Restart** | ACKO 자동 관리 | 수동 순차 재시작 |
+
+---
 
 ## Aerospike CE 제약 사항
 

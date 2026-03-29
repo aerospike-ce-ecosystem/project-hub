@@ -1,6 +1,6 @@
 ---
 title: "Claude Code Plugins"
-description: Claude Code Plugins 내부 구조. 5개 Skill과 1개 Agent의 역할 및 대상 레포 관계.
+description: CE Ecosystem Plugin 구조. User → Agent → Plugin(Skills) 계층에서 ACKO/aerospike-py 가이드 제공.
 sidebar_position: 4
 scope: single-repo
 repos: [plugins]
@@ -12,36 +12,37 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Claude Code Plugins Component Diagram
 
-Claude Code에서 Aerospike CE Ecosystem 개발 생산성을 높이는 Skill과 Agent입니다.
+User → Agent → Plugin 계층의 최하단에서 ACKO 배포, aerospike-py API, 클러스터 디버깅을 가이드하는 5개 Skill과 1개 Agent입니다.
 
 <FlowDiagram
-  height={350}
-  layout="dagre-TB"
+  height={450}
+  layout="manual"
   nodes={[
-    { id: 'ackodeploy', label: 'acko-deploy', description: 'K8s 배포 가이드', group: 'orange', items: ['Skill'] },
-    { id: 'ackoops', label: 'acko-operations', description: '클러스터 운영/디버깅', group: 'orange', items: ['Skill'] },
-    { id: 'ackoconfig', label: 'acko-config-reference', description: 'CE 8.1 설정 레퍼런스', group: 'orange', items: ['Skill'] },
-    { id: 'pyapiskill', label: 'aerospike-py-api', description: 'Python API 가이드', group: 'orange', items: ['Skill'] },
-    { id: 'pyfastapi', label: 'aerospike-py-fastapi', description: 'FastAPI 통합 패턴', group: 'orange', items: ['Skill'] },
-    { id: 'debugger', label: 'acko-cluster-debugger', description: '클러스터 문제 자율 디버깅', group: 'red', items: ['Agent'] },
-    { id: 'acko-target', label: 'ACKO', group: 'green' },
-    { id: 'py-target', label: 'aerospike-py', group: 'purple' },
+    { id: 'agent', label: 'Agent (Claude Code)', group: 'orange', position: { x: 280, y: 0 } },
+
+    { id: 'plugin-group', label: 'CE Ecosystem Plugin', icon: '🔌', group: 'orange', description: 'plugin.json v1.0.0', width: 720, height: 200, position: { x: 15, y: 90 } },
+    { id: 'acko-skills', label: 'ACKO Skills', group: 'green', items: ['acko-deploy', 'acko-operations', 'acko-config-reference'], parent: 'plugin-group', position: { x: 20, y: 55 } },
+    { id: 'py-skills', label: 'Python Skills', group: 'purple', items: ['aerospike-py-api', 'aerospike-py-fastapi'], parent: 'plugin-group', position: { x: 260, y: 55 } },
+    { id: 'debugger', label: 'acko-cluster-debugger', group: 'blue', items: ['Agent', '39 issue-fix mappings'], parent: 'plugin-group', position: { x: 480, y: 55 } },
+
+    { id: 'acko', label: 'ACKO', group: 'grey', position: { x: 80, y: 360 } },
+    { id: 'aspy', label: 'aerospike-py', group: 'grey', position: { x: 330, y: 360 } },
+    { id: 'cm', label: 'Cluster Manager', group: 'grey', position: { x: 560, y: 360 } },
   ]}
   edges={[
-    { from: 'ackodeploy', to: 'acko-target', label: '가이드', dashed: true },
-    { from: 'ackoops', to: 'acko-target', label: '가이드', dashed: true },
-    { from: 'ackoconfig', to: 'acko-target', label: '레퍼런스', dashed: true },
-    { from: 'pyapiskill', to: 'py-target', label: '가이드', dashed: true },
-    { from: 'pyfastapi', to: 'py-target', label: '가이드', dashed: true },
-    { from: 'debugger', to: 'acko-target', label: '디버깅', animated: true },
+    { from: 'agent', to: 'plugin-group' },
+    { from: 'acko-skills', to: 'acko', label: 'guides', animated: true },
+    { from: 'py-skills', to: 'aspy', label: 'guides', animated: true },
+    { from: 'py-skills', to: 'cm', label: 'FastAPI 패턴', dashed: true },
+    { from: 'debugger', to: 'acko', label: 'debugs', animated: true },
   ]}
 />
 
-| 분류 | 이름 | 설명 |
-|------|------|------|
-| **Skill** | `acko-deploy` | ACKO를 통한 Aerospike K8s 배포 가이드 |
-| **Skill** | `acko-operations` | 기존 Aerospike K8s 클러스터 운영/디버깅 |
-| **Skill** | `acko-config-reference` | Aerospike CE 8.1 설정 파라미터 레퍼런스 |
-| **Skill** | `aerospike-py-api` | aerospike-py Python API 사용 가이드 |
-| **Skill** | `aerospike-py-fastapi` | FastAPI + aerospike-py 통합 패턴 |
-| **Agent** | `acko-cluster-debugger` | Aerospike K8s 클러스터 문제 자율 디버깅 |
+| 분류 | 이름 | 대상 | 설명 |
+|------|------|------|------|
+| **Skill** | `acko-deploy` | ACKO | K8s 배포 YAML 가이드, CE 제약 반영 |
+| **Skill** | `acko-operations` | ACKO | 스케일링, 업그레이드, 재시작, 트러블슈팅 |
+| **Skill** | `acko-config-reference` | ACKO | CE 8.1 설정 파라미터 레퍼런스 |
+| **Skill** | `aerospike-py-api` | aerospike-py | CRUD, batch, CDT, Expression API 가이드 |
+| **Skill** | `aerospike-py-fastapi` | aerospike-py, CM | AsyncClient + FastAPI 통합 패턴 |
+| **Agent** | `acko-cluster-debugger` | ACKO | kubectl 기반 자율 디버깅, 39개 이슈-수정 매핑 |

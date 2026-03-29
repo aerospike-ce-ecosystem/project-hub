@@ -5,7 +5,8 @@ import type { DefaultNodeData } from '../types';
 export function DefaultNode({ data }: NodeProps<Node<DefaultNodeData>>) {
   const { label, description, items = [], icon, color, borderColor, url } = data;
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     if (url) window.open(url, '_blank', 'noopener');
   }, [url]);
 

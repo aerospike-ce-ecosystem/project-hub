@@ -1,6 +1,6 @@
 ---
 title: "Cluster Manager"
-description: Cluster Manager 내부 아키텍처. Next.js Frontend, FastAPI Backend, aerospike-py/K8s 연동 구조.
+description: Cluster Manager 아키텍처. K8s 환경 안에서 Frontend/Backend/aerospike-py로 클러스터를 관리하는 Web UI.
 sidebar_position: 3
 scope: single-repo
 repos: [cluster-manager]
@@ -12,42 +12,38 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Cluster Manager Component Diagram
 
-웹 기반 Aerospike 클러스터 관리 UI입니다.
+K8s 환경 안에서 동작하는 웹 관리 UI. Backend에 aerospike-py를 내장하여 Aerospike 데이터에 접근하고, K8s API를 통해 ACKO가 관리하는 클러스터를 제어합니다.
 
 <FlowDiagram
-  height={500}
-  layout="dagre-TB"
+  height={580}
+  layout="manual"
   nodes={[
-    { id: 'approuter', label: 'App Router', group: 'blue' },
-    { id: 'pages', label: 'Pages', group: 'blue' },
-    { id: 'components', label: 'React Components', group: 'blue' },
-    { id: 'nodeview', label: 'Node View', group: 'blue' },
-    { id: 'nsview', label: 'Namespace View', group: 'blue' },
-    { id: 'setview', label: 'Set View', group: 'blue' },
-    { id: 'api', label: 'REST API', group: 'teal' },
-    { id: 'aeroservice', label: 'Aerospike Service', group: 'teal' },
-    { id: 'k8sservice', label: 'K8s Service', group: 'teal' },
-    { id: 'aeropy', label: 'aerospike-py', group: 'purple' },
-    { id: 'k8sapi', label: 'Kubernetes API', group: 'grey' },
+    { id: 'user', label: 'User (Browser)', group: 'grey', position: { x: 250, y: 0 } },
+
+    { id: 'cm-group', label: 'Cluster Manager', icon: '🌐', group: 'blue', width: 580, height: 330, position: { x: 30, y: 90 } },
+    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 16', 'React Components', 'Zustand (11 stores)', 'Tailwind CSS 4'], parent: 'cm-group', position: { x: 25, y: 45 } },
+    { id: 'be', label: 'Backend', group: 'green', items: ['FastAPI', 'Pydantic models', 'REST API routers'], parent: 'cm-group', position: { x: 290, y: 45 } },
+    { id: 'aspy', label: 'aerospike-py (내장)', group: 'purple', items: ['AsyncClient', 'query', 'batch', 'CDT'], parent: 'cm-group', position: { x: 70, y: 190 } },
+    { id: 'k8s', label: 'K8s Client', group: 'orange', items: ['ACKO CRD 조회', 'Pod 상태'], parent: 'cm-group', position: { x: 340, y: 190 } },
+
+    { id: 'db', label: 'Database', group: 'teal', items: ['PostgreSQL', 'SQLite (dev)'], position: { x: 660, y: 170 } },
+    { id: 'acko', label: 'ACKO (Aerospike Pods)', group: 'green', position: { x: 260, y: 480 } },
   ]}
   edges={[
-    { from: 'approuter', to: 'pages' },
-    { from: 'pages', to: 'components' },
-    { from: 'components', to: 'nodeview' },
-    { from: 'components', to: 'nsview' },
-    { from: 'components', to: 'setview' },
-    { from: 'pages', to: 'api', label: 'fetch' },
-    { from: 'api', to: 'aeroservice' },
-    { from: 'api', to: 'k8sservice' },
-    { from: 'aeroservice', to: 'aeropy' },
-    { from: 'k8sservice', to: 'k8sapi' },
+    { from: 'user', to: 'fe', label: 'HTTP' },
+    { from: 'fe', to: 'be', label: 'REST API' },
+    { from: 'be', to: 'aspy' },
+    { from: 'be', to: 'k8s' },
+    { from: 'be', to: 'db' },
+    { from: 'aspy', to: 'acko', label: 'Aerospike Protocol', animated: true },
+    { from: 'k8s', to: 'acko', label: 'K8s API', animated: true },
   ]}
 />
 
 | 컴포넌트 | 역할 |
 |----------|------|
-| Next.js Frontend | App Router 기반 SPA, 클러스터 상태 시각화 |
-| React Components | 노드, Namespace, Set 등의 뷰 컴포넌트 |
-| FastAPI Backend | REST API 서버, 비즈니스 로직 처리 |
-| Aerospike Service | aerospike-py를 사용한 데이터 접근 계층 |
-| K8s Service | Kubernetes API를 통한 클러스터 관리 기능 |
+| Frontend | Next.js 16 App Router, Zustand 상태관리, 클러스터 시각화 |
+| Backend | FastAPI REST API, 비즈니스 로직 |
+| aerospike-py (내장) | Backend에서 Aerospike 데이터 접근 (AsyncClient) |
+| K8s Client | ACKO CRD 조회, Pod 상태 모니터링 |
+| Database | 연결 정보, 사용자 설정 저장 |
