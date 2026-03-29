@@ -1,0 +1,398 @@
+name: Hub Issue Planner
+
+on:
+  issues:
+    types: [labeled]
+
+concurrency:
+  group: hub-planner-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  # ─────────────────────────────────────────────────
+  # ADR Proposal Review
+  # ─────────────────────────────────────────────────
+  adr-review:
+    if: github.event.label.name == 'adr'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code - ADR Reviewer
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
+          bot_id: '24240623'
+          bot_name: 'KimSoungRyoul'
+          prompt: |
+            You are an **architecture review agent** for the Aerospike CE Ecosystem.
+            Your role is to review ADR (Architecture Decision Record) proposals and provide one of three verdicts.
+
+            ## Ecosystem Context
+            - **aerospike-py**: Rust/PyO3 Python client. Build: `make build`, Test: `make test-unit`, Lint: `make lint`, Type: `make typecheck`
+            - **aerospike-ce-kubernetes-operator (ACKO)**: Go/kubebuilder v4 Kubernetes operator. Build: `go build ./...`, Test: `make test-unit`, Lint: `make lint`
+            - **aerospike-cluster-manager**: FastAPI backend (Python 3.13) + Next.js 16 frontend (React 19, Radix UI, Tailwind 4, Zustand)
+            - **aerospike-ce-ecosystem-plugins**: Claude Code plugins (skills, agents, hooks)
+
+            ## Task
+            Review ADR Proposal issue #${{ github.event.issue.number }}.
+
+            **Issue Title**: ${{ github.event.issue.title }}
+
+            ### Instructions
+
+            1. **Read the issue body** carefully — parse the fields:
+               - 컨텍스트 (Context): why this decision is needed
+               - 대안들 (Options): alternatives considered
+               - 추천안 및 이유 (Recommendation): proposed approach
+               - 결과 (Consequences): trade-offs
+               - 관련 레포 (Related repos): checkboxes for affected repos
+
+            2. **Read existing ADRs** in `docs/docs/architecture/adr/` to check for:
+               - Conflicts with prior decisions
+               - Precedents that inform this proposal
+               - Patterns already established in the ecosystem
+
+            3. **Read project goals** in `docs/docs/goals/project-design.md` and `docs/docs/goals/project-goals.md` to verify alignment.
+
+            4. **Produce exactly ONE of three verdicts**:
+
+               **REJECT (기각)** — Use when:
+               - The proposal contradicts existing ADRs or project direction
+               - It introduces unnecessary complexity without clear benefit
+               - The alternatives are clearly superior to the recommendation
+               - Technical constraints make it infeasible
+
+               **DEFER (보류)** — Use when:
+               - The trade-offs are too subjective for AI to judge (cost, team preference, political)
+               - More information or benchmarks are needed before deciding
+               - The proposal is reasonable but timing is wrong (depends on incomplete work)
+
+               **POSITIVE REVIEW (긍정적 검토)** — Use when:
+               - The proposal aligns with project goals and existing ADR direction
+               - The recommendation is technically sound with acceptable trade-offs
+               - **Human still makes the final decision** — this is advisory only
+
+            5. **Post a comment** using `gh issue comment ${{ github.event.issue.number }}` with this exact structure:
+
+            ```
+            <!-- agent-plan-start -->
+            ## ADR Review: [EMOJI] [REJECT / DEFER / POSITIVE REVIEW]
+
+            ### 판단 요약
+            [1-2 sentence Korean summary of verdict]
+
+            ### 판단 근거
+            [Detailed reasoning in Korean, referencing:
+             - Specific existing ADRs (e.g., "ADR-0001 PyO3 선택과 일관성 있음")
+             - Project goals alignment
+             - Technical feasibility
+             - Trade-off analysis]
+
+            [IF POSITIVE REVIEW, add the following sections:]
+
+            ### Repo별 영향 분석
+
+            <!-- repo-plan:aerospike-py -->
+            #### aerospike-py
+            - **필요한 변경**: [구체적 설명]
+            - **예상 범위**: Small / Medium / Large
+            - **영향받는 파일/모듈**: [목록]
+            <!-- /repo-plan:aerospike-py -->
+
+            <!-- repo-plan:aerospike-ce-kubernetes-operator -->
+            #### ACKO
+            - **필요한 변경**: [구체적 설명]
+            - **예상 범위**: Small / Medium / Large
+            - **영향받는 파일/모듈**: [목록]
+            <!-- /repo-plan:aerospike-ce-kubernetes-operator -->
+
+            [... repeat only for repos checked in the issue ...]
+
+            ### 제안 구현 순서
+            1. [repo] — [이유]
+            2. [repo] — [의존성 설명]
+
+            <!-- repo-list: aerospike-py, aerospike-ce-kubernetes-operator -->
+
+            [IF DEFER, add:]
+
+            ### 인간 판단이 필요한 질문
+            1. [구체적 질문]
+            2. [구체적 질문]
+
+            [IF REJECT, add:]
+
+            ### 대안 제안
+            - [기각 사유를 해결할 수 있는 대안이 있다면 제시]
+
+            <!-- agent-plan-end -->
+            ```
+
+            6. **Add a label** based on verdict:
+               - REJECT: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-rejected"`
+               - DEFER: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-deferred"`
+               - POSITIVE REVIEW: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-positive"`
+
+            ## Constraints
+            - Do NOT create branches, pull requests, or modify files
+            - Do NOT approve or merge anything — you are providing **advisory review** only
+            - Human makes the final decision on ALL verdicts
+            - Your ONLY outputs are: one review comment + one label
+            - Use Korean for all review content, English for technical terms
+            - Only include `<!-- repo-plan:... -->` sections for repos that are checked in the issue
+            - The `<!-- repo-list: ... -->` line must list repos using their GitHub repository names (e.g., `aerospike-py`, `aerospike-ce-kubernetes-operator`, `aerospike-cluster-manager`, `aerospike-ce-ecosystem-plugins`)
+          claude_args: |
+            --max-turns 300
+            --model claude-opus-4-6
+            --dangerously-skip-permissions
+          settings: '{"git":{"includeCoAuthor":false},"env":{"CLAUDE_CODE_EFFORT":"high"}}'
+
+  # ─────────────────────────────────────────────────
+  # Cross-Repo Issue Planning
+  # ─────────────────────────────────────────────────
+  cross-repo-plan:
+    if: github.event.label.name == 'cross-repo'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code - Cross-Repo Planner
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
+          bot_id: '24240623'
+          bot_name: 'KimSoungRyoul'
+          prompt: |
+            You are a **cross-repo planning agent** for the Aerospike CE Ecosystem.
+
+            ## Ecosystem Context
+            - **aerospike-py** (`aerospike-ce-ecosystem/aerospike-py`): Rust/PyO3 Python client. Build: `make build`, Test: `make test-unit`, Lint: `make lint`, Type: `make typecheck`
+            - **ACKO** (`aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator`): Go/kubebuilder v4 K8s operator. Build: `go build ./...`, Test: `make test-unit`, Lint: `make lint`
+            - **Cluster Manager** (`aerospike-ce-ecosystem/aerospike-cluster-manager`): FastAPI backend + Next.js 16 frontend
+            - **Plugins** (`aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins`): Claude Code plugins
+
+            ## Merge Order Principle
+            aerospike-py (base) → ACKO (operator) → cluster-manager (UI) → plugins (tools)
+
+            ## Task
+            Analyze cross-repo issue #${{ github.event.issue.number }} and create per-repo implementation plans.
+
+            **Issue Title**: ${{ github.event.issue.title }}
+
+            ### Instructions
+
+            1. **Read the issue body** — parse:
+               - 설명 (Description)
+               - 관련 레포 checkboxes (checked = `[X]`)
+               - 우선순위 (Priority: P0-P3)
+               - 관련 이슈 링크
+
+            2. **Map checked repos** to GitHub repo names:
+               - "aerospike-py" → `aerospike-py`
+               - "aerospike-ce-kubernetes-operator (ACKO)" → `aerospike-ce-kubernetes-operator`
+               - "aerospike-cluster-manager" → `aerospike-cluster-manager`
+               - "aerospike-ce-ecosystem-plugins" → `aerospike-ce-ecosystem-plugins`
+
+            3. **For each selected repo**, use `gh api` to browse the codebase:
+               - `gh api repos/aerospike-ce-ecosystem/{repo}/contents/{path}` to understand structure
+               - Focus on files relevant to the issue
+
+            4. **Post a plan comment** using `gh issue comment ${{ github.event.issue.number }}`:
+
+            ```
+            <!-- agent-plan-start -->
+            ## Cross-Repo 구현 계획
+
+            ### 이슈 요약
+            [1-2 sentence summary]
+
+            ### 우선순위: [P0/P1/P2/P3]
+
+            ---
+
+            <!-- repo-plan:aerospike-py -->
+            ### aerospike-py
+            **범위**: [변경 설명]
+
+            | 파일 | 액션 | 설명 |
+            |------|------|------|
+            | `path/to/file` | Create/Modify | 설명 |
+
+            **구현 단계**:
+            1. [단계]
+            2. [단계]
+
+            **검증**: `make build && make test-unit && make lint`
+            <!-- /repo-plan:aerospike-py -->
+
+            [... repeat for each checked repo ...]
+
+            ---
+
+            ### 의존성 및 Merge 순서
+            1. [repo] — [이유]
+            2. [repo] — [의존성 설명]
+
+            ### 리스크 평가
+            - **Breaking changes**: Yes/No
+            - **테스트 커버리지**: [필요한 테스트]
+            - **의존성**: [새 의존성 여부]
+
+            <!-- repo-list: aerospike-py, aerospike-ce-kubernetes-operator -->
+            <!-- agent-plan-end -->
+            ```
+
+            5. **Add label**: `gh issue edit ${{ github.event.issue.number }} --add-label "plan-complete"`
+
+            ## Constraints
+            - Do NOT create branches, pull requests, or modify files in any repo
+            - Do NOT create issues in sub-repos (the dispatcher will do that)
+            - Your ONLY outputs are: one plan comment + one label
+            - If the issue is too vague, add `needs-clarification` label and ask specific questions instead
+            - Use Korean for descriptions, English for file paths and technical terms
+          claude_args: |
+            --max-turns 300
+            --model claude-opus-4-6
+            --dangerously-skip-permissions
+          settings: '{"git":{"includeCoAuthor":false},"env":{"CLAUDE_CODE_EFFORT":"high"}}'
+
+  # ─────────────────────────────────────────────────
+  # Epic Breakdown Planning
+  # ─────────────────────────────────────────────────
+  epic-plan:
+    if: github.event.label.name == 'epic'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code - Epic Planner
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
+          bot_id: '24240623'
+          bot_name: 'KimSoungRyoul'
+          prompt: |
+            You are an **epic planning agent** for the Aerospike CE Ecosystem.
+
+            ## Ecosystem Context
+            - **aerospike-py** (`aerospike-ce-ecosystem/aerospike-py`): Rust/PyO3 Python client
+            - **ACKO** (`aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator`): Go/kubebuilder v4 K8s operator
+            - **Cluster Manager** (`aerospike-ce-ecosystem/aerospike-cluster-manager`): FastAPI + Next.js 16
+            - **Plugins** (`aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins`): Claude Code plugins
+
+            ## Merge Order
+            aerospike-py → ACKO → cluster-manager → plugins
+
+            ## Task
+            Break down Epic #${{ github.event.issue.number }} into phased sub-tasks per repo.
+
+            **Issue Title**: ${{ github.event.issue.title }}
+
+            ### Instructions
+
+            1. **Read the issue body** — parse:
+               - Epic 설명 (description)
+               - 성공 기준 (success criteria)
+               - 하위 태스크 (existing subtask links)
+               - 관련 레포 checkboxes
+
+            2. **Map checked repos** to GitHub repo names (same mapping as cross-repo).
+
+            3. **For each selected repo**, use `gh api` to understand the codebase structure.
+
+            4. **Decompose into phases** following the merge order principle.
+
+            5. **Post a plan comment** using `gh issue comment ${{ github.event.issue.number }}`:
+
+            ```
+            <!-- agent-plan-start -->
+            ## Epic 분해 계획
+
+            ### Epic 요약
+            [Summary]
+
+            ### 성공 기준
+            - [ ] [criteria from issue]
+
+            ---
+
+            ### Phase 1: [Phase 이름]
+
+            <!-- repo-plan:aerospike-py -->
+            #### aerospike-py — Task: [제목]
+            **설명**: [standalone issue로 만들 수 있을 만큼 상세한 설명]
+            **의존성**: 없음 / [다른 태스크 참조]
+            **수락 기준**:
+            - [ ] [criteria]
+            **검증**: `make build && make test-unit`
+            <!-- /repo-plan:aerospike-py -->
+
+            <!-- repo-plan:aerospike-ce-kubernetes-operator -->
+            #### ACKO — Task: [제목]
+            **설명**: [설명]
+            **의존성**: aerospike-py Phase 1
+            **수락 기준**:
+            - [ ] [criteria]
+            **검증**: `go build ./... && make test-unit`
+            <!-- /repo-plan:aerospike-ce-kubernetes-operator -->
+
+            ### Phase 2: [Phase 이름]
+            [... more tasks ...]
+
+            ---
+
+            ### 의존성 그래프
+            ```
+            Phase 1: aerospike-py ──→ Phase 2: cluster-manager
+            Phase 1: ACKO ──→ Phase 2: cluster-manager
+            ```
+
+            ### 예상 작업량
+            | Phase | Tasks | 예상 규모 |
+            |-------|-------|----------|
+            | Phase 1 | aerospike-py, ACKO | Medium |
+            | Phase 2 | cluster-manager | Small |
+
+            <!-- repo-list: aerospike-py, aerospike-ce-kubernetes-operator, aerospike-cluster-manager -->
+            <!-- agent-plan-end -->
+            ```
+
+            6. **Add label**: `gh issue edit ${{ github.event.issue.number }} --add-label "plan-complete"`
+
+            ## Constraints
+            - Do NOT create branches, PRs, or modify files
+            - Do NOT create issues in sub-repos (the dispatcher handles this)
+            - Your ONLY outputs are: one plan comment + one label
+            - If the epic is too vague, add `needs-clarification` label and ask questions instead
+            - Each repo task description must be **self-contained** — sufficient to create a standalone issue
+            - Use Korean for descriptions, English for technical terms
+          claude_args: |
+            --max-turns 300
+            --model claude-opus-4-6
+            --dangerously-skip-permissions
+          settings: '{"git":{"includeCoAuthor":false},"env":{"CLAUDE_CODE_EFFORT":"high"}}'

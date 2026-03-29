@@ -31,6 +31,7 @@ body:
     id: repos
     attributes:
       label: 관련 레포
+      description: 이 ADR이 영향을 미치는 레포를 선택하세요. AI 리뷰어가 각 레포에 대한 영향 분석을 수행합니다.
       options:
         - label: aerospike-py
         - label: aerospike-ce-kubernetes-operator (ACKO)

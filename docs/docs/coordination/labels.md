@@ -53,6 +53,34 @@ project-hub 레포 전용 라벨입니다. 크로스-레포 이슈 관리와 프
 | `roadmap` | `#0075CA` | 로드맵 항목 |
 | `discussion` | `#D4C5F9` | 논의 필요 |
 
+## Hub Orchestration 라벨
+
+project-hub의 Issue Planner/Dispatcher 파이프라인에서 사용하는 라벨입니다.
+
+| Label | Color | Description |
+|-------|-------|-------------|
+| `start-implement` | `#0E8A16` | Dispatcher 트리거: 각 repo에 issue 자동 생성 |
+| `plan-complete` | `#1D76DB` | Hub planner가 계획 수립 완료 |
+| `dispatched` | `#BFD4F2` | sub-repo에 issue 생성 완료 |
+| `adr-rejected` | `#D93F0B` | ADR 기각 — 프로젝트 방향성 불일치 |
+| `adr-deferred` | `#FBCA04` | ADR 보류 — 인간 판단 필요 |
+| `adr-positive` | `#0E8A16` | ADR 긍정적 검토 — 인간 최종 확인 필요 |
+| `needs-clarification` | `#D93F0B` | 정보 부족, 추가 설명 필요 |
+
+### Hub 라벨 상태 흐름
+
+**ADR Proposal**:
+```
+adr (자동) → adr-rejected / adr-deferred / adr-positive
+  → [adr-positive일 때] start-implement → dispatched
+```
+
+**Cross-Repo Issue / Epic**:
+```
+cross-repo 또는 epic (자동) → plan-complete
+  → start-implement → dispatched
+```
+
 ## 라벨 적용 규칙
 
 1. **단일 레포 이슈**: 해당 레포에서 Agentic Workflow 라벨만 사용

@@ -1,0 +1,163 @@
+name: Hub Issue Dispatcher
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  dispatch:
+    if: github.event.label.name == 'start-implement'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ secrets.GH_AW_GITHUB_TOKEN }}
+      ORG: aerospike-ce-ecosystem
+      HUB_ISSUE: ${{ github.event.issue.number }}
+      HUB_REPO: ${{ github.repository }}
+    steps:
+      - name: Fetch plan comment and dispatch to repos
+        run: |
+          set -euo pipefail
+
+          echo "=== Step 1: Fetch issue labels ==="
+          ISSUE_LABELS=$(gh api "repos/${HUB_REPO}/issues/${HUB_ISSUE}" --jq '[.labels[].name] | join(",")')
+          echo "Labels: ${ISSUE_LABELS}"
+
+          # Determine issue prefix based on type
+          IS_ADR=false
+          ISSUE_PREFIX="[Hub]"
+          if echo "${ISSUE_LABELS}" | grep -q "adr"; then
+            IS_ADR=true
+            ISSUE_PREFIX="[ADR]"
+            # ADR requires positive review before dispatch
+            if ! echo "${ISSUE_LABELS}" | grep -q "adr-positive"; then
+              gh issue comment "${HUB_ISSUE}" --body "$(cat <<'ERRBODY'
+          ## Dispatch 실패
+
+          ADR Proposal은 `adr-positive` 라벨이 있어야 dispatch할 수 있습니다.
+          먼저 ADR 리뷰어의 **긍정적 검토**를 받은 후 `start-implement` 라벨을 추가해주세요.
+
+          현재 라벨: `'"${ISSUE_LABELS}"'`
+          ERRBODY
+          )"
+              exit 1
+            fi
+          fi
+
+          echo "=== Step 2: Fetch plan comment ==="
+          # Get the last comment containing plan markers
+          PLAN_COMMENT=$(gh api "repos/${HUB_REPO}/issues/${HUB_ISSUE}/comments" --paginate --jq '
+            [.[] | select(.body | contains("<!-- agent-plan-start -->"))] | last | .body // empty
+          ')
+
+          if [ -z "${PLAN_COMMENT}" ]; then
+            gh issue comment "${HUB_ISSUE}" --body "$(cat <<'ERRBODY'
+          ## Dispatch 실패
+
+          Plan 코멘트를 찾을 수 없습니다 (`<!-- agent-plan-start -->` 마커 없음).
+          먼저 적절한 라벨(`adr`, `cross-repo`, `epic`)을 추가하여 planner를 실행해주세요.
+          ERRBODY
+          )"
+            exit 1
+          fi
+
+          echo "=== Step 3: Extract repo list ==="
+          REPO_LIST=$(echo "${PLAN_COMMENT}" | grep -o '<!-- repo-list: [^>]*-->' | sed 's/<!-- repo-list: //;s/ -->//' | tr -d ' ')
+
+          if [ -z "${REPO_LIST}" ]; then
+            gh issue comment "${HUB_ISSUE}" --body "$(cat <<'ERRBODY'
+          ## Dispatch 실패
+
+          Plan 코멘트에서 repo 목록을 찾을 수 없습니다.
+          `<!-- repo-list: repo1, repo2 -->` 마커가 필요합니다.
+          ERRBODY
+          )"
+            exit 1
+          fi
+
+          echo "Repos to dispatch: ${REPO_LIST}"
+
+          echo "=== Step 4: Get hub issue title ==="
+          HUB_ISSUE_TITLE=$(gh api "repos/${HUB_REPO}/issues/${HUB_ISSUE}" --jq '.title')
+          echo "Hub issue title: ${HUB_ISSUE_TITLE}"
+
+          echo "=== Step 5: Create issues in target repos ==="
+          CREATED_ISSUES=""
+          FAILED_REPOS=""
+
+          IFS=',' read -ra REPOS <<< "${REPO_LIST}"
+          for REPO_KEY in "${REPOS[@]}"; do
+            REPO_KEY=$(echo "${REPO_KEY}" | xargs)  # trim whitespace
+
+            if [ -z "${REPO_KEY}" ]; then
+              continue
+            fi
+
+            echo "--- Processing: ${REPO_KEY} ---"
+
+            # Extract repo-specific plan section
+            REPO_PLAN=$(echo "${PLAN_COMMENT}" | sed -n "/<!-- repo-plan:${REPO_KEY} -->/,/<!-- \/repo-plan:${REPO_KEY} -->/p")
+
+            if [ -z "${REPO_PLAN}" ]; then
+              echo "Warning: No plan section for ${REPO_KEY}, skipping"
+              FAILED_REPOS="${FAILED_REPOS}\n- ${REPO_KEY}: plan 섹션 없음"
+              continue
+            fi
+
+            TARGET_REPO="${ORG}/${REPO_KEY}"
+
+            # Build issue body
+            ISSUE_BODY=$(cat <<ISSUEEOF
+          ## Hub에서 자동 생성된 이슈
+
+          **Source**: ${HUB_REPO}#${HUB_ISSUE}
+          **Hub Issue**: ${HUB_ISSUE_TITLE}
+
+          ---
+
+          ${REPO_PLAN}
+
+          ---
+
+          > 이 이슈는 project-hub dispatcher에 의해 자동 생성되었습니다.
+          > 전체 계획: https://github.com/${HUB_REPO}/issues/${HUB_ISSUE}
+          ISSUEEOF
+          )
+
+            # Create issue in target repo with agent label
+            NEW_ISSUE_URL=$(gh issue create \
+              --repo "${TARGET_REPO}" \
+              --title "${ISSUE_PREFIX} ${HUB_ISSUE_TITLE}" \
+              --body "${ISSUE_BODY}" \
+              --label "agent" 2>&1) || {
+              echo "Error creating issue in ${TARGET_REPO}: ${NEW_ISSUE_URL}"
+              FAILED_REPOS="${FAILED_REPOS}\n- ${REPO_KEY}: issue 생성 실패"
+              continue
+            }
+
+            echo "Created: ${NEW_ISSUE_URL}"
+            CREATED_ISSUES="${CREATED_ISSUES}\n- **${REPO_KEY}**: ${NEW_ISSUE_URL}"
+          done
+
+          echo "=== Step 6: Post summary ==="
+          SUMMARY=""
+          if [ -n "${CREATED_ISSUES}" ]; then
+            SUMMARY="## Dispatch 완료\n\n생성된 이슈:\n${CREATED_ISSUES}\n\n각 이슈에 \`agent\` 라벨이 부착되어 해당 repo의 Issue Planner → Agent Implement 파이프라인이 자동으로 시작됩니다."
+          fi
+
+          if [ -n "${FAILED_REPOS}" ]; then
+            SUMMARY="${SUMMARY}\n\n### 실패/스킵:\n${FAILED_REPOS}"
+          fi
+
+          if [ -z "${SUMMARY}" ]; then
+            SUMMARY="## Dispatch 실패\n\n대상 repo가 없거나 모든 repo에서 issue 생성에 실패했습니다."
+          fi
+
+          echo -e "${SUMMARY}" | gh issue comment "${HUB_ISSUE}" --body-file -
+
+          # Add dispatched label
+          gh issue edit "${HUB_ISSUE}" --add-label "dispatched"
+
+          echo "=== Done ==="
