@@ -16,8 +16,9 @@ jobs:
     if: github.event.label.name == 'adr'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       issues: write
+      pull-requests: write
       id-token: write
     steps:
       - name: Checkout repository
@@ -142,12 +143,96 @@ jobs:
                - DEFER: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-deferred"`
                - POSITIVE REVIEW: `gh issue edit ${{ github.event.issue.number }} --add-label "adr-positive"`
 
+            7. **[POSITIVE REVIEW only] Create ADR document and PR**
+
+               If your verdict is POSITIVE REVIEW, you MUST also create an ADR markdown document and submit it as a Pull Request:
+
+               a. **Determine the next ADR number**: List existing files in `docs/docs/architecture/adr/` and find the highest number. The existing files follow the pattern `YYYY-MM-DD-slug.md` with ADR numbers in the title (e.g., "ADR-0009"). Assign the next sequential number.
+
+               b. **Create a new branch**:
+                  ```bash
+                  git checkout -b adr/issue-${{ github.event.issue.number }}-<short-slug>
+                  ```
+
+               c. **Create the ADR file** at `docs/docs/architecture/adr/YYYY-MM-DD-<slug>.md` using today's date. The file MUST follow this exact structure:
+
+                  ```markdown
+                  ---
+                  title: "ADR-NNNN: <Title>"
+                  description: <1-2 sentence description in Korean>
+                  sidebar_position: <next number>
+                  scope: <ecosystem or single-repo>
+                  repos: [<affected repos>]
+                  tags: [adr, <relevant tags>]
+                  last_updated: YYYY-MM-DD
+                  ---
+
+                  # ADR-NNNN: <Title>
+
+                  ## 상태
+
+                  **Proposed**
+
+                  - 제안일: YYYY-MM-DD
+                  - 관련 이슈: aerospike-ce-ecosystem/project-hub#${{ github.event.issue.number }}
+
+                  ## 맥락 (Context)
+
+                  [Expand on the issue's context section with technical analysis]
+
+                  ## 결정 (Decision)
+
+                  > **[Clear statement of the decision from the recommendation]**
+
+                  [Detailed explanation of the chosen approach]
+
+                  ## 대안 (Alternatives Considered)
+
+                  [List all options from the issue with pros/cons analysis]
+
+                  ## 결과 (Consequences)
+
+                  ### 긍정적
+                  - [From issue + your analysis]
+
+                  ### 부정적
+                  - [From issue + your analysis]
+
+                  ## 관련 ADR
+
+                  - [Reference related existing ADRs you found during review]
+                  ```
+
+               d. **Commit and push**:
+                  ```bash
+                  git add docs/docs/architecture/adr/
+                  git commit -m "docs(adr): add ADR-NNNN <title> (proposed)"
+                  git push origin adr/issue-${{ github.event.issue.number }}-<short-slug>
+                  ```
+
+               e. **Create PR**:
+                  ```bash
+                  gh pr create \
+                    --title "docs(adr): ADR-NNNN <title>" \
+                    --body "## ADR 문서 초안
+
+                  Issue #${{ github.event.issue.number }} 의 ADR Proposal에 대한 긍정적 검토 결과, ADR 문서 초안을 자동 생성했습니다.
+
+                  - **상태**: Proposed (인간 리뷰 후 Accepted로 변경)
+                  - **관련 Issue**: #${{ github.event.issue.number }}
+
+                  ## 체크리스트
+                  - [ ] ADR 내용 검토 완료
+                  - [ ] 상태를 Accepted로 변경
+                  - [ ] \`npm run build\` 성공 확인" \
+                    --label "adr"
+                  ```
+
             ## Constraints
-            - Do NOT create branches, pull requests, or modify files
-            - Do NOT approve or merge anything — you are providing **advisory review** only
-            - Human makes the final decision on ALL verdicts
-            - Your ONLY outputs are: one review comment + one label
-            - Use Korean for all review content, English for technical terms
+            - For REJECT and DEFER verdicts: Do NOT create branches, pull requests, or modify files
+            - For POSITIVE REVIEW: You MUST create the ADR document and PR in addition to the review comment
+            - Human makes the final decision on ALL verdicts — ADR PR status is "Proposed" not "Accepted"
+            - Use Korean for all review content and ADR document, English for technical terms
             - Only include `<!-- repo-plan:... -->` sections for repos that are checked in the issue
             - The `<!-- repo-list: ... -->` line must list repos using their GitHub repository names (e.g., `aerospike-py`, `aerospike-ce-kubernetes-operator`, `aerospike-cluster-manager`, `aerospike-ce-ecosystem-plugins`)
           claude_args: |
