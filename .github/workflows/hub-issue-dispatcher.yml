@@ -1,4 +1,7 @@
 name: Hub Issue Dispatcher
+# start-implement 라벨 시 planner 코멘트를 파싱하여 각 core repo에 issue 자동 생성 (agent 라벨 부착)
+# ADR: adr-positive 라벨 필수, Cross-Repo/Epic: plan-complete 필수
+run-name: "Dispatch: ${{ github.event.issue.title }}"
 
 on:
   issues:

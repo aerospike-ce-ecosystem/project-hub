@@ -1,4 +1,8 @@
 name: Hub Issue Planner
+# ADR Proposal → AI 검토 (기각/보류/긍정) + ADR 문서 PR 생성
+# Cross-Repo Issue → 각 repo별 구현 계획 수립
+# Epic → Phase별 하위 태스크 분해
+run-name: "Plan: ${{ github.event.issue.title }}"
 
 on:
   issues:
