@@ -1,0 +1,82 @@
+name: ADR Status Override
+# 사람이 verdict 라벨(adr-rejected/adr-deferred/adr-positive)을 붙이면
+# 이미 머지된 ADR 문서의 상태를 업데이트
+run-name: "ADR Override: #${{ github.event.issue.number }} → ${{ github.event.label.name }}"
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  update-adr-status:
+    if: >-
+      github.event.label.name == 'adr-rejected' ||
+      github.event.label.name == 'adr-deferred' ||
+      github.event.label.name == 'adr-positive'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Update ADR document status
+        env:
+          LABEL: ${{ github.event.label.name }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+
+          # Find ADR file referencing this issue
+          ADR_FILE=$(grep -rl "project-hub#${ISSUE_NUM}$" docs/docs/architecture/adr/ || true)
+
+          if [ -z "${ADR_FILE}" ]; then
+            echo "::notice::No ADR file found for issue #${ISSUE_NUM} — skipping (PR may not be merged yet)"
+            exit 0
+          fi
+
+          echo "Found ADR file: ${ADR_FILE}"
+
+          # Determine new status based on label
+          case "${LABEL}" in
+            adr-rejected)
+              NEW_STATUS="Rejected"
+              REVIEW_RESULT="REJECT"
+              ;;
+            adr-deferred)
+              NEW_STATUS="Deferred"
+              REVIEW_RESULT="DEFER"
+              ;;
+            adr-positive)
+              NEW_STATUS="Proposed"
+              REVIEW_RESULT="POSITIVE REVIEW"
+              ;;
+          esac
+
+          # Update status line (handles any previous status)
+          sed -i "s/^\*\*Proposed\*\*$/**${NEW_STATUS}**/" "${ADR_FILE}"
+          sed -i "s/^\*\*Rejected\*\*$/**${NEW_STATUS}**/" "${ADR_FILE}"
+          sed -i "s/^\*\*Deferred\*\*$/**${NEW_STATUS}**/" "${ADR_FILE}"
+          sed -i "s/^\*\*Accepted\*\*$/**${NEW_STATUS}**/" "${ADR_FILE}"
+
+          # Update review result
+          sed -i "s/^- 검토 결과: .*$/- 검토 결과: ${REVIEW_RESULT}/" "${ADR_FILE}"
+
+          # Update last_updated in frontmatter
+          TODAY=$(date +%Y-%m-%d)
+          sed -i "s/^last_updated: .*$/last_updated: ${TODAY}/" "${ADR_FILE}"
+
+          # Check if there are actual changes
+          if git diff --quiet; then
+            echo "::notice::No changes needed — status already matches"
+            exit 0
+          fi
+
+          echo "=== Changes ==="
+          git diff
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "${ADR_FILE}"
+          git commit -m "docs(adr): update status to ${NEW_STATUS} (issue #${ISSUE_NUM})"
+          git push
