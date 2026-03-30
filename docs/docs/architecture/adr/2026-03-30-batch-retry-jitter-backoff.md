@@ -132,4 +132,4 @@ sleep = min(cap, random_between(base, previous_sleep * 3))
 
 - [AWS Architecture Blog: Exponential Backoff And Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
 - [aerospike-py batch retry 구현: `rust/src/client_ops.rs` (lines 265-409)](https://github.com/aerospike-ce-ecosystem/aerospike-py)
-- [Project Goal 1-5: batch_write retry 개선](../../../goals/project-goals)
+- [Project Goal 1-5: batch_write retry 개선](../../goals/project-goals)

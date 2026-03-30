@@ -124,7 +124,7 @@ Pause 시 Status 불일치 가능성을 문서에 명시하고, `kubectl annotat
 
 ## 관련 ADR
 
-- [ADR-0013: Reconciliation Circuit Breaker 도입](/architecture/adr/2026-03-01-reconciliation-circuit-breaker) — `CircuitBreakerOpen` condition 패턴의 선례. Pause condition과의 상호작용 정의 필요
-- [ADR-0012: Pod Readiness Gates 도입](/architecture/adr/2026-02-20-pod-readiness-gates) — 정확한 상태 반영 원칙의 선례
-- [ADR-0002: Kubebuilder v4 + controller-runtime 선택](/architecture/adr/2026-01-18-kubebuilder-v4) — controller-runtime의 `meta.SetStatusCondition` 유틸리티 활용 근거
-- [ADR-0011: CRD 이름 AerospikeCluster로 변경](/architecture/adr/2026-03-10-crd-rename-aerospikecluster) — CRD status subresource 구조 참조
+- [ADR-0013: Reconciliation Circuit Breaker 도입](/docs/architecture/adr/2026-03-01-reconciliation-circuit-breaker) — `CircuitBreakerOpen` condition 패턴의 선례. Pause condition과의 상호작용 정의 필요
+- [ADR-0012: Pod Readiness Gates 도입](/docs/architecture/adr/2026-02-20-pod-readiness-gates) — 정확한 상태 반영 원칙의 선례
+- [ADR-0002: Kubebuilder v4 + controller-runtime 선택](/docs/architecture/adr/2026-01-18-kubebuilder-v4) — controller-runtime의 `meta.SetStatusCondition` 유틸리티 활용 근거
+- [ADR-0011: CRD 이름 AerospikeCluster로 변경](/docs/architecture/adr/2026-03-10-crd-rename-aerospikecluster) — CRD status subresource 구조 참조
