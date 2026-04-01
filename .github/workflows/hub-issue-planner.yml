@@ -33,10 +33,10 @@ jobs:
       - name: Run Claude Code - ADR Reviewer
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
-          bot_id: '24240623'
-          bot_name: 'KimSoungRyoul'
+          bot_id: '${{ vars.CLAUDE_BOT_ID }}'
+          bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
           prompt: |
             You are an **architecture review agent** for the Aerospike CE Ecosystem.
             Your role is to review ADR (Architecture Decision Record) proposals and provide one of three verdicts.
@@ -254,10 +254,10 @@ jobs:
             - Only include `<!-- repo-plan:... -->` sections for repos that are checked in the issue
             - The `<!-- repo-list: ... -->` line must list repos using their GitHub repository names (e.g., `aerospike-py`, `aerospike-ce-kubernetes-operator`, `aerospike-cluster-manager`, `aerospike-ce-ecosystem-plugins`)
           claude_args: |
-            --max-turns 300
-            --model claude-opus-4-6
+            --max-turns ${{ vars.CLAUDE_MAX_TURNS }}
+            --model ${{ vars.CLAUDE_MODEL }}
             --dangerously-skip-permissions
-          settings: '{"git":{"includeCoAuthor":false},"env":{"CLAUDE_CODE_EFFORT":"high"}}'
+          settings: '${{ vars.CLAUDE_SETTINGS }}'
 
   # ─────────────────────────────────────────────────
   # Cross-Repo Issue Planning
@@ -278,10 +278,10 @@ jobs:
       - name: Run Claude Code - Cross-Repo Planner
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
-          bot_id: '24240623'
-          bot_name: 'KimSoungRyoul'
+          bot_id: '${{ vars.CLAUDE_BOT_ID }}'
+          bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
           prompt: |
             You are a **cross-repo planning agent** for the Aerospike CE Ecosystem.
 
@@ -371,10 +371,10 @@ jobs:
             - If the issue is too vague, add `needs-clarification` label and ask specific questions instead
             - Use Korean for descriptions, English for file paths and technical terms
           claude_args: |
-            --max-turns 300
-            --model claude-opus-4-6
+            --max-turns ${{ vars.CLAUDE_MAX_TURNS }}
+            --model ${{ vars.CLAUDE_MODEL }}
             --dangerously-skip-permissions
-          settings: '{"git":{"includeCoAuthor":false},"env":{"CLAUDE_CODE_EFFORT":"high"}}'
+          settings: '${{ vars.CLAUDE_SETTINGS }}'
 
   # ─────────────────────────────────────────────────
   # Epic Breakdown Planning
@@ -395,10 +395,10 @@ jobs:
       - name: Run Claude Code - Epic Planner
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
-          bot_id: '24240623'
-          bot_name: 'KimSoungRyoul'
+          bot_id: '${{ vars.CLAUDE_BOT_ID }}'
+          bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
           prompt: |
             You are an **epic planning agent** for the Aerospike CE Ecosystem.
 
@@ -495,7 +495,7 @@ jobs:
             - Each repo task description must be **self-contained** — sufficient to create a standalone issue
             - Use Korean for descriptions, English for technical terms
           claude_args: |
-            --max-turns 300
-            --model claude-opus-4-6
+            --max-turns ${{ vars.CLAUDE_MAX_TURNS }}
+            --model ${{ vars.CLAUDE_MODEL }}
             --dangerously-skip-permissions
-          settings: '{"git":{"includeCoAuthor":false},"env":{"CLAUDE_CODE_EFFORT":"high"}}'
+          settings: '${{ vars.CLAUDE_SETTINGS }}'
