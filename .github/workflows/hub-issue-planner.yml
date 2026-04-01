@@ -33,7 +33,7 @@ jobs:
       - name: Run Claude Code - ADR Reviewer
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
           bot_id: '${{ vars.CLAUDE_BOT_ID }}'
           bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
@@ -278,7 +278,7 @@ jobs:
       - name: Run Claude Code - Cross-Repo Planner
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
           bot_id: '${{ vars.CLAUDE_BOT_ID }}'
           bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
@@ -395,7 +395,7 @@ jobs:
       - name: Run Claude Code - Epic Planner
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
           bot_id: '${{ vars.CLAUDE_BOT_ID }}'
           bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
