@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: Cluster Manager Frontend 리소스 누수 방지 및 API 호출 최적화"
 description: Cluster Manager 프론트엔드에서 폴링 메모리 누수, AbortController 미사용, 상태 초기화 누락, 에러 정보 미노출 문제를 해결하는 표준 패턴 도입.
-sidebar_position: 20
+sidebar_position: 33
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, performance, frontend, cluster-manager, resource-management, optimization]

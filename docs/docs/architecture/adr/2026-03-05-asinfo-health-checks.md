@@ -1,6 +1,7 @@
 ---
 title: "ADR-0015: asinfo 기반 Health Check 도입"
 description: ACKO에서 TCP probe 대신 asinfo 명령어 기반 liveness/readiness check를 도입하여 정확한 Aerospike 노드 상태를 감지하도록 한 아키텍처 결정 기록.
+sidebar_position: 15
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, kubernetes, health-check, asinfo, liveness, readiness]

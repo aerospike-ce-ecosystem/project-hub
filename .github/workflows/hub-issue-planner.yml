@@ -499,3 +499,132 @@ jobs:
             --model ${{ vars.CLAUDE_MODEL }}
             --dangerously-skip-permissions
           settings: '${{ vars.CLAUDE_SETTINGS }}'
+
+  # ─────────────────────────────────────────────────
+  # Skill Impact Review (core repo 변경 → plugins skill 업데이트 검토)
+  # ─────────────────────────────────────────────────
+  skill-impact-plan:
+    if: github.event.label.name == 'skill-impact-review'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code - Skill Impact Analyzer
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GH_AW_GITHUB_TOKEN }}
+          bot_id: '${{ vars.CLAUDE_BOT_ID }}'
+          bot_name: '${{ vars.CLAUDE_BOT_NAME }}'
+          prompt: |
+            You are a **skill impact analysis agent** for the Aerospike CE Ecosystem.
+            Your role is to analyze core repo changes and determine what plugin skills need updating.
+
+            ## Ecosystem Context
+            - **aerospike-py** (`aerospike-ce-ecosystem/aerospike-py`): Rust/PyO3 Python client
+            - **ACKO** (`aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator`): Go/kubebuilder K8s operator
+            - **Cluster Manager** (`aerospike-ce-ecosystem/aerospike-cluster-manager`): FastAPI + Next.js
+            - **Plugins** (`aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins`): Claude Code plugin skills
+
+            ## Skill ↔ Source File Mapping
+            | Skill | Source Files |
+            |-------|-------------|
+            | aerospike-py-api | `__init__.pyi`, `errors.rs`, `lib.rs`, `list_operations.py`, `map_operations.py`, `exp.py`, `types.py` |
+            | aerospike-py-fastapi | `__init__.pyi`, `errors.rs`, `types.py` |
+            | acko-deploy | `aerospikecluster_types.go`, `aerospikecluster_webhook.go`, `types_*.go` |
+            | acko-operations | `aerospikecluster_types.go`, `reconciler_status.go`, `reconciler_restart.go` |
+            | acko-config-reference | `aerospikecluster_types.go`, `aerospikecluster_webhook.go` |
+            | acko-cluster-debugger (agent) | `reconciler_status.go` |
+
+            ## Task
+            Analyze skill impact from core repo change reported in issue #${{ github.event.issue.number }}.
+
+            **Issue Title**: ${{ github.event.issue.title }}
+
+            ### Instructions
+
+            1. **Parse the issue body** to extract:
+               - Source repo name
+               - Commit SHA
+               - Changed files list
+               - Pre-computed affected skills
+
+            2. **Fetch the actual diff** from the source repo:
+               ```
+               gh api repos/aerospike-ce-ecosystem/{source-repo}/commits/{sha} --jq '.files[].patch'
+               ```
+
+            3. **For each affected skill**, read the current skill content from the plugins repo:
+               ```
+               gh api repos/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/contents/skills/{skill-name}/SKILL.md
+               ```
+               Also check relevant files in the `reference/` subdirectory.
+
+            4. **Identify specific updates needed**:
+               - Changed API signatures → update code examples and API docs
+               - New/removed exceptions → update error handling examples
+               - Changed CRD fields → update YAML examples and field docs
+               - Changed phase names/events → update troubleshooting guides
+               - Changed default values → update parameter reference tables
+
+            5. **Post a plan comment** using `gh issue comment ${{ github.event.issue.number }}`:
+
+            ```
+            <!-- agent-plan-start -->
+            ## Skill Impact Analysis
+
+            ### Source 변경 요약
+            [1-2 sentence summary of the core repo change]
+
+            ### 영향 분석
+
+            <!-- repo-plan:aerospike-ce-ecosystem-plugins -->
+            #### aerospike-ce-ecosystem-plugins
+
+            **영향받는 skills:**
+
+            ##### 1. {skill-name}
+            - **파일**: `skills/{skill-name}/SKILL.md` (또는 reference 파일)
+            - **변경 필요**: [구체적 설명 — 어떤 코드 예제/API 시그니처/필드가 변경되어야 하는지]
+            - **현재 값**: `[skill에 기록된 현재 내용]`
+            - **새 값**: `[source repo에서 확인한 최신 내용]`
+
+            [... repeat for each affected skill ...]
+
+            **영향 없는 skills:** [해당사항 없으면 생략]
+            - {skill-name}: [영향 없는 이유]
+            <!-- /repo-plan:aerospike-ce-ecosystem-plugins -->
+
+            ### 구현 순서
+            1. [skill-name] — [이유]
+
+            <!-- repo-list: aerospike-ce-ecosystem-plugins -->
+            <!-- agent-plan-end -->
+            ```
+
+            6. If NO skill updates are needed (internal-only change):
+               - Post a comment: "분석 결과, 이 변경은 plugin skill에 영향을 주지 않습니다. [이유]"
+               - Close the issue: `gh issue close ${{ github.event.issue.number }}`
+               - Do NOT add `plan-complete` label
+
+            7. If updates ARE needed:
+               - Add `plan-complete` label: `gh issue edit ${{ github.event.issue.number }} --add-label "plan-complete"`
+
+            ## Constraints
+            - Do NOT create branches, PRs, or modify files in any repo
+            - Do NOT create issues in sub-repos (the dispatcher handles that)
+            - Your ONLY outputs are: one analysis comment + label (or close)
+            - Compare **actual content** — do not guess based on file names alone
+            - Use Korean for descriptions, English for technical terms
+          claude_args: |
+            --max-turns ${{ vars.CLAUDE_MAX_TURNS }}
+            --model ${{ vars.CLAUDE_MODEL }}
+            --dangerously-skip-permissions
+          settings: '${{ vars.CLAUDE_SETTINGS }}'

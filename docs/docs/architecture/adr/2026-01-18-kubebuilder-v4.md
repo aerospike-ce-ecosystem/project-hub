@@ -1,6 +1,7 @@
 ---
 title: "ADR-0002: Kubebuilder v4 + controller-runtime 선택"
 description: ACKO에서 Kubernetes Operator 프레임워크로 Kubebuilder v4와 controller-runtime을 선택한 아키텍처 결정 기록.
+sidebar_position: 2
 scope: single-repo
 repos: [acko]
 tags: [adr, kubebuilder, controller-runtime, kubernetes, operator, acko]

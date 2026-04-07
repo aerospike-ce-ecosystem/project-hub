@@ -1,6 +1,7 @@
 ---
 title: "ADR-0012: Pod Readiness Gates 도입"
 description: Aerospike 클러스터 메시 합류 및 마이그레이션 완료를 보장하기 위해 커스텀 Pod Readiness Gate(acko.io/aerospike-ready)를 도입한 아키텍처 결정 기록.
+sidebar_position: 12
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, kubernetes, readiness, rolling-update, zero-downtime]

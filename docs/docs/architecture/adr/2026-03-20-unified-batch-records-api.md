@@ -1,6 +1,7 @@
 ---
 title: "ADR-0009: Unified BatchRecords API"
 description: aerospike-py의 batch 연산 반환 타입을 BatchRecords NamedTuple로 통일하여 API 일관성과 per-record 에러 추적을 개선한 결정.
+sidebar_position: 9
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, batch, api-design, namedtuple, aerospike-py]

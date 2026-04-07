@@ -1,6 +1,7 @@
 ---
 title: "ADR-0003: Docker 대신 Podman 선택"
 description: 로컬 개발 환경의 컨테이너 런타임으로 Docker 대신 Podman을 선택한 아키텍처 결정 기록.
+sidebar_position: 3
 scope: ecosystem
 repos: [cluster-manager, acko]
 tags: [adr, podman, docker, container, rootless, oci]

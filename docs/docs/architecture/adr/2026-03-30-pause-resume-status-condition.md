@@ -1,7 +1,7 @@
 ---
 title: "ADR-0018: ACKO Pause/Resume 상태 전환 시 Status Condition 정합성 보장"
 description: ACKO operator의 Pause/Resume 상태 전환 시 Status Condition 불일치 문제를 해결하기 위해 원자적 업데이트와 Resume condition 리셋을 도입하는 아키텍처 결정.
-sidebar_position: 18
+sidebar_position: 23
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, kubernetes, pause, resume, status-condition, reconciliation]

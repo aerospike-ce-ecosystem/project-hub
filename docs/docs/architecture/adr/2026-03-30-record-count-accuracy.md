@@ -1,7 +1,7 @@
 ---
 title: "ADR-0019: Cluster Manager 레코드 카운트 정확도 개선"
 description: Cluster Manager에서 set object count 조회 실패 시 0 대신 None을 반환하여 "알 수 없음" 상태를 명시적으로 표현하고, 프론트엔드 pagination 정상 동작을 보장하는 아키텍처 결정.
-sidebar_position: 19
+sidebar_position: 26
 scope: single-repo
 repos: [cluster-manager, plugins]
 tags: [adr, cluster-manager, record-browser, pagination, api-schema, bug-fix]

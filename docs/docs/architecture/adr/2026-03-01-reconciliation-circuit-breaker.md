@@ -1,6 +1,7 @@
 ---
 title: "ADR-0013: Reconciliation Circuit Breaker 도입"
 description: 무한 reconciliation 루프 방지를 위해 5분 context timeout, 지수 백오프, 10회 연속 실패 시 circuit breaker를 도입한 아키텍처 결정 기록.
+sidebar_position: 13
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, kubernetes, reconciliation, circuit-breaker, reliability]

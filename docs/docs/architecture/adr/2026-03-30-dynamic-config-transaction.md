@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: ACKO Dynamic Config 부분 적용 방지를 위한 트랜잭션 보장 전략"
 description: ACKO의 동적 설정 변경 시 부분 적용을 방지하기 위해 Two-Phase Commit 패턴과 ConfigDegraded 상태 전환을 도입하는 전략
-sidebar_position: 29
+sidebar_position: 32
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, dynamic-config, reconciliation, transaction, stabilization]

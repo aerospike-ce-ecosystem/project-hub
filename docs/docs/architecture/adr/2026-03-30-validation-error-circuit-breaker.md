@@ -1,7 +1,7 @@
 ---
 title: "ADR-0019: ACKO ValidationError 기반 영구/일시적 오류 분류로 Circuit Breaker 불필요 재시도 방지"
 description: ACKO의 기존 ValidationError 타입을 활용하여 영구적 오류를 즉시 식별하고 Circuit Breaker를 즉시 활성화함으로써 불필요한 재시도를 방지하는 아키텍처 결정.
-sidebar_position: 19
+sidebar_position: 28
 scope: single-repo
 repos: [acko, plugins]
 tags: [adr, acko, kubernetes, reconciliation, circuit-breaker, validation, error-handling]

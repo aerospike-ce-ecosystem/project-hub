@@ -1,6 +1,7 @@
 ---
 title: "ADR-0011: CRD 이름 AerospikeCluster로 변경"
 description: AerospikeCECluster CRD를 AerospikeCluster로 리네이밍한 아키텍처 결정 기록. 중복된 CE 접두사 제거로 API 표면 단순화.
+sidebar_position: 11
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, crd, kubernetes, api, breaking-change]
