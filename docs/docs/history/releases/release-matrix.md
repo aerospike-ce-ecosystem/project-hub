@@ -13,7 +13,7 @@ tags:
   - compatibility
   - matrix
   - versioning
-last_updated: 2026-03-29
+last_updated: 2026-04-07
 ---
 
 # Release Compatibility Matrix
@@ -36,6 +36,11 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 | v0.0.2 | 2026-03-12 | Stable | Backpressure, batch_write retry, code dedup (~1200 lines) |
 | v0.0.3 | 2026-03-19 | Stable | BatchRecords API unification, consolidated improvements |
 | v0.0.4 | 2026-03-26 | Stable | Final Q1 release, stability hardening |
+| v0.0.5 | 2026-03-30 | Stable | Ping health check, batch result code fixes |
+| v0.1.0 | 2026-04-02 | Stable | Lifecycle state machine, Full Jitter exponential backoff |
+| v0.1.1~v0.1.5 | 2026-04-01~05 | Stable | Incremental stabilization, docs versioning |
+| v0.2.0 | 2026-04-07 | Stable | batch_write() API, aerospike crate v2.0.0, in_doubt field exposure |
+| v0.2.1 | 2026-04-07 | Stable | batch_write post-merge review fixes |
 
 ---
 
@@ -59,6 +64,11 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 | v0.1.5 | 2026-03-19 | Priority class support, data safety hardening |
 | v0.1.6 | 2026-03-22 | Bilingual docs (EN/KO), Helm chart refinements |
 | v0.1.7 | 2026-03-25 | Final Q1 release, agentic CI workflows |
+| v0.1.8 | 2026-03-28 | UTF-8 truncation fix, internal API cleanup, UI docs sync |
+| v0.2.0~v0.2.1 | 2026-04-02 | Two-phase commit for dynamic config, circuit breaker enhancement |
+| v0.3.0~v0.3.2 | 2026-04-02~03 | Webhook network port validation, pod readiness watch, hard-rack template fixes |
+| v0.4.0 | 2026-04-03 | Helm improvements (aerospikeImages, UI K8S_VERIFY_SSL, PostgreSQL PVC) |
+| v0.4.1 | 2026-04-05 | External access support (per-pod LB/NodePort), external endpoints in status |
 
 ---
 
@@ -66,10 +76,15 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 
 | Version | Date (approx) | Key Changes |
 |:---:|:---:|:---|
-| v0.1.0+ | 2026-03-08 | Initial release with ACKO operator integration |
+| v0.2.0~v0.2.3 | 2026-02-28~03-03 | Initial release, basic CRUD UI |
+| v0.3.0~v0.3.2 | 2026-03-04~10 | ACKO integration, K8s cluster management UI |
+| v0.3.4~v0.3.8 | 2026-03-10~30 | Template scheduling, monitoring, stability |
+| v0.4.0 | 2026-03-18 | Feature updates aligned with ACKO v0.1.4+ |
+| v0.5.0~v0.5.2 | 2026-04-02~03 | SSE real-time streaming, parallel health checks, per-connection locks |
+| v0.6.0~v0.6.1 | 2026-04-03 | K8s server-side pagination, security headers, virtual scrolling |
 
 :::note
-Cluster Manager follows continuous deployment aligned with ACKO integration milestones. Version tagging started with ACKO v0.1.x integration.
+Cluster Manager follows continuous deployment aligned with ACKO integration milestones. Version tagging started at v0.2.0.
 :::
 
 ---
@@ -98,7 +113,10 @@ Cluster Manager follows continuous deployment aligned with ACKO integration mile
 | v0.0.1.beta2 | v0.0.1~v0.0.9 | - | - | 8.1 | 2026-03-03 | ACKO 개발 시작, 초기 통합 |
 | v0.0.2 | v0.1.1~v0.1.3 | v0.1.0 | v1.0.0 | 8.1 | 2026-03-12 | 4개 프로젝트 첫 통합 릴리스 |
 | v0.0.3 | v0.1.4~v0.1.5 | v0.1.x | v1.0.0 | 8.1 | 2026-03-19 | API unification, stability |
-| v0.0.4 | v0.1.6~v0.1.7 | v0.1.x | v1.0.0 | 8.1 | 2026-03-26 | Q1 최종 릴리스 |
+| v0.0.4 | v0.1.6~v0.1.7 | v0.3.7~v0.4.0 | v1.0.0 | 8.1 | 2026-03-26 | Q1 최종 릴리스 |
+| v0.0.5 | v0.1.8 | v0.3.8 | v1.0.0 | 8.1 | 2026-03-30 | Q1→Q2 전환, stability + CI 개선 |
+| v0.1.0~v0.1.5 | v0.2.0~v0.3.2 | v0.5.0~v0.5.2 | v1.0.0 | 8.1 | 2026-04-02 | Q2 첫 통합: lifecycle state machine, two-phase config, SSE streaming |
+| v0.2.1 | v0.4.1 | v0.6.1 | v1.0.0 | 8.1 | 2026-04-07 | Q2 최신: batch_write API, external access, virtual scrolling |
 
 ---
 
