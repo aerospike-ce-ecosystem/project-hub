@@ -1,7 +1,7 @@
 ---
 title: "ADR-0019: Cluster Manager Aerospike Info 명령 배치 집계로 클러스터 Overview 응답 시간 단축"
 description: Cluster Manager에서 개별 Aerospike info 호출을 세미콜론 구분자 기반 배치 호출로 통합하고 TTL 캐시를 도입하여 클러스터 Overview 응답 시간을 75% 단축하는 아키텍처 결정.
-sidebar_position: 19
+sidebar_position: 25
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, performance, cluster-manager, caching, aerospike-info]

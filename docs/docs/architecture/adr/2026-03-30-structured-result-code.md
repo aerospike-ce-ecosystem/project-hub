@@ -1,7 +1,7 @@
 ---
 title: "ADR-0019: aerospike-py 구조화된 에러 코드(result_code) 체계 도입"
 description: aerospike-py의 모든 AerospikeError 하위 예외에 result_code 정수 속성을 추가하여, 문자열 매칭 대신 안정적인 정수 코드 기반 에러 분류를 지원하는 아키텍처 결정.
-sidebar_position: 19
+sidebar_position: 27
 scope: single-repo
 repos: [aerospike-py, cluster-manager, plugins]
 tags: [adr, error-handling, result-code, aerospike-py, observability]

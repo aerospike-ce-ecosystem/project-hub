@@ -1,7 +1,7 @@
 ---
 title: "ADR-0017: Cluster Manager Backend↔Frontend 타입 동기화 자동화 (Codegen)"
 description: Cluster Manager에서 FastAPI OpenAPI 스키마를 기반으로 TypeScript 타입을 자동 생성하여 Backend↔Frontend 타입 동기화를 자동화하는 아키텍처 결정.
-sidebar_position: 17
+sidebar_position: 19
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, codegen, openapi, typescript, cluster-manager, type-safety]

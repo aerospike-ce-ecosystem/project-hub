@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: ACKO Pod Readiness Watch 전환 및 Status Enrichment 병렬화"
 description: ACKO의 Pod readiness 확인을 10초 간격 polling에서 Kubernetes Informer watch로 전환하고, status enrichment의 Aerospike 노드 정보 수집을 병렬화하여 reconciliation 성능을 개선하는 아키텍처 결정.
-sidebar_position: 20
+sidebar_position: 35
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, kubernetes, performance, watch, informer, parallelization, reconciliation]

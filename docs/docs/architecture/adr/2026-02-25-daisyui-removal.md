@@ -1,6 +1,7 @@
 ---
 title: "ADR-0005: DaisyUI 제거 및 Pure Tailwind CSS 4 전환"
 description: Cluster Manager에서 DaisyUI를 제거하고 Tailwind CSS 4 + Radix UI로 전환한 아키텍처 결정 기록.
+sidebar_position: 5
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, tailwind, daisyui, radix-ui, frontend, cluster-manager]

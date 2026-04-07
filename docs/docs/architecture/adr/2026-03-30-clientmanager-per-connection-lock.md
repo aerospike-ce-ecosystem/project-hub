@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: Cluster Manager ClientManager 동시성 결함 분석 및 per-connection lock 도입"
 description: ClientManager의 double-checked locking race condition을 per-connection-id AsyncLock으로 해결하고, string 기반 에러 감지를 구조화된 result_code 기반으로 전환하는 아키텍처 결정.
-sidebar_position: 20
+sidebar_position: 31
 scope: single-repo
 repos: [cluster-manager, aerospike-py]
 tags: [adr, concurrency, connection-management, error-handling, cluster-manager]

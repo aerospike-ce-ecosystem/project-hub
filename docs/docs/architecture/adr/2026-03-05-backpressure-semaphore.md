@@ -1,6 +1,7 @@
 ---
 title: "ADR-0006: Semaphore 기반 Backpressure 메커니즘"
 description: aerospike-py에서 동시 요청 과부하 방지를 위한 Semaphore 기반 backpressure를 도입한 아키텍처 결정 기록.
+sidebar_position: 6
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, backpressure, semaphore, performance, aerospike-py]

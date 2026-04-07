@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: aerospike-py AsyncClient 동시 connect() 호출 시 연결 누수 방지 및 lifecycle 안전성 강화"
 description: aerospike-py AsyncClient에서 동시 connect() 호출 시 발생하는 연결 누수를 AtomicBool guard와 상태 머신으로 방지하고, close() 후 재연결 시 전체 상태를 초기화하는 아키텍처 결정.
-sidebar_position: 20
+sidebar_position: 29
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, aerospike-py, async, connection-safety, lifecycle, concurrency]

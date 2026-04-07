@@ -1,6 +1,7 @@
 ---
 title: "ADR-0010: 3-Layer Observability Stack"
 description: aerospike-py에 Logging(Rust tracing) + Metrics(Prometheus) + Tracing(OpenTelemetry) 3계층 관측성 스택을 도입한 아키텍처 결정.
+sidebar_position: 10
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, observability, logging, metrics, tracing, opentelemetry, prometheus]

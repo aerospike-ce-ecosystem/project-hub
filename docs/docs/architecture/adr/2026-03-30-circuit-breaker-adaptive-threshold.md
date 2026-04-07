@@ -1,7 +1,7 @@
 ---
 title: "ADR-0017: ACKO Reconciliation Circuit Breaker 임계값 자동 조정 메커니즘"
 description: ACKO의 reconciliation circuit breaker 고정 임계값을 에러 유형별 차등 임계값으로 개선하는 제안에 대한 검토 결과. 운영 데이터 부재로 보류.
-sidebar_position: 17
+sidebar_position: 18
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, kubernetes, reconciliation, circuit-breaker, adaptive-threshold]

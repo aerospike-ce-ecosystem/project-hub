@@ -1,7 +1,7 @@
 ---
 title: "ADR-0018: Cluster Manager Backend 비동기 연산의 Graceful Cancellation 전략"
 description: Cluster Manager Backend에서 클라이언트 연결 끊김 시 장시간 실행 중인 비동기 연산(scan, query, K8s API)을 Graceful하게 취소하는 전략 도입.
-sidebar_position: 18
+sidebar_position: 21
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, cluster-manager, fastapi, cancellation, async, resource-management]

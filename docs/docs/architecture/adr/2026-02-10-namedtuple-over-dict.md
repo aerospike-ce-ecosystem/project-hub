@@ -1,6 +1,7 @@
 ---
 title: "ADR-0004: Dict 대신 NamedTuple 반환 선택"
 description: aerospike-py에서 레코드 결과를 dict 대신 NamedTuple로 반환하도록 선택한 아키텍처 결정 기록.
+sidebar_position: 4
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, namedtuple, type-safety, aerospike-py, python]

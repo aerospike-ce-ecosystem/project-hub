@@ -1,6 +1,7 @@
 ---
 title: "ADR-0014: SQLite에서 PostgreSQL로 마이그레이션"
 description: cluster-manager의 데이터베이스를 SQLite에서 PostgreSQL(asyncpg)로 마이그레이션하고, SQLite를 개발용 fallback으로 유지한 아키텍처 결정 기록.
+sidebar_position: 14
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, cluster-manager, postgresql, sqlite, database, asyncpg, scalability]

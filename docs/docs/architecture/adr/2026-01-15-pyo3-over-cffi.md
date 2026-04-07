@@ -1,6 +1,7 @@
 ---
 title: "ADR-0001: CFFI 대신 Rust/PyO3 선택"
 description: aerospike-py에서 C FFI(CFFI) 대신 Rust/PyO3를 바인딩 기술로 선택한 아키텍처 결정 기록.
+sidebar_position: 1
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, pyo3, rust, cffi, aerospike-py, performance]

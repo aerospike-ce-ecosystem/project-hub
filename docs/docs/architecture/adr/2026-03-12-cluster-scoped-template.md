@@ -1,6 +1,7 @@
 ---
 title: "ADR-0007: Cluster-scoped AerospikeClusterTemplate"
 description: ACKO에서 AerospikeClusterTemplate을 namespace-scoped에서 cluster-scoped로 변경한 아키텍처 결정 기록.
+sidebar_position: 7
 scope: single-repo
 repos: [acko]
 tags: [adr, kubernetes, crd, template, acko]

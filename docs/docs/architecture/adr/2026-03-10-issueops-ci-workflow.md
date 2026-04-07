@@ -1,6 +1,7 @@
 ---
 title: "ADR-0008: IssueOps 기반 CI 워크플로우"
 description: GitHub Issues에서 claude-code-action을 통해 AI 에이전트가 자동으로 코드를 생성하고 PR을 제출하는 IssueOps 워크플로우 도입 결정.
+sidebar_position: 8
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager]
 tags: [adr, ci, issueops, claude-code-action, automation]

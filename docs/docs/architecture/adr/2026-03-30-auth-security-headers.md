@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화"
 description: Cluster Manager API에 JWT 기반 인증/인가(RBAC)를 도입하고 보안 헤더(HSTS, CORS 검증)를 강화하여 프로덕션 배포 가능성을 확보하는 아키텍처 결정.
-sidebar_position: 20
+sidebar_position: 30
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, security, authentication, authorization, rbac, jwt, cors, hsts]

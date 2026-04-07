@@ -1,7 +1,7 @@
 ---
 title: "ADR-0020: Cluster Manager Health Check 병렬화 및 연결 실패 컨텍스트 전파"
 description: Cluster Manager 초기 로딩 시 순차 health check를 병렬화하고, 연결 실패 시 에러 유형을 UI에 표시하여 디버깅 편의성을 개선
-sidebar_position: 20
+sidebar_position: 34
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, cluster-manager, health-check, performance, ux]
