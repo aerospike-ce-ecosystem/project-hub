@@ -26,6 +26,10 @@ docs/docs/
 └── goals/           # 프로젝트 목표
 ```
 
+## Latest ADR
+
+- [ADR-0040: Multi-Cluster Topology and Keycloak OIDC for ACKO + Cluster-Manager](docs/docs/architecture/adr/2026-05-05-multi-cluster-topology-and-keycloak-oidc.md)
+
 ## Development
 
 ```bash
