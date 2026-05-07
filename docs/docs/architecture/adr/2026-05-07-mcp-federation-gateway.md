@@ -55,7 +55,7 @@ Phase 0a (mcp/registry decorator Context contract) 와 Phase 0b (Workspace.owner
 
 `tools/list` aggregation 시 도구 이름을 `<backend>__<tool>` 으로 prefix한다. 예: `dev__connect`, `prod__list_namespaces`.
 
-- separator로 `__`(double underscore)를 채택한다. `/`는 일부 MCP client/agent가 도구 이름을 path-segment로 sanitize하면서 깨질 수 있고, FastMCP의 `add_tool(name=...)`은 별도 정규식 검사를 강제하지 않지만 보수적으로 영문/숫자/`_`만 허용하는 client(Claude Desktop, Inspector)와 호환된다.
+- separator로 `__`(double underscore)를 **잠정 채택**한다. `/`는 일부 MCP client/agent가 도구 이름을 path-segment로 sanitize하면서 깨질 수 있고, FastMCP의 `add_tool(name=...)`은 별도 정규식 검사를 강제하지 않지만 보수적으로 영문/숫자/`_`만 허용하는 client(Claude Desktop, Inspector)와 호환되리라 예상한다. 다만 실제 client 호환성은 prototype에서 검증해야 하며, 그 결과가 부정적이면 후속 작업 #2의 fallback(`:` 또는 `.`)으로 교체한다 — 이 단계에서는 단일 separator 정책을 유지한다는 것이 결정의 핵심이며, 기호 자체는 prototype-gated이다.
 - backend 이름은 gateway config의 `backends[].name` 키에서 가져오며, kebab-case가 아닌 snake-case를 강제한다. 이름이 하나뿐일 때 prefix 생략 옵션은 두지 않는다 (단일 backend일 때조차 prefix를 유지해야 backend를 늘렸을 때 client tool catalog가 바뀌지 않는다).
 - `tools/call`이 prefix 없는 이름을 받으면 4xx로 명시적으로 실패한다 — 자동 추정은 하지 않는다.
 
