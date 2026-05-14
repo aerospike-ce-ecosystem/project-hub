@@ -13,7 +13,7 @@ tags:
   - compatibility
   - matrix
   - versioning
-last_updated: 2026-04-07
+last_updated: 2026-05-15
 ---
 
 # Release Compatibility Matrix
@@ -78,8 +78,8 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 | v0.2.0~v0.2.3 | 2026-02-28~03-03 | Initial release, basic CRUD UI |
 | v0.3.0~v0.3.2 | 2026-03-04~10 | ACKO integration, K8s cluster management UI |
 | v0.3.4~v0.3.7 | 2026-03-10~16 | Template scheduling, monitoring |
-| v0.4.0 | 2026-03-18 | Feature updates aligned with ACKO v0.1.4+ |
 | v0.3.8 | 2026-03-30 | Stability fixes (backport) |
+| v0.4.0 | 2026-03-18 | Feature updates aligned with ACKO v0.1.4+ |
 | v0.5.0~v0.5.2 | 2026-04-02~03 | SSE real-time streaming, parallel health checks, per-connection locks |
 | v0.6.0~v0.6.1 | 2026-04-03 | K8s server-side pagination, security headers, virtual scrolling |
 

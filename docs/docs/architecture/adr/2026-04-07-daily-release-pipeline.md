@@ -12,7 +12,7 @@ last_updated: 2026-04-07
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#46
