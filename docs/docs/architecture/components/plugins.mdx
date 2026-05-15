@@ -5,14 +5,14 @@ sidebar_position: 4
 scope: single-repo
 repos: [plugins]
 tags: [architecture, component-diagram, plugins]
-last_updated: 2026-03-29
+last_updated: 2026-05-15
 ---
 
 import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Claude Code Plugins Component Diagram
 
-User → Agent → Plugin 계층의 최하단에서 ACKO 배포, aerospike-py API, 클러스터 디버깅을 가이드하는 5개 Skill과 1개 Agent입니다.
+User → Agent → Plugin 계층의 최하단에서 ACKO 배포·운영·디버깅, aerospike-py API, ackoctl CLI, 버그 리포팅을 가이드하는 9개 Skill입니다. (별도 Agent 없음 — 기존 `acko-cluster-debugger` Agent는 `acko-debugging` Skill로 강등됨)
 
 <FlowDiagram
   height={450}
@@ -20,10 +20,10 @@ User → Agent → Plugin 계층의 최하단에서 ACKO 배포, aerospike-py AP
   nodes={[
     { id: 'agent', label: 'Agent (Claude Code)', group: 'orange', position: { x: 280, y: 0 } },
 
-    { id: 'plugin-group', label: 'CE Ecosystem Plugin', icon: '🔌', group: 'orange', description: 'plugin.json v1.0.0', width: 720, height: 200, position: { x: 15, y: 90 } },
-    { id: 'acko-skills', label: 'ACKO Skills', group: 'green', items: ['acko-deploy', 'acko-operations', 'acko-config-reference'], parent: 'plugin-group', position: { x: 20, y: 55 } },
+    { id: 'plugin-group', label: 'CE Ecosystem Plugin', icon: '🔌', group: 'orange', description: 'plugin.json — 9 skills', width: 720, height: 200, position: { x: 15, y: 90 } },
+    { id: 'acko-skills', label: 'ACKO Skills', group: 'green', items: ['acko-deploy', 'acko-operations', 'acko-config-reference', 'acko-debugging', 'acko-e2e-test'], parent: 'plugin-group', position: { x: 20, y: 55 } },
     { id: 'py-skills', label: 'Python Skills', group: 'purple', items: ['aerospike-py-api', 'aerospike-py-fastapi'], parent: 'plugin-group', position: { x: 260, y: 55 } },
-    { id: 'debugger', label: 'acko-cluster-debugger', group: 'blue', items: ['Agent', '39 issue-fix mappings'], parent: 'plugin-group', position: { x: 480, y: 55 } },
+    { id: 'tooling-skills', label: 'Tooling Skills', group: 'blue', items: ['ackoctl', 'bug-reporter'], parent: 'plugin-group', position: { x: 480, y: 55 } },
 
     { id: 'acko', label: 'ACKO', group: 'grey', position: { x: 80, y: 360 } },
     { id: 'aspy', label: 'aerospike-py', group: 'grey', position: { x: 330, y: 360 } },
@@ -34,7 +34,7 @@ User → Agent → Plugin 계층의 최하단에서 ACKO 배포, aerospike-py AP
     { from: 'acko-skills', to: 'acko', label: 'guides', animated: true },
     { from: 'py-skills', to: 'aspy', label: 'guides', animated: true },
     { from: 'py-skills', to: 'cm', label: 'FastAPI 패턴', dashed: true },
-    { from: 'debugger', to: 'acko', label: 'debugs', animated: true },
+    { from: 'tooling-skills', to: 'cm', label: 'ackoctl → CM', animated: true },
   ]}
 />
 
@@ -43,6 +43,9 @@ User → Agent → Plugin 계층의 최하단에서 ACKO 배포, aerospike-py AP
 | **Skill** | `acko-deploy` | ACKO | K8s 배포 YAML 가이드, CE 제약 반영 |
 | **Skill** | `acko-operations` | ACKO | 스케일링, 업그레이드, 재시작, 트러블슈팅 |
 | **Skill** | `acko-config-reference` | ACKO | CE 8.1 설정 파라미터 레퍼런스 |
+| **Skill** | `acko-debugging` | ACKO | 6단계 진단 절차 기반 클러스터 디버깅 (기존 `acko-cluster-debugger` Agent를 Skill로 강등) |
+| **Skill** | `acko-e2e-test` | ACKO | Kind/로컬 클러스터 E2E 테스트 시나리오 가이드 |
 | **Skill** | `aerospike-py-api` | aerospike-py | CRUD, batch, CDT, Expression API 가이드 |
 | **Skill** | `aerospike-py-fastapi` | aerospike-py, CM | AsyncClient + FastAPI 통합 패턴 |
-| **Agent** | `acko-cluster-debugger` | ACKO | kubectl 기반 자율 디버깅, 39개 이슈-수정 매핑 |
+| **Skill** | `ackoctl` | ackoctl, CM | ackoctl CLI로 cluster-manager 제어 가이드 |
+| **Skill** | `bug-reporter` | ecosystem | 증상 기반으로 올바른 레포에 버그 이슈 라우팅 |
