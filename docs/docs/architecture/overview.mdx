@@ -24,10 +24,10 @@ Aerospike CE Ecosystem은 **User → Agent → Plugin** 계층 구조와 **Kuber
 
     { id: 'agent-group', label: 'Agent + Plugin', icon: '🤖', group: 'orange', width: 280, height: 460, position: { x: 0, y: 100 } },
     { id: 'agent', label: 'Agent (Claude Code, Codex ...)', group: 'orange', items: ['CLI', 'IDE', 'claude-code-action'], parent: 'agent-group', position: { x: 55, y: 45 } },
-    { id: 'plugin', label: 'CE Ecosystem Plugin', group: 'orange', items: ['acko-deploy', 'acko-operations', 'acko-config-reference', 'aerospike-py-api', 'aerospike-py-fastapi', 'acko-cluster-debugger'], parent: 'agent-group', position: { x: 55, y: 190 } },
+    { id: 'plugin', label: 'CE Ecosystem Plugin', group: 'orange', items: ['acko-deploy', 'acko-operations', 'acko-config-reference', 'acko-debugging', 'acko-e2e-test', 'ackoctl', 'aerospike-py-api', 'aerospike-py-fastapi', 'bug-reporter'], parent: 'agent-group', position: { x: 55, y: 190 } },
 
     { id: 'cm-group', label: 'Cluster Manager', icon: '🌐', group: 'blue', description: 'Web UI', width: 250, height: 310, position: { x: 320, y: 100 } },
-    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 16', 'React', 'Zustand'], parent: 'cm-group', position: { x: 40, y: 45 } },
+    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 14.2', 'React 18', 'Zustand'], parent: 'cm-group', position: { x: 40, y: 45 } },
     { id: 'be', label: 'Backend', group: 'green', items: ['FastAPI', 'Pydantic', 'aerospike-py 내장'], parent: 'cm-group', position: { x: 40, y: 175 } },
 
     { id: 'aspy-group', label: 'aerospike-py', icon: '🐍', group: 'purple', description: 'Rust/PyO3 Client', width: 400, height: 470, position: { x: 610, y: 100 } },

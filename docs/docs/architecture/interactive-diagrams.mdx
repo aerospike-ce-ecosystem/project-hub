@@ -33,10 +33,10 @@ User → Agent → Plugin 계층과 Kubernetes / Bare Metal 이중 배포 구조
 
     { id: 'agent-group', label: 'Agent + Plugin', icon: '🤖', group: 'orange', url: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins', width: 280, height: 460, position: { x: 0, y: 100 } },
     { id: 'agent', label: 'Agent (Claude Code, Codex ...)', group: 'orange', items: ['CLI', 'IDE', 'claude-code-action'], parent: 'agent-group', position: { x: 55, y: 45 } },
-    { id: 'plugin', label: 'CE Ecosystem Plugin', group: 'orange', items: ['acko-deploy', 'acko-operations', 'acko-config-reference', 'aerospike-py-api', 'aerospike-py-fastapi', 'acko-cluster-debugger'], parent: 'agent-group', position: { x: 55, y: 190 } },
+    { id: 'plugin', label: 'CE Ecosystem Plugin', group: 'orange', items: ['acko-deploy', 'acko-operations', 'acko-config-reference', 'acko-debugging', 'acko-e2e-test', 'ackoctl', 'aerospike-py-api', 'aerospike-py-fastapi', 'bug-reporter'], parent: 'agent-group', position: { x: 55, y: 190 } },
 
     { id: 'cm-group', label: 'Cluster Manager', icon: '🌐', group: 'blue', description: 'Web UI', url: 'https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager', width: 250, height: 310, position: { x: 320, y: 100 } },
-    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 16', 'React', 'Zustand'], parent: 'cm-group', position: { x: 40, y: 45 } },
+    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 14.2', 'React 18', 'Zustand'], parent: 'cm-group', position: { x: 40, y: 45 } },
     { id: 'be', label: 'Backend', group: 'green', items: ['FastAPI', 'Pydantic', 'aerospike-py 내장'], parent: 'cm-group', position: { x: 40, y: 175 } },
 
     { id: 'aspy-group', label: 'aerospike-py', icon: '🐍', group: 'purple', description: 'Rust/PyO3 Client', url: 'https://github.com/aerospike-ce-ecosystem/aerospike-py', width: 400, height: 470, position: { x: 610, y: 100 } },
@@ -154,7 +154,7 @@ K8s 환경 안에서 동작하는 웹 관리 UI입니다. Backend에 aerospike-p
   layout="manual"
   nodes={[
     { id: 'cm-group', label: 'Cluster Manager', icon: '🌐', group: 'blue', url: 'https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager', width: 620, height: 330, position: { x: 30, y: 0 } },
-    { id: 'fe', label: 'Frontend (Next.js 16)', group: 'blue', items: ['App Router', 'React Components', 'Zustand stores', 'Tailwind CSS 4'], parent: 'cm-group', position: { x: 25, y: 45 } },
+    { id: 'fe', label: 'Frontend (Next.js 14.2)', group: 'blue', items: ['App Router', 'React 18 components', 'Zustand stores', 'Tailwind CSS 3.4'], parent: 'cm-group', position: { x: 25, y: 45 } },
     { id: 'be', label: 'Backend (FastAPI)', group: 'green', items: ['REST API routers', 'Pydantic models', 'Services'], parent: 'cm-group', position: { x: 310, y: 45 } },
     { id: 'aspy', label: 'aerospike-py (내장)', icon: '🐍', group: 'purple', items: ['AsyncClient', 'query', 'batch', 'CDT'], parent: 'cm-group', position: { x: 80, y: 190 } },
     { id: 'k8s-client', label: 'K8s Client', icon: '☸️', group: 'orange', items: ['kubernetes-python', 'ACKO CRD 조회'], parent: 'cm-group', position: { x: 360, y: 190 } },
@@ -177,7 +177,7 @@ K8s 환경 안에서 동작하는 웹 관리 UI입니다. Backend에 aerospike-p
 
 ## 5. Plugin Structure
 
-Claude Code Plugin의 Skill/Agent 구성과 대상 프로젝트 관계입니다.
+Claude Code Plugin의 9개 Skill 구성과 대상 프로젝트 관계입니다.
 
 <FlowDiagram
   height={450}
@@ -185,10 +185,10 @@ Claude Code Plugin의 Skill/Agent 구성과 대상 프로젝트 관계입니다.
   nodes={[
     { id: 'manifest', label: 'Plugin Manifest', icon: '📋', group: 'orange', items: ['plugin.json', 'v1.0.0'], position: { x: 260, y: 0 } },
 
-    { id: 'plugin-group', label: 'CE Ecosystem Plugin', icon: '🔌', group: 'orange', url: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins', width: 740, height: 200, position: { x: 20, y: 100 } },
-    { id: 'acko-skills', label: 'ACKO Skills', group: 'green', items: ['acko-deploy', 'acko-operations', 'acko-config-reference'], parent: 'plugin-group', position: { x: 20, y: 55 } },
-    { id: 'py-skills', label: 'Python Skills', group: 'purple', items: ['aerospike-py-api', 'aerospike-py-fastapi'], parent: 'plugin-group', position: { x: 270, y: 55 } },
-    { id: 'debugger', label: 'acko-cluster-debugger', icon: '🔍', group: 'blue', items: ['Agent', 'kubectl diagnostics', '39 issue-fix mappings'], parent: 'plugin-group', position: { x: 500, y: 55 } },
+    { id: 'plugin-group', label: 'CE Ecosystem Plugin', icon: '🔌', group: 'orange', url: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins', width: 780, height: 220, position: { x: 20, y: 100 } },
+    { id: 'acko-skills', label: 'ACKO Skills', group: 'green', items: ['acko-deploy', 'acko-operations', 'acko-config-reference', 'acko-debugging', 'acko-e2e-test'], parent: 'plugin-group', position: { x: 20, y: 55 } },
+    { id: 'py-skills', label: 'Python Skills', group: 'purple', items: ['aerospike-py-api', 'aerospike-py-fastapi'], parent: 'plugin-group', position: { x: 300, y: 55 } },
+    { id: 'tooling-skills', label: 'Tooling Skills', group: 'blue', items: ['ackoctl', 'bug-reporter'], parent: 'plugin-group', position: { x: 520, y: 55 } },
 
     { id: 'target-acko', label: 'ACKO', group: 'grey', position: { x: 80, y: 370 } },
     { id: 'target-py', label: 'aerospike-py', group: 'grey', position: { x: 330, y: 370 } },
@@ -199,6 +199,7 @@ Claude Code Plugin의 Skill/Agent 구성과 대상 프로젝트 관계입니다.
     { from: 'acko-skills', to: 'target-acko', label: 'guides', animated: true },
     { from: 'py-skills', to: 'target-py', label: 'guides', animated: true },
     { from: 'py-skills', to: 'target-cm', label: 'FastAPI 패턴', dashed: true },
-    { from: 'debugger', to: 'target-acko', label: 'debugs', animated: true },
+    { from: 'tooling-skills', to: 'target-cm', label: 'ackoctl', animated: true },
+    { from: 'tooling-skills', to: 'target-acko', label: 'bug routing', dashed: true },
   ]}
 />
