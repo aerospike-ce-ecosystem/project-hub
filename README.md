@@ -13,6 +13,7 @@ Aerospike Community Edition 에코시스템의 중앙 프로젝트 관리 허브
 | [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py) | Rust(PyO3) 기반 고성능 Python 클라이언트 | [Docs](https://aerospike-ce-ecosystem.github.io/aerospike-py/) |
 | [ACKO](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator) | Aerospike CE Kubernetes Operator | [Docs](https://aerospike-ce-ecosystem.github.io/aerospike-ce-kubernetes-operator/) |
 | [Cluster Manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager) | 웹 기반 클러스터 관리 UI (FastAPI + Next.js) | — |
+| [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl) | Aerospike Cluster Manager CLI | — |
 | [Plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins) | Claude Code 플러그인 | — |
 
 ## Structure

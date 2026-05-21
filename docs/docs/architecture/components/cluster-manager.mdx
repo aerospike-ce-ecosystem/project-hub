@@ -21,7 +21,7 @@ K8s 환경 안에서 동작하는 웹 관리 UI. Backend에 aerospike-py를 내�
     { id: 'user', label: 'User (Browser)', group: 'grey', position: { x: 250, y: 0 } },
 
     { id: 'cm-group', label: 'Cluster Manager', icon: '🌐', group: 'blue', width: 580, height: 330, position: { x: 30, y: 90 } },
-    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 16', 'React Components', 'Zustand (11 stores)', 'Tailwind CSS 4'], parent: 'cm-group', position: { x: 25, y: 45 } },
+    { id: 'fe', label: 'Frontend', group: 'blue', items: ['Next.js 14.2', 'React 18 components', 'Zustand (11 stores)', 'Tailwind CSS 3.4'], parent: 'cm-group', position: { x: 25, y: 45 } },
     { id: 'be', label: 'Backend', group: 'green', items: ['FastAPI', 'Pydantic models', 'REST API routers'], parent: 'cm-group', position: { x: 290, y: 45 } },
     { id: 'aspy', label: 'aerospike-py (내장)', group: 'purple', items: ['AsyncClient', 'query', 'batch', 'CDT'], parent: 'cm-group', position: { x: 70, y: 190 } },
     { id: 'k8s', label: 'K8s Client', group: 'orange', items: ['ACKO CRD 조회', 'Pod 상태'], parent: 'cm-group', position: { x: 340, y: 190 } },
@@ -42,7 +42,7 @@ K8s 환경 안에서 동작하는 웹 관리 UI. Backend에 aerospike-py를 내�
 
 | 컴포넌트 | 역할 |
 |----------|------|
-| Frontend | Next.js 16 App Router, Zustand 상태관리, 클러스터 시각화 |
+| Frontend | Next.js 14.2 App Router, React 18, Tailwind CSS 3.4, Zustand 상태관리, 클러스터 시각화 |
 | Backend | FastAPI REST API, 비즈니스 로직 |
 | aerospike-py (내장) | Backend에서 Aerospike 데이터 접근 (AsyncClient) |
 | K8s Client | ACKO CRD 조회, Pod 상태 모니터링 |
