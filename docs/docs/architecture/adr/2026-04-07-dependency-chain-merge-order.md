@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: 에코시스템 의존성 체인 및 Merge 순서 원칙"
+title: "ADR-0050: 에코시스템 의존성 체인 및 Merge 순서 원칙"
 description: Cross-repo 변경 전파 시 의존성 체인 순서를 ADR로 공식화하고, 점진적 CI 검증을 도입하는 원칙을 정의합니다.
-sidebar_position: 39
+sidebar_position: 50
 scope: ecosystem
 repos: [aerospike-py, aerospike-ce-kubernetes-operator, aerospike-cluster-manager, aerospike-ce-ecosystem-plugins]
 tags: [adr, dependency-chain, merge-order, cross-repo, ci, release]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: 에코시스템 의존성 체인 및 Merge 순서 원칙
+# ADR-0050: 에코시스템 의존성 체인 및 Merge 순서 원칙
 
 ## 상태
 

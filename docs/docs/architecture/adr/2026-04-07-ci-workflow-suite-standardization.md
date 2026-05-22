@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: 에코시스템 통합 CI 워크플로우 스위트 표준화"
+title: "ADR-0043: 에코시스템 통합 CI 워크플로우 스위트 표준화"
 description: 에코시스템 5개 repo의 CI 워크플로우(agent-implement, pr-reviewer, issue-planner, daily-release, skill-impact-notify) 적용 범위를 표준화하고 공유 설정 관리 방식을 문서화하는 결정.
-sidebar_position: 39
+sidebar_position: 43
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, ci, workflow, standardization, automation, claude-code-action]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: 에코시스템 통합 CI 워크플로우 스위트 표준화
+# ADR-0043: 에코시스템 통합 CI 워크플로우 스위트 표준화
 
 ## 상태
 

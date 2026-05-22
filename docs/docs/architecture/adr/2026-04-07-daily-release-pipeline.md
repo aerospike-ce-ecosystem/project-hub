@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: 에코시스템 일일 자동 릴리스 파이프라인 — Conventional Commits 기반 SemVer 자동화"
+title: "ADR-0051: 에코시스템 일일 자동 릴리스 파이프라인 — Conventional Commits 기반 SemVer 자동화"
 description: 4개 core repo에서 매일 KST 09:00에 Conventional Commits 분석 기반 SemVer 자동 릴리스를 실행하는 daily-release 파이프라인의 아키텍처 결정 문서화.
-sidebar_position: 39
+sidebar_position: 51
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, release, ci-cd, conventional-commits, semver, automation]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: 에코시스템 일일 자동 릴리스 파이프라인 — Conventional Commits 기반 SemVer 자동화
+# ADR-0051: 에코시스템 일일 자동 릴리스 파이프라인 — Conventional Commits 기반 SemVer 자동화
 
 ## 상태
 

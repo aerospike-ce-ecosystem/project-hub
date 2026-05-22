@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파"
+title: "ADR-0046: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파"
 description: aerospike-py의 OTel Tracing을 완성하고 cluster-manager까지 trace context를 전파하는 아키텍처 결정. Metrics는 Prometheus 유지.
-sidebar_position: 39
+sidebar_position: 46
 scope: ecosystem
 repos: [aerospike-py, cluster-manager]
 tags: [adr, opentelemetry, tracing, observability, prometheus]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파
+# ADR-0046: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파
 
 ## 상태
 

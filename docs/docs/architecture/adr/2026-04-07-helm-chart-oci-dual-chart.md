@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: ACKO Helm Chart 버전 관리 체계 — OCI Registry 기반 CRD/Operator 이중 Chart 릴리스"
+title: "ADR-0045: ACKO Helm Chart 버전 관리 체계 — OCI Registry 기반 CRD/Operator 이중 Chart 릴리스"
 description: ACKO의 CRD와 Operator를 독립된 Helm chart로 분리하고 GHCR OCI Registry를 통해 배포하는 버전 관리 체계에 대한 아키텍처 결정.
-sidebar_position: 39
+sidebar_position: 45
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, helm, oci, crd, versioning, kubernetes]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: ACKO Helm Chart 버전 관리 체계 — OCI Registry 기반 CRD/Operator 이중 Chart 릴리스
+# ADR-0045: ACKO Helm Chart 버전 관리 체계 — OCI Registry 기반 CRD/Operator 이중 Chart 릴리스
 
 ## 상태
 

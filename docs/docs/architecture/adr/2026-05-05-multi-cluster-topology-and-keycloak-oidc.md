@@ -142,7 +142,7 @@ ACKO chart의 `multiCluster.enabled`, `multiCluster.clusters[]` values 키로 �
 - [ADR-0007: Cluster-scoped AerospikeClusterTemplate](./2026-03-12-cluster-scoped-template.md) — 각 operator cluster가 자기 namespace의 Aerospike 클러스터를 관리하는 cluster-scoped 패턴
 - [ADR-0030: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화](./2026-03-30-auth-security-headers.md) — 본 ADR이 채우는 외부 IdP 연동 자리의 출발점
 - [ADR-0038: ACKO 외부 네트워크 접근 — Per-pod LoadBalancer/NodePort 서비스](./2026-04-05-external-network-access.md) — 외부 클라이언트 접근의 네트워크 측면 (본 ADR은 인증 측면)
-- [ADR-0039: ACKO Helm Chart 버전 관리 체계](./2026-04-07-helm-chart-oci-dual-chart.md) — 본 ADR로 추가되는 multiCluster values는 동일 chart 릴리스 체계를 따른다
+- [ADR-0045: ACKO Helm Chart 버전 관리 체계](./2026-04-07-helm-chart-oci-dual-chart.md) — 본 ADR로 추가되는 multiCluster values는 동일 chart 릴리스 체계를 따른다
 
 ## 참고 자료
 
