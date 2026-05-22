@@ -48,7 +48,7 @@ ADR-0010과 ADR-0046으로 `aerospike-py`는 logging·metrics·tracing 3계층 o
 - **설명**: operator는 기존대로 `/metrics`만 노출하고 tracing을 추가하지 않는다.
 - **장점**: 변경 없음, 의존성 추가 없음.
 - **단점**: reconcile 동작을 trace로 관찰할 수 없고, UI→API→operator end-to-end trace가 단절된다.
-- **미선택 사유**: ADR-0010/0039가 세운 관찰성 목표와 정면으로 배치된다.
+- **미선택 사유**: ADR-0010/0046이 세운 관찰성 목표와 정면으로 배치된다.
 
 ### 대안 2: Helm chart가 OTel Collector를 함께 배포
 
