@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: Project Hub ADR Lifecycle 자동화 아키텍처 — 리뷰/디스패치/상태 관리 3단계 자동화"
+title: "ADR-0049: Project Hub ADR Lifecycle 자동화 아키텍처 — 리뷰/디스패치/상태 관리 3단계 자동화"
 description: Project-hub의 ADR lifecycle을 AI 리뷰, cross-repo 디스패치, 상태 관리 3단계로 자동화하는 워크플로우 아키텍처를 문서화하고 표준화하는 결정.
-sidebar_position: 39
+sidebar_position: 49
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, automation, issueops, ai-review, workflow, dispatch]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: Project Hub ADR Lifecycle 자동화 아키텍처 — 리뷰/디스패치/상태 관리 3단계 자동화
+# ADR-0049: Project Hub ADR Lifecycle 자동화 아키텍처 — 리뷰/디스패치/상태 관리 3단계 자동화
 
 ## 상태
 

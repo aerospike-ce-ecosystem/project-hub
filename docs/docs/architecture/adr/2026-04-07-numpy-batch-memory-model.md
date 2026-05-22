@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: NumPy Batch 연산 인터페이스 확정 — Owned Arrays 기본 메모리 모델"
+title: "ADR-0047: NumPy Batch 연산 인터페이스 확정 — Owned Arrays 기본 메모리 모델"
 description: aerospike-py의 NumPy batch 연산에서 Owned Arrays를 기본 메모리 모델로 확정하고, API surface를 안정화하는 아키텍처 결정.
-sidebar_position: 39
+sidebar_position: 47
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, numpy, batch, memory-model, pyo3, aerospike-py, zero-copy]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: NumPy Batch 연산 인터페이스 확정 — Owned Arrays 기본 메모리 모델
+# ADR-0047: NumPy Batch 연산 인터페이스 확정 — Owned Arrays 기본 메모리 모델
 
 ## 상태
 

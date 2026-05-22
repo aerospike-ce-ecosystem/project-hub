@@ -16,11 +16,11 @@ last_updated: 2026-05-21
 
 - 제안일: 2026-05-21
 - 승인일: 2026-05-21
-- 관련 ADR: [ADR-0010](./2026-02-05-observability-stack.md) (3-Layer Observability Stack), [ADR-0039](./2026-04-07-otel-tracing-integration.md) (OpenTelemetry Tracing 통합)
+- 관련 ADR: [ADR-0010](./2026-02-05-observability-stack.md) (3-Layer Observability Stack), [ADR-0046](./2026-04-07-otel-tracing-integration.md) (OpenTelemetry Tracing 통합)
 
 ## 맥락 (Context)
 
-ADR-0010과 ADR-0039로 `aerospike-py`는 logging·metrics·tracing 3계층 observability를 갖췄고, OpenTelemetry trace context가 PyO3 경계를 넘어 전파된다. 그러나 그 위 계층은 단절돼 있었다.
+ADR-0010과 ADR-0046으로 `aerospike-py`는 logging·metrics·tracing 3계층 observability를 갖췄고, OpenTelemetry trace context가 PyO3 경계를 넘어 전파된다. 그러나 그 위 계층은 단절돼 있었다.
 
 - **ACKO operator (Go)** — Prometheus `/metrics`(controller-runtime + `acko_*`)만 노출했고 tracing이나 OTLP export는 전혀 없었다. reconcile 루프의 동작은 trace로 관찰할 수 없었다.
 - **Cluster Manager API (FastAPI)** — OpenTelemetry SDK는 구성돼 있었지만 `aerospike_py.init_tracing()`을 호출하지 않았다. `[otel]` extra는 context 전파만 연결할 뿐 span *emission*은 시작하지 않으므로, aerospike-py의 `aerospike.<op>` span은 문서의 설명과 달리 실제로는 전량 누락됐다.
@@ -96,7 +96,7 @@ ADR-0010과 ADR-0039로 `aerospike-py`는 logging·metrics·tracing 3계층 obse
 ## 참고 자료
 
 - [ADR-0010: 3-Layer Observability Stack](./2026-02-05-observability-stack.md)
-- [ADR-0039: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파](./2026-04-07-otel-tracing-integration.md)
+- [ADR-0046: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파](./2026-04-07-otel-tracing-integration.md)
 - `acko` PR #279 — operator OpenTelemetry export (traces/metrics/logs)
 - `acko` PR #281 — Helm OTel 활성화 + NetworkPolicy egress
 - `cluster-manager` PR #378 — aerospike-py traces/logs 수집

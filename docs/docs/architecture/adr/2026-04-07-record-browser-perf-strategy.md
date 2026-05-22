@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: Record 브라우저 대용량 데이터 통합 성능 전략 — Virtual Scroll + Pagination + Timeout 계층"
+title: "ADR-0048: Record 브라우저 대용량 데이터 통합 성능 전략 — Virtual Scroll + Pagination + Timeout 계층"
 description: Record 브라우저에서 대용량 데이터셋을 안정적으로 탐색하기 위해 가상 스크롤, cursor 기반 pagination, 3계층 timeout을 통합하는 상위 아키텍처 결정.
-sidebar_position: 39
+sidebar_position: 48
 scope: single-repo
 repos: [cluster-manager]
 tags: [adr, performance, virtual-scroll, pagination, timeout, cluster-manager, record-browser]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: Record 브라우저 대용량 데이터 통합 성능 전략 — Virtual Scroll + Pagination + Timeout 계층
+# ADR-0048: Record 브라우저 대용량 데이터 통합 성능 전략 — Virtual Scroll + Pagination + Timeout 계층
 
 ## 상태
 

@@ -1,14 +1,14 @@
 ---
-title: "ADR-0039: ACKO E2E 테스트 확장 전략 — Kind 기반 운영 시나리오 테스트 프레임워크"
+title: "ADR-0044: ACKO E2E 테스트 확장 전략 — Kind 기반 운영 시나리오 테스트 프레임워크"
 description: ACKO의 E2E 테스트를 시나리오별 독립 테스트 스위트와 CI matrix 병렬 실행으로 확장하는 전략 결정.
-sidebar_position: 39
+sidebar_position: 44
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, e2e, testing, kind, kubernetes, ci]
 last_updated: 2026-04-07
 ---
 
-# ADR-0039: ACKO E2E 테스트 확장 전략 — Kind 기반 운영 시나리오 테스트 프레임워크
+# ADR-0044: ACKO E2E 테스트 확장 전략 — Kind 기반 운영 시나리오 테스트 프레임워크
 
 ## 상태
 

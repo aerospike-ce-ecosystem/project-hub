@@ -78,7 +78,7 @@ Phase F1은 bearer pass-through로 시작하고, F2에서 OIDC token exchange를
 
 - gateway는 inbound 요청의 `traceparent` / `tracestate` 헤더를 그대로 backend로 forward한다.
 - gateway 자신은 `mcp.gateway.forward` span을 생성해 incoming agent call ↔ backend ACM span을 연결한다.
-- ADR-0039 (OTel Tracing 통합)에서 정한 W3C trace context 표준을 그대로 따른다. gateway가 OTel SDK를 직접 import하지 않더라도 header pass-through만 보장하면 ADR-0039 trace는 절단되지 않는다.
+- ADR-0046 (OTel Tracing 통합)에서 정한 W3C trace context 표준을 그대로 따른다. gateway가 OTel SDK를 직접 import하지 않더라도 header pass-through만 보장하면 ADR-0046 trace는 절단되지 않는다.
 - Phase 0a (registry decorator Context contract)가 session/workspace 정보를 ctxvar에 stash하는 흐름은 backend 내부에서만 일어나며, gateway는 그에 영향을 주지 않는다. 단, gateway는 `Mcp-Session-Id` 와 `Authorization` 외의 application header를 임의로 strip하지 않는다.
 
 ### 6. mTLS: production 필수, cert-manager 발급 인증서
@@ -196,7 +196,7 @@ F1은 single-tenant에 가까운 운영(internal lab, demo)에 충분하다. F2�
 ## 관련 ADR
 
 - [ADR-0040: Multi-Cluster Topology and Keycloak OIDC for ACKO + Cluster-Manager](./2026-05-05-multi-cluster-topology-and-keycloak-oidc.md) — federation gateway는 ADR-0040의 multi-cluster topology를 LLM 에이전트 surface로 확장한다. Keycloak realm/audience 모델을 그대로 재사용한다.
-- [ADR-0039: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파](./2026-04-07-otel-tracing-integration.md) — gateway는 ADR-0039의 W3C trace context 전파 규칙을 깨지 않는 단순 forward 정책을 따른다.
+- [ADR-0046: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파](./2026-04-07-otel-tracing-integration.md) — gateway는 ADR-0046의 W3C trace context 전파 규칙을 깨지 않는 단순 forward 정책을 따른다.
 - [ADR-0030: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화](./2026-03-30-auth-security-headers.md) — gateway가 backend로 forward하는 토큰의 inbound 검증 모델은 ADR-0030의 native JWT verify 방식 그대로다.
 - [ADR-0008: IssueOps 기반 CI 워크플로우](./2026-03-10-issueops-ci-workflow.md) — gateway 자체 repo / 디렉터리에서도 동일한 IssueOps automation을 따른다.
 
