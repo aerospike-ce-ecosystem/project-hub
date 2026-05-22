@@ -86,4 +86,4 @@ Aerospike CE Ecosystem 각 프로젝트의 개발 방향과 제약 조건.
 
 4-1. **Skills 최신 반영** — 각 프로젝트의 API/기능 변경 사항을 Skills에 빠르게 반영할 것 (aerospike-py API 변경, ACKO CRD 변경 등)
 
-4-2. **디버깅 에이전트 정확도** — ACKO 클러스터 디버깅 에이전트(acko-cluster-debugger)가 실제 트러블슈팅에 유효하도록 정확도를 유지할 것
+4-2. **디버깅 Skill 정확도** — ACKO 클러스터 디버깅 Skill(acko-debugging)이 실제 트러블슈팅에 유효하도록 정확도를 유지할 것
