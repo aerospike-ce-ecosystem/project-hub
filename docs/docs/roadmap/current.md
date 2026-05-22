@@ -55,7 +55,7 @@ last_updated: 2026-03-29
 | 목표 | 설명 |
 |------|------|
 | Skills 최신 API 반영 | aerospike-py API 변경, ACKO CRD 변경 등 최신 사항 반영 |
-| acko-cluster-debugger 정확도 개선 | 실제 트러블슈팅 시나리오에서의 디버깅 정확도 향상 |
+| acko-debugging 정확도 개선 | 실제 트러블슈팅 시나리오에서의 디버깅 정확도 향상 |
 
 ---
 

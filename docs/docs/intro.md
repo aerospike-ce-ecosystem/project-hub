@@ -29,7 +29,7 @@ Aerospike CE Ecosystem Hub는 5개의 핵심 레포지토리를 중앙에서 관
 | [ACKO](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator) | Aerospike CE Kubernetes Operator | Go 기반 Kubernetes Operator로 Aerospike 클러스터 자동 배포/관리 |
 | [cluster-manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager) | Aerospike Cluster Manager | Python/TypeScript 기반 웹 UI로 클러스터 모니터링 및 관리 |
 | [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl) | Aerospike Cluster Manager CLI | Go + cobra 기반 CLI로 cluster-manager 제어 (connection/cluster/k8s/record/set/query/index) |
-| [plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins) | Claude Code Plugins | 생태계 전용 Claude Code 플러그인 (skills, hooks, commands) |
+| [plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins) | Claude Code Plugins | 생태계 전용 Claude Code 플러그인 (9개 Skill) |
 
 ## 문서 구성
 
