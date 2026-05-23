@@ -13,7 +13,7 @@ tags:
   - q2-2026
   - goals
   - planning
-last_updated: 2026-03-29
+last_updated: 2026-05-23
 ---
 
 # 2026-Q2 목표

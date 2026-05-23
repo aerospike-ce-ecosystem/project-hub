@@ -13,7 +13,7 @@ tags:
   - constraints
   - principles
   - development-guidelines
-last_updated: 2026-03-29
+last_updated: 2026-05-23
 ---
 
 # Project Goals
