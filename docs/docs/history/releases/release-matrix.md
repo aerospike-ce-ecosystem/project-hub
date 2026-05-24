@@ -7,18 +7,33 @@ repos:
   - aerospike-py
   - acko
   - cluster-manager
+  - ackoctl
   - plugins
 tags:
   - releases
   - compatibility
   - matrix
   - versioning
-last_updated: 2026-05-15
+last_updated: 2026-05-24
 ---
 
 # Release Compatibility Matrix
 
 Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입니다. 동일 행에 있는 버전들은 함께 테스트되었으며 호환성이 검증되었습니다.
+
+---
+
+## Current Latest Tags
+
+2026-05-24 기준 각 core repo의 최신 태그입니다. 이 표는 release freshness 추적용이며, 호환성 보장은 아래 Cross-Project Compatibility Matrix의 행 단위 기준을 따릅니다.
+
+| Project | Latest tag | Tag date | Notes |
+|:---|:---:|:---:|:---|
+| aerospike-py | v0.10.11 | 2026-05-23 | list/map `BY_VALUE` op validation fix |
+| ACKO | v1.7.3 | 2026-05-23 | PodSpec container name + ACL role validation |
+| Cluster Manager | v0.29.2 | 2026-05-23 | bin-name validation coverage fixes |
+| ackoctl | v0.2.0 | 2026-05-15 | release notes for the v0.2.x CLI line |
+| Plugins | v1.5.1 | 2026-05-23 | ackoctl verb/flag and skill metadata fixes |
 
 ---
 
@@ -40,6 +55,7 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 | v0.1.0~v0.1.5 | 2026-04-02~05 | Stable | Lifecycle state machine, Full Jitter backoff, incremental stabilization |
 | v0.2.0 | 2026-04-07 | Stable | batch_write() API, aerospike crate v2.0.0, in_doubt field exposure |
 | v0.2.1 | 2026-04-07 | Stable | batch_write post-merge review fixes |
+| v0.10.0~v0.10.11 | 2026-05-23 | Stable | LazyBatchRecords/to_numpy performance line, list/map `BY_VALUE` validation hardening |
 
 ---
 
@@ -68,6 +84,7 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 | v0.3.0~v0.3.2 | 2026-04-02~03 | Webhook network port validation, pod readiness watch, hard-rack template fixes |
 | v0.4.0 | 2026-04-03 | Helm improvements (aerospikeImages, UI K8S_VERIFY_SSL, PostgreSQL PVC) |
 | v0.4.1 | 2026-04-05 | External access support (per-pod LB/NodePort), external endpoints in status |
+| v1.7.0~v1.7.3 | 2026-05-23 | OTel export line stabilization, webhook validation for PodSpec container names and ACL roles |
 
 ---
 
@@ -82,10 +99,20 @@ Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입�
 | v0.4.0 | 2026-03-18 | Feature updates aligned with ACKO v0.1.4+ |
 | v0.5.0~v0.5.2 | 2026-04-02~03 | SSE real-time streaming, parallel health checks, per-connection locks |
 | v0.6.0~v0.6.1 | 2026-04-03 | K8s server-side pagination, security headers, virtual scrolling |
+| v0.29.0~v0.29.2 | 2026-05-23 | K8s and bin-name validation coverage fixes |
 
 :::note
 Cluster Manager follows continuous deployment aligned with ACKO integration milestones. Version tagging started at v0.2.0.
 :::
+
+---
+
+## ackoctl Releases
+
+| Version | Date (approx) | Key Changes |
+|:---:|:---:|:---|
+| v0.1.0~v0.1.4 | 2026-05-13~14 | Initial CLI line for Cluster Manager contexts and resource commands |
+| v0.2.0 | 2026-05-15 | v0.2.x release notes and command surface stabilization |
 
 ---
 
@@ -94,6 +121,7 @@ Cluster Manager follows continuous deployment aligned with ACKO integration mile
 | Version | Date (approx) | Key Changes |
 |:---:|:---:|:---|
 | v1.0.0 | 2026-03-12 | Initial release: 5 skills, 1 agent, 8 deployment examples, 13 reference docs |
+| v1.5.0~v1.5.1 | 2026-05-23 | 9-skill plugin line, ackoctl command corrections, skill metadata hardening |
 
 ---
 
@@ -101,23 +129,24 @@ Cluster Manager follows continuous deployment aligned with ACKO integration mile
 
 동일 행의 버전 조합은 통합 테스트가 완료된 호환 버전입니다.
 
-| aerospike-py | ACKO | Cluster Manager | Plugins | Aerospike CE | Period | Notes |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---|
-| v0.0.1.dev2 | - | - | - | 8.1 | 2026-02-05 | aerospike-py 단독 개발 시작 |
-| v0.0.1.alpha | - | - | - | 8.1 | 2026-02-10 | CDT, expression filters 추가 |
-| v0.0.1.alpha3 | - | - | - | 8.1 | 2026-02-12 | Async client 도입 |
-| v0.0.1.alpha4 | - | - | - | 8.1 | 2026-02-14 | Observability stack 추가 |
-| v0.0.1.alpha6 | - | - | - | 8.1 | 2026-02-17 | Type system, NumPy 통합 |
-| v0.0.1.beta1 | - | - | - | 8.1 | 2026-02-21 | Performance optimization |
-| v0.0.1.beta2 | - | - | - | 8.1 | 2026-02-27 | Quality hardening, i18n |
-| v0.0.1.beta2 | v0.0.1~v0.0.9 | - | - | 8.1 | 2026-03-03 | ACKO 개발 시작, 초기 통합 |
-| v0.0.2 | v0.1.1~v0.1.3 | v0.2.3~v0.3.0 | v1.0.0 | 8.1 | 2026-03-12 | 4개 프로젝트 첫 통합 릴리스 |
-| v0.0.3 | v0.1.4~v0.1.5 | v0.3.1~v0.3.2 | v1.0.0 | 8.1 | 2026-03-19 | API unification, stability |
-| v0.0.4 | v0.1.6~v0.1.7 | v0.3.7~v0.4.0 | v1.0.0 | 8.1 | 2026-03-26 | Q1 최종 릴리스 |
-| v0.0.5 | v0.1.8 | v0.3.8 | v1.0.0 | 8.1 | 2026-03-30 | Q1→Q2 전환, stability + CI 개선 |
-| v0.1.0~v0.1.5 | v0.2.0~v0.3.2 | v0.5.0~v0.5.2 | v1.0.0 | 8.1 | 2026-04-02 | Q2 첫 통합: lifecycle state machine, two-phase config, SSE streaming |
-| v0.1.5 | v0.4.0 | v0.6.0~v0.6.1 | v1.0.0 | 8.1 | 2026-04-03 | Helm improvements, K8s pagination, security headers |
-| v0.2.0~v0.2.1 | v0.4.1 | v0.6.1 | v1.0.0 | 8.1 | 2026-04-07 | Q2 최신: batch_write API, external access, virtual scrolling |
+| aerospike-py | ACKO | Cluster Manager | ackoctl | Plugins | Aerospike CE | Period | Notes |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---|
+| v0.0.1.dev2 | - | - | - | - | 8.1 | 2026-02-05 | aerospike-py 단독 개발 시작 |
+| v0.0.1.alpha | - | - | - | - | 8.1 | 2026-02-10 | CDT, expression filters 추가 |
+| v0.0.1.alpha3 | - | - | - | - | 8.1 | 2026-02-12 | Async client 도입 |
+| v0.0.1.alpha4 | - | - | - | - | 8.1 | 2026-02-14 | Observability stack 추가 |
+| v0.0.1.alpha6 | - | - | - | - | 8.1 | 2026-02-17 | Type system, NumPy 통합 |
+| v0.0.1.beta1 | - | - | - | - | 8.1 | 2026-02-21 | Performance optimization |
+| v0.0.1.beta2 | - | - | - | - | 8.1 | 2026-02-27 | Quality hardening, i18n |
+| v0.0.1.beta2 | v0.0.1~v0.0.9 | - | - | - | 8.1 | 2026-03-03 | ACKO 개발 시작, 초기 통합 |
+| v0.0.2 | v0.1.1~v0.1.3 | v0.2.3~v0.3.0 | - | v1.0.0 | 8.1 | 2026-03-12 | 4개 프로젝트 첫 통합 릴리스 |
+| v0.0.3 | v0.1.4~v0.1.5 | v0.3.1~v0.3.2 | - | v1.0.0 | 8.1 | 2026-03-19 | API unification, stability |
+| v0.0.4 | v0.1.6~v0.1.7 | v0.3.7~v0.4.0 | - | v1.0.0 | 8.1 | 2026-03-26 | Q1 최종 릴리스 |
+| v0.0.5 | v0.1.8 | v0.3.8 | - | v1.0.0 | 8.1 | 2026-03-30 | Q1→Q2 전환, stability + CI 개선 |
+| v0.1.0~v0.1.5 | v0.2.0~v0.3.2 | v0.5.0~v0.5.2 | - | v1.0.0 | 8.1 | 2026-04-02 | Q2 첫 통합: lifecycle state machine, two-phase config, SSE streaming |
+| v0.1.5 | v0.4.0 | v0.6.0~v0.6.1 | - | v1.0.0 | 8.1 | 2026-04-03 | Helm improvements, K8s pagination, security headers |
+| v0.2.0~v0.2.1 | v0.4.1 | v0.6.1 | - | v1.0.0 | 8.1 | 2026-04-07 | batch_write API, external access, virtual scrolling |
+| v0.10.11 | v1.7.3 | v0.29.2 | v0.2.0 | v1.5.1 | 8.1 | 2026-05-23 | 최신 추적 릴리스: LazyBatchRecords line, webhook validation fixes, ackoctl integration, 9-skill plugin line |
 
 ---
 
@@ -126,6 +155,7 @@ Cluster Manager follows continuous deployment aligned with ACKO integration mile
 - **aerospike-py**: SemVer + pre-release (`dev`, `alpha`, `beta`, `rc`)
 - **ACKO**: SemVer (v0.0.x = pre-stable, v0.1.x = feature-complete)
 - **cluster-manager**: SemVer (ACKO 통합 기준)
+- **ackoctl**: SemVer (cluster-manager REST API와 함께 진화)
 - **plugins**: SemVer
 - **Aerospike CE**: Aerospike Community Edition 서버 버전
 
