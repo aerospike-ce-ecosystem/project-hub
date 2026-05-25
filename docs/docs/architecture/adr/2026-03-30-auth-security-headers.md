@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화"
+title: "ADR-0030: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화"
 description: Cluster Manager API에 JWT 기반 인증/인가(RBAC)를 도입하고 보안 헤더(HSTS, CORS 검증)를 강화하여 프로덕션 배포 가능성을 확보하는 아키텍처 결정.
 sidebar_position: 30
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, security, authentication, authorization, rbac, jwt, cors, hsts]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화
+# ADR-0030: Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화
 
 ## 상태
 
@@ -97,5 +97,5 @@ ADR-0014 (PostgreSQL 마이그레이션)에서 이미 프로덕션 환경을 고
 
 - [ADR-0014: SQLite → PostgreSQL Migration](/docs/architecture/adr/2026-02-10-postgresql-migration) — 프로덕션 인프라 기반 마련. 감사 로그 저장소로 PostgreSQL 활용 가능
 - [ADR-0016: SSE 기반 실시간 이벤트 스트리밍](/docs/architecture/adr/2026-03-29-sse-event-streaming) — SSE 엔드포인트에도 인증 적용 필요
-- [ADR-0017: Codegen 타입 동기화](/docs/architecture/adr/2026-03-30-codegen-type-sync) — 인증 관련 API 응답 타입(401, 403)도 codegen 범위에 포함 필요
-- [ADR-0018: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — 인증 미들웨어가 요청 취소 흐름에 영향을 주지 않도록 설계 필요
+- [ADR-0019: Codegen 타입 동기화](/docs/architecture/adr/2026-03-30-codegen-type-sync) — 인증 관련 API 응답 타입(401, 403)도 codegen 범위에 포함 필요
+- [ADR-0021: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — 인증 미들웨어가 요청 취소 흐름에 영향을 주지 않도록 설계 필요

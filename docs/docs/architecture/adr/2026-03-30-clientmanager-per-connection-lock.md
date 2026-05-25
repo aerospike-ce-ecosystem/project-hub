@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: Cluster Manager ClientManager 동시성 결함 분석 및 per-connection lock 도입"
+title: "ADR-0031: Cluster Manager ClientManager 동시성 결함 분석 및 per-connection lock 도입"
 description: ClientManager의 double-checked locking race condition을 per-connection-id AsyncLock으로 해결하고, string 기반 에러 감지를 구조화된 result_code 기반으로 전환하는 아키텍처 결정.
 sidebar_position: 31
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, concurrency, connection-management, error-handling, cluster-manager]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: Cluster Manager ClientManager 동시성 결함 분석 및 per-connection lock 도입
+# ADR-0031: Cluster Manager ClientManager 동시성 결함 분석 및 per-connection lock 도입
 
 ## 상태
 
@@ -47,11 +47,11 @@ async def get_client(self, conn_id: str) -> AsyncClient:
 
 ### 2. String 기반 에러 감지 취약점
 
-`main.py:169`에서 `if "FailForbidden" in msg` 패턴으로 TTL 관련 에러를 감지합니다. aerospike-py의 메시지 포맷 변경 시 silent failure가 발생할 수 있으며, 이는 ADR-0019에서 지적된 anti-pattern과 동일합니다.
+`main.py:169`에서 `if "FailForbidden" in msg` 패턴으로 TTL 관련 에러를 감지합니다. aerospike-py의 메시지 포맷 변경 시 silent failure가 발생할 수 있으며, 이는 ADR-0027에서 지적된 anti-pattern과 동일합니다.
 
 ## 결정 (Decision)
 
-> **per-connection-id AsyncLock을 도입하여 연결 생성의 race condition을 제거하고, string 기반 에러 감지를 ADR-0019의 result_code 기반으로 점진적으로 전환한다.**
+> **per-connection-id AsyncLock을 도입하여 연결 생성의 race condition을 제거하고, string 기반 에러 감지를 ADR-0027의 result_code 기반으로 점진적으로 전환한다.**
 
 ### per-connection-id AsyncLock 구현
 
@@ -85,7 +85,7 @@ class ClientManager:
 ### String 에러 감지 전환 전략
 
 1. **즉시 조치**: 대소문자 무시 매칭 + fallback logging 강화
-2. **ADR-0019 완료 후**: `exc.result_code == ResultCode.FAIL_FORBIDDEN`으로 최종 전환
+2. **ADR-0027 완료 후**: `exc.result_code == ResultCode.FAIL_FORBIDDEN`으로 최종 전환
 
 ## 대안 (Alternatives Considered)
 
@@ -104,7 +104,7 @@ class ClientManager:
 ### 대안 3: 현행 유지 (string 매칭)
 
 - **장점**: 변경 없음
-- **단점**: ADR-0019에서 명시적으로 anti-pattern으로 지적됨. 메시지 변경 시 silent failure 위험
+- **단점**: ADR-0027에서 명시적으로 anti-pattern으로 지적됨. 메시지 변경 시 silent failure 위험
 - **미선택 사유**: 기존 ADR 방향과 불일치
 
 ## 결과 (Consequences)
@@ -114,17 +114,17 @@ class ClientManager:
 - **Race condition 완전 제거**: 동일 `conn_id`에 대한 연결 생성이 직렬화되어 zombie 연결 방지
 - **동시성 유지**: 서로 다른 `conn_id`에 대한 요청은 독립적으로 병렬 처리
 - **CE connection limit 보호**: 불필요한 중복 연결이 제거되어 Aerospike CE의 유한한 connection limit을 효율적으로 사용 (설계 원칙 2-5)
-- **ADR-0019 연계**: string 기반 에러 감지 전환이 ADR-0019의 구현 로드맵과 자연스럽게 연결
+- **ADR-0027 연계**: string 기반 에러 감지 전환이 ADR-0027의 구현 로드맵과 자연스럽게 연결
 - **테스트 가능성**: 동시 `get_client()` 호출에 대한 단위 테스트로 검증 가능
 
 ### 부정적
 
 - **Lock dict 메모리**: `_conn_locks` dict에 삭제된 connection의 lock 객체가 남을 수 있음 (connection 수가 유한하므로 실질적 영향 미미)
 - **Global lock bottleneck**: per-connection lock 획득 시 `_global_lock`을 거치므로 이론적 bottleneck이나, dict 조회는 O(1)이므로 실질적 영향 없음
-- **ADR-0019 의존성**: string 에러 감지의 최종 전환은 aerospike-py의 `result_code` 시스템 완료에 의존
+- **ADR-0027 의존성**: string 에러 감지의 최종 전환은 aerospike-py의 `result_code` 시스템 완료에 의존
 
 ## 관련 ADR
 
 - [ADR-0006: Semaphore 기반 Backpressure](/docs/architecture/adr/2026-03-05-backpressure-semaphore) — 에코시스템의 구조화된 동시성 제어 패턴 선례
-- [ADR-0018: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — Cluster Manager 리소스 관리의 보완적 결정 (연결 종료 시 정리)
-- [ADR-0019: Structured Result Code](/docs/architecture/adr/2026-03-30-structured-result-code) — string 매칭 → result_code 전환의 기반 결정
+- [ADR-0021: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — Cluster Manager 리소스 관리의 보완적 결정 (연결 종료 시 정리)
+- [ADR-0027: Structured Result Code](/docs/architecture/adr/2026-03-30-structured-result-code) — string 매칭 → result_code 전환의 기반 결정

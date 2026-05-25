@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: aerospike-py AsyncClient 동시 connect() 호출 시 연결 누수 방지 및 lifecycle 안전성 강화"
+title: "ADR-0029: aerospike-py AsyncClient 동시 connect() 호출 시 연결 누수 방지 및 lifecycle 안전성 강화"
 description: aerospike-py AsyncClient에서 동시 connect() 호출 시 발생하는 연결 누수를 AtomicBool guard와 상태 머신으로 방지하고, close() 후 재연결 시 전체 상태를 초기화하는 아키텍처 결정.
 sidebar_position: 29
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, aerospike-py, async, connection-safety, lifecycle, concurrency]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: aerospike-py AsyncClient 동시 connect() 호출 시 연결 누수 방지 및 lifecycle 안전성 강화
+# ADR-0029: aerospike-py AsyncClient 동시 connect() 호출 시 연결 누수 방지 및 lifecycle 안전성 강화
 
 ## 상태
 
@@ -45,7 +45,7 @@ future_into_py(py, async move {
 
 ### 문제 3: AEROSPIKE_RUNTIME_WORKERS 상한 미검증
 
-`runtime.rs` (lines 31-37)에서 환경변수 `AEROSPIKE_RUNTIME_WORKERS`의 하한(1)만 검증하고 상한이 없어, 비정상적으로 큰 값 설정 시 Tokio 런타임 생성 실패로 Python import 시 panic이 발생합니다. 이 문제는 ADR-0018(Tokio Worker Autotuning)과 범위가 중복되므로, 해당 ADR에서 함께 처리하는 것을 권장합니다.
+`runtime.rs` (lines 31-37)에서 환경변수 `AEROSPIKE_RUNTIME_WORKERS`의 하한(1)만 검증하고 상한이 없어, 비정상적으로 큰 값 설정 시 Tokio 런타임 생성 실패로 Python import 시 panic이 발생합니다. 이 문제는 ADR-0024(Tokio Worker Autotuning)과 범위가 중복되므로, 해당 ADR에서 함께 처리하는 것을 권장합니다.
 
 ## 결정 (Decision)
 
@@ -59,7 +59,7 @@ future_into_py(py, async move {
 
 3. **Client lifecycle 상태 머신**: `Disconnected → Connecting → Connected → Closing → Disconnected` 전이를 명확히 정의하여, 잘못된 상태 전이를 컴파일 타임 또는 런타임에서 방지합니다.
 
-4. **Worker thread 상한 검증**: ADR-0018(Tokio Worker Autotuning)과 통합하여 처리합니다. 이 ADR에서는 문제 1과 2에 집중합니다.
+4. **Worker thread 상한 검증**: ADR-0024(Tokio Worker Autotuning)과 통합하여 처리합니다. 이 ADR에서는 문제 1과 2에 집중합니다.
 
 ## 대안 (Alternatives Considered)
 
@@ -104,4 +104,4 @@ future_into_py(py, async move {
 
 - **ADR-0001 (CFFI 대신 Rust/PyO3 선택)**: Rust의 메모리 안전성이 이 ADR의 기반. PyO3 아키텍처 내에서 동시성 안전성을 강화하는 자연스러운 확장
 - **ADR-0006 (Semaphore 기반 Backpressure)**: 동시 요청 제어의 선례. limiter 상태가 close/reconnect 시 올바르게 관리되어야 함
-- **ADR-0018 (Tokio Worker Autotuning)**: Worker thread 상한 검증 문제가 중복되므로, 해당 ADR에서 통합 처리 권장
+- **ADR-0024 (Tokio Worker Autotuning)**: Worker thread 상한 검증 문제가 중복되므로, 해당 ADR에서 통합 처리 권장

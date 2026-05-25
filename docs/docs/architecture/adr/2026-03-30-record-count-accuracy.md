@@ -1,5 +1,5 @@
 ---
-title: "ADR-0019: Cluster Manager 레코드 카운트 정확도 개선"
+title: "ADR-0026: Cluster Manager 레코드 카운트 정확도 개선"
 description: Cluster Manager에서 set object count 조회 실패 시 0 대신 None을 반환하여 "알 수 없음" 상태를 명시적으로 표현하고, 프론트엔드 pagination 정상 동작을 보장하는 아키텍처 결정.
 sidebar_position: 26
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, cluster-manager, record-browser, pagination, api-schema, bug-fix]
 last_updated: 2026-03-30
 ---
 
-# ADR-0019: Cluster Manager 레코드 카운트 정확도 개선
+# ADR-0026: Cluster Manager 레코드 카운트 정확도 개선
 
 ## 상태
 
@@ -113,7 +113,7 @@ async def get_set_object_count(...) -> int | None:
 - "레코드 없음" 오표시 제거 — 데이터 신뢰도 향상
 - 필터링된 결과에 대한 정확한 추정치 표시
 - Pagination이 불완전한 count에서도 정상 동작
-- ADR-0017(Virtual Scroll)과 결합 시 대용량 레코드 브라우저 안정성 확보
+- ADR-0020(Virtual Scroll)과 결합 시 대용량 레코드 브라우저 안정성 확보
 - 프로젝트 목표 2-8 달성의 기반 마련
 
 ### 부정적
@@ -126,5 +126,5 @@ async def get_set_object_count(...) -> int | None:
 
 - [ADR-0004: Dict 대신 NamedTuple 반환 선택](/docs/architecture/adr/2026-02-10-namedtuple-over-dict) — 명시적 타입 표현 원칙의 선례
 - [ADR-0009: Unified BatchRecords API](/docs/architecture/adr/2026-03-20-unified-batch-records-api) — per-record 성공/실패 상태 명시적 표현 패턴
-- [ADR-0017: Cluster Manager 레코드 브라우저 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 레코드 브라우저 성능 개선의 연장선
-- [ADR-0017: Backend↔Frontend 타입 동기화 자동화](/docs/architecture/adr/2026-03-30-codegen-type-sync) — API 스키마 변경이 codegen으로 자동 반영 가능
+- [ADR-0020: Cluster Manager 레코드 브라우저 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 레코드 브라우저 성능 개선의 연장선
+- [ADR-0019: Backend↔Frontend 타입 동기화 자동화](/docs/architecture/adr/2026-03-30-codegen-type-sync) — API 스키마 변경이 codegen으로 자동 반영 가능

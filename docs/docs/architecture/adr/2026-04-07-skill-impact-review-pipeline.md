@@ -104,5 +104,5 @@ core repo에서 plugins repo로 직접 `workflow_dispatch`. 중간 허브 없이
 ## 관련 ADR
 
 - [ADR-0008: IssueOps 기반 CI 워크플로우](./2026-03-10-issueops-ci-workflow.md) — 이 파이프라인의 기반 패턴. Issue → Plan → Implement 흐름을 cross-repo 감지까지 확장
-- [ADR-0017: Cluster Manager Backend↔Frontend 타입 동기화 자동화](./2026-03-30-codegen-type-sync.md) — repo 내부 타입 동기화의 선례. 이 ADR은 repo 간 API↔Skill 동기화를 다루어 보완적
+- [ADR-0019: Cluster Manager Backend↔Frontend 타입 동기화 자동화](./2026-03-30-codegen-type-sync.md) — repo 내부 타입 동기화의 선례. 이 ADR은 repo 간 API↔Skill 동기화를 다루어 보완적
 - [ADR-0038: ACKO 외부 네트워크 접근](./2026-04-05-external-network-access.md) — CRD 변경이 plugins skill에 영향을 주는 사례. 이 파이프라인이 감지해야 할 대표적 시나리오

@@ -26,9 +26,16 @@ const repos = [
     github: 'https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager',
   },
   {
+    name: 'ackoctl',
+    description: 'Aerospike Cluster Manager CLI',
+    tech: 'Go / Cobra',
+    docs: null,
+    github: 'https://github.com/aerospike-ce-ecosystem/ackoctl',
+  },
+  {
     name: 'Plugins',
     description: 'Claude Code 에코시스템 플러그인',
-    tech: 'Skills / Agents',
+    tech: 'Skills',
     docs: null,
     github: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins',
   },
@@ -77,7 +84,7 @@ function RepoCard({name, description, tech, docs, github}: (typeof repos)[0]) {
   );
 }
 
-export default function Home(): JSX.Element {
+export default function Home() {
   return (
     <Layout description="Aerospike CE Ecosystem Project Hub">
       <HomepageHeader />

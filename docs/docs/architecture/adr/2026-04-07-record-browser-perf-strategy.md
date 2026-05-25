@@ -108,8 +108,8 @@ Layer 1: Aerospike — socket_timeout (operation 레벨 timeout)
 
 ## 관련 ADR
 
-- [ADR-0017: 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 이 ADR의 "탐색 모드"가 ADR-0017의 TanStack Virtual 결정을 통합
-- [ADR-0018: K8s Server-Side Pagination](/docs/architecture/adr/2026-03-30-k8s-server-side-pagination) — cursor 기반 pagination 패턴의 선례. 이 ADR은 동일 패턴을 record browser에 적용
+- [ADR-0020: 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 이 ADR의 "탐색 모드"가 ADR-0017의 TanStack Virtual 결정을 통합
+- [ADR-0022: K8s Server-Side Pagination](/docs/architecture/adr/2026-03-30-k8s-server-side-pagination) — cursor 기반 pagination 패턴의 선례. 이 ADR은 동일 패턴을 record browser에 적용
 - [ADR-0016: SSE 기반 이벤트 스트리밍](/docs/architecture/adr/2026-03-29-sse-event-streaming) — "탐색 모드"의 streaming 데이터 전송에 SSE/StreamingResponse 패턴 활용
-- [ADR-0018: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — 3계층 timeout의 Backend 계층 구현에 `Request.is_disconnected()` 패턴 활용
+- [ADR-0021: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — 3계층 timeout의 Backend 계층 구현에 `Request.is_disconnected()` 패턴 활용
 - [ADR-0006: Semaphore 기반 Backpressure](/docs/architecture/adr/2026-03-05-backpressure-semaphore) — 요청 수 제한(backpressure)과 데이터 흐름 제어(이 ADR)는 상호보완적 리소스 보호 계층

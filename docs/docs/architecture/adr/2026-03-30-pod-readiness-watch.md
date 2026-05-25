@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: ACKO Pod Readiness Watch 전환 및 Status Enrichment 병렬화"
+title: "ADR-0035: ACKO Pod Readiness Watch 전환 및 Status Enrichment 병렬화"
 description: ACKO의 Pod readiness 확인을 10초 간격 polling에서 Kubernetes Informer watch로 전환하고, status enrichment의 Aerospike 노드 정보 수집을 병렬화하여 reconciliation 성능을 개선하는 아키텍처 결정.
 sidebar_position: 35
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, acko, kubernetes, performance, watch, informer, parallelization, rec
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: ACKO Pod Readiness Watch 전환 및 Status Enrichment 병렬화
+# ADR-0035: ACKO Pod Readiness Watch 전환 및 Status Enrichment 병렬화
 
 ## 상태
 
@@ -133,4 +133,4 @@ CE 제약(최대 8노드)으로 goroutine 수가 자연스럽게 제한된다. C
 - [ADR-0012: Pod Readiness Gates 도입](./2026-02-20-pod-readiness-gates.md) — 커스텀 readiness gate와 결합하여 즉시 감지 효과 극대화
 - [ADR-0013: Reconciliation Circuit Breaker 도입](./2026-03-01-reconciliation-circuit-breaker.md) — reconciliation 안정성 패턴과 공존
 - [ADR-0015: asinfo 기반 Health Check 도입](./2026-03-05-asinfo-health-checks.md) — health check와 pod readiness watch의 역할 분리
-- [ADR-0019: Info 배치 집계](./2026-03-30-info-batch-aggregation.md) — 유사한 성능 최적화 패턴 (Cluster Manager)
+- [ADR-0025: Info 배치 집계](./2026-03-30-info-batch-aggregation.md) — 유사한 성능 최적화 패턴 (Cluster Manager)

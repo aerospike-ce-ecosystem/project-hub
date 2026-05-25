@@ -1,5 +1,5 @@
 ---
-title: "ADR-0019: ACKO ValidationError 기반 영구/일시적 오류 분류로 Circuit Breaker 불필요 재시도 방지"
+title: "ADR-0028: ACKO ValidationError 기반 영구/일시적 오류 분류로 Circuit Breaker 불필요 재시도 방지"
 description: ACKO의 기존 ValidationError 타입을 활용하여 영구적 오류를 즉시 식별하고 Circuit Breaker를 즉시 활성화함으로써 불필요한 재시도를 방지하는 아키텍처 결정.
 sidebar_position: 28
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, acko, kubernetes, reconciliation, circuit-breaker, validation, error
 last_updated: 2026-03-30
 ---
 
-# ADR-0019: ACKO ValidationError 기반 영구/일시적 오류 분류로 Circuit Breaker 불필요 재시도 방지
+# ADR-0028: ACKO ValidationError 기반 영구/일시적 오류 분류로 Circuit Breaker 불필요 재시도 방지
 
 ## 상태
 
@@ -34,9 +34,9 @@ ADR-0013에서 도입된 Reconciliation Circuit Breaker는 `maxFailedReconciles 
 2. **오퍼레이터 리소스 낭비**: 실패할 reconcile 루프가 API server, Aerospike 클라이언트 커넥션을 불필요하게 소비
 3. **운영자 혼란**: Circuit Breaker 활성화까지 의미 없는 재시도 이벤트가 K8s Event에 누적되어 실제 문제 진단을 방해
 
-### ADR-0017과의 관계
+### ADR-0018과의 관계
 
-ADR-0017은 에러 유형별 차등 임계값(Transient/Infrastructure/Configuration 3단계 분류)을 제안했으나, 에러 분류 기준 미검증과 복잡성으로 보류되었다. 본 제안은 ADR-0017의 전체 에러 분류 체계가 아닌, **이미 코드에 존재하는 `ValidationError` 타입**을 활용한 단순 이진 분류(영구/일시적)로, ADR-0017의 보류 사유에 해당하지 않는 최소 침습적 접근이다.
+ADR-0018은 에러 유형별 차등 임계값(Transient/Infrastructure/Configuration 3단계 분류)을 제안했으나, 에러 분류 기준 미검증과 복잡성으로 보류되었다. 본 제안은 ADR-0018의 전체 에러 분류 체계가 아닌, **이미 코드에 존재하는 `ValidationError` 타입**을 활용한 단순 이진 분류(영구/일시적)로, ADR-0018의 보류 사유에 해당하지 않는 최소 침습적 접근이다.
 
 ## 결정 (Decision)
 
@@ -45,7 +45,7 @@ ADR-0017은 에러 유형별 차등 임계값(Transient/Infrastructure/Configura
 ### 핵심 변경 사항
 
 1. **ValidationError 즉시 Circuit Break**: `reconciler.go`의 실패 카운터 증가 로직에 `errors.IsValidation(err)` 분기를 추가하여, ValidationError인 경우 `failedReconciles`를 `maxFailedReconciles`로 즉시 설정
-2. **Status Condition 기록**: `reason: PermanentError`, `message: <validation 상세>` 형태로 Status Condition에 기록 (ADR-0013의 `CircuitBreakerOpen` 및 ADR-0018의 `Paused` condition과 동일한 패턴)
+2. **Status Condition 기록**: `reason: PermanentError`, `message: <validation 상세>` 형태로 Status Condition에 기록 (ADR-0013의 `CircuitBreakerOpen` 및 ADR-0023의 `Paused` condition과 동일한 패턴)
 3. **K8s Event 기록**: "영구 오류로 자동 재시도 중단됨" 메시지를 K8s Event에 기록하여 운영자에게 즉시 알림
 4. **Webhook Validation 강화**: 가능한 한 많은 ValidationError를 admission 단계에서 사전 차단
 5. **수동 재시도 지원**: `kubectl annotate ... force-reconcile=true` annotation으로 오판 시 수동 재시도 가능
@@ -70,7 +70,7 @@ ADR-0017은 에러 유형별 차등 임계값(Transient/Infrastructure/Configura
 
 - **장점**: 일시적/영구적 오류 각각에 독립 임계값 설정 가능, 세밀한 제어
 - **단점**: 복잡도 증가, 두 breaker 간 상호작용 관리 필요, 테스트 매트릭스 확대
-- **평가**: 현재 ACKO v0.1.x 규모에서 과도한 설계. ADR-0017 보류 사유와 유사한 복잡성 문제
+- **평가**: 현재 ACKO v0.1.x 규모에서 과도한 설계. ADR-0018 보류 사유와 유사한 복잡성 문제
 
 ## 결과 (Consequences)
 
@@ -93,5 +93,5 @@ ADR-0017은 에러 유형별 차등 임계값(Transient/Infrastructure/Configura
 ## 관련 ADR
 
 - **ADR-0013 (Reconciliation Circuit Breaker 도입)**: 본 제안의 기반. 10회 고정 임계값과 `CircuitBreakerOpen` condition 패턴을 확립
-- **ADR-0017 (Circuit Breaker 임계값 자동 조정)**: 보류됨. 전체 에러 분류 체계의 복잡성 문제를 지적. 본 제안은 이진 분류로 복잡성을 회피
-- **ADR-0018 (Pause/Resume Status Condition)**: Status Condition 기반 상태 노출 패턴을 공유. `PermanentError` reason 추가는 동일한 설계 철학
+- **ADR-0018 (Circuit Breaker 임계값 자동 조정)**: 보류됨. 전체 에러 분류 체계의 복잡성 문제를 지적. 본 제안은 이진 분류로 복잡성을 회피
+- **ADR-0023 (Pause/Resume Status Condition)**: Status Condition 기반 상태 노출 패턴을 공유. `PermanentError` reason 추가는 동일한 설계 철학

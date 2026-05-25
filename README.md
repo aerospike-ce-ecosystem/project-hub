@@ -29,7 +29,7 @@ docs/docs/
 
 ## Latest ADR
 
-- [ADR-0040: Multi-Cluster Topology and Keycloak OIDC for ACKO + Cluster-Manager](docs/docs/architecture/adr/2026-05-05-multi-cluster-topology-and-keycloak-oidc.md)
+- [ADR-0052: aerospike-py batch_read 병목 프로파일링](docs/docs/architecture/adr/2026-05-23-aerospike-py-batch-read-profiling.md)
 
 ## Development
 

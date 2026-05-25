@@ -1,5 +1,5 @@
 ---
-title: "ADR-0018: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입"
+title: "ADR-0022: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입"
 description: Cluster Manager의 K8s 클러스터 목록 API에 Kubernetes 네이티브 cursor 기반 pagination과 namespace 필터링을 도입하여 대규모 환경 확장성을 확보하는 아키텍처 결정.
 sidebar_position: 22
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, pagination, k8s, performance, cluster-manager, filtering]
 last_updated: 2026-03-30
 ---
 
-# ADR-0018: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입
+# ADR-0022: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입
 
 ## 상태
 
@@ -26,7 +26,7 @@ Cluster Manager는 `/api/k8s/clusters` 엔드포인트를 통해 K8s 클러스�
 
 1. **확장성 한계**: 대규모 환경(100+ AerospikeCluster CR)에서 매 조회마다 전체 목록을 K8s API 서버에서 가져오며, JSON 직렬화 및 네트워크 전송 비용이 선형적으로 증가한다.
 2. **필터링 비효율**: 특정 namespace의 클러스터만 필요한 경우에도 전체 조회가 필수이며, K8s RBAC 제한으로 특정 namespace만 접근 가능한 경우 에러 가능성이 있다.
-3. **프론트엔드 병목 유지**: ADR-0017(가상 스크롤)이 프론트엔드 렌더링을 최적화하지만, 백엔드에서 전체 데이터를 전송하는 네트워크/메모리 병목은 그대로 남아있다.
+3. **프론트엔드 병목 유지**: ADR-0020(가상 스크롤)이 프론트엔드 렌더링을 최적화하지만, 백엔드에서 전체 데이터를 전송하는 네트워크/메모리 병목은 그대로 남아있다.
 
 이 문제는 프로젝트 목표 2-2(Backend read/write timeout·limit 관리), 2-6(ACKO 클러스터 관리 편의성·성능), 2-8(대용량 데이터 성능)과 직결된다.
 
@@ -81,8 +81,8 @@ Option A가 K8s API의 네이티브 메커니즘을 활용하여 복잡도 대�
 - K8s API 서버 부하 감소: 페이지 단위(20개)로 조회하여 대규모 환경에서도 안정적
 - 네트워크 대역폭 절감: 전체 CR 목록 대신 페이지 단위 전송
 - RBAC 호환성 개선: `namespace` 파라미터로 접근 가능한 namespace만 조회하여 권한 에러 방지
-- ADR-0017(가상 스크롤)과 시너지: 프론트엔드(렌더링) + 백엔드(데이터 전송) 양쪽 최적화 완성
-- ADR-0017(Codegen 타입 동기화)과 연계: pagination 응답 타입을 OpenAPI → TypeScript 자동 생성 가능
+- ADR-0020(가상 스크롤)과 시너지: 프론트엔드(렌더링) + 백엔드(데이터 전송) 양쪽 최적화 완성
+- ADR-0019(Codegen 타입 동기화)과 연계: pagination 응답 타입을 OpenAPI → TypeScript 자동 생성 가능
 - 하위 호환성: query parameter 없으면 기존 동작 유지
 
 ### 부정적
@@ -92,6 +92,6 @@ Option A가 K8s API의 네이티브 메커니즘을 활용하여 복잡도 대�
 
 ## 관련 ADR
 
-- [ADR-0017: 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 프론트엔드 렌더링 최적화. 이 ADR은 백엔드 데이터 전송 최적화로 상호 보완
-- [ADR-0017: Codegen 타입 동기화](/docs/architecture/adr/2026-03-30-codegen-type-sync) — pagination 응답 타입 동기화에 활용
+- [ADR-0020: 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 프론트엔드 렌더링 최적화. 이 ADR은 백엔드 데이터 전송 최적화로 상호 보완
+- [ADR-0019: Codegen 타입 동기화](/docs/architecture/adr/2026-03-30-codegen-type-sync) — pagination 응답 타입 동기화에 활용
 - [ADR-0016: SSE 이벤트 스트리밍](/docs/architecture/adr/2026-03-29-sse-event-streaming) — Option C(Watch 캐싱)와의 중복을 피하기 위해 cursor 기반 접근 채택

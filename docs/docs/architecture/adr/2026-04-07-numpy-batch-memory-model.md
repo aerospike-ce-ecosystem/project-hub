@@ -108,4 +108,4 @@ Q2 2026 로드맵에 "NumPy batch 연산 안정화"가 명시되어 있으며, �
 - [ADR-0001: CFFI 대신 Rust/PyO3 선택](/docs/architecture/adr/2026-01-15-pyo3-over-cffi) — 메모리 안전성 우선 원칙의 근거
 - [ADR-0004: Dict 대신 NamedTuple 반환 선택](/docs/architecture/adr/2026-02-10-namedtuple-over-dict) — 타입 안전성과 개발자 경험 우선 패턴
 - [ADR-0009: Unified BatchRecords API](/docs/architecture/adr/2026-03-20-unified-batch-records-api) — batch 연산 통일 반환 타입, per-record result_code 패턴
-- [ADR-0018: Tokio Runtime Worker Thread 자동 튜닝](/docs/architecture/adr/2026-03-30-tokio-worker-autotuning) — aerospike-py 성능 최적화 관련 선례
+- [ADR-0024: Tokio Runtime Worker Thread 자동 튜닝](/docs/architecture/adr/2026-03-30-tokio-worker-autotuning) — aerospike-py 성능 최적화 관련 선례

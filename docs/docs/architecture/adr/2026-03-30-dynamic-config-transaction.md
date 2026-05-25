@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: ACKO Dynamic Config 부분 적용 방지를 위한 트랜잭션 보장 전략"
+title: "ADR-0032: ACKO Dynamic Config 부분 적용 방지를 위한 트랜잭션 보장 전략"
 description: ACKO의 동적 설정 변경 시 부분 적용을 방지하기 위해 Two-Phase Commit 패턴과 ConfigDegraded 상태 전환을 도입하는 전략
 sidebar_position: 32
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, acko, dynamic-config, reconciliation, transaction, stabilization]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: ACKO Dynamic Config 부분 적용 방지를 위한 트랜잭션 보장 전략
+# ADR-0032: ACKO Dynamic Config 부분 적용 방지를 위한 트랜잭션 보장 전략
 
 ## 상태
 
@@ -114,5 +114,5 @@ ADR-0013에서 도입한 5분 reconciliation timeout 내에서 동적 설정 변
 
 - [ADR-0013: Reconciliation Circuit Breaker](/docs/architecture/adr/2026-03-01-reconciliation-circuit-breaker) — 5분 context timeout과 circuit breaker 패턴. 이번 ADR은 해당 timeout 내에서 발생하는 부분 적용 문제를 보완
 - [ADR-0012: Pod Readiness Gates](/docs/architecture/adr/2026-02-20-pod-readiness-gates) — Pod 상태 관리의 세밀한 제어 방향과 일치
-- [ADR-0018: Pause/Resume Status Condition](/docs/architecture/adr/2026-03-30-pause-resume-status-condition) — Status Condition 정합성 보장 패턴의 선례
+- [ADR-0023: Pause/Resume Status Condition](/docs/architecture/adr/2026-03-30-pause-resume-status-condition) — Status Condition 정합성 보장 패턴의 선례
 - [ADR-0002: Kubebuilder v4](/docs/architecture/adr/2026-01-18-kubebuilder-v4) — ACKO의 기반 프레임워크

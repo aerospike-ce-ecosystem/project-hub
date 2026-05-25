@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: Cluster Manager Frontend 리소스 누수 방지 및 API 호출 최적화"
+title: "ADR-0033: Cluster Manager Frontend 리소스 누수 방지 및 API 호출 최적화"
 description: Cluster Manager 프론트엔드에서 폴링 메모리 누수, AbortController 미사용, 상태 초기화 누락, 에러 정보 미노출 문제를 해결하는 표준 패턴 도입.
 sidebar_position: 33
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, performance, frontend, cluster-manager, resource-management, optimiz
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: Cluster Manager Frontend 리소스 누수 방지 및 API 호출 최적화
+# ADR-0033: Cluster Manager Frontend 리소스 누수 방지 및 API 호출 최적화
 
 ## 상태
 
@@ -32,7 +32,7 @@ ADR-0016에서 SSE 기반 실시간 이벤트 스트리밍이 제안되어 장�
 
 `use-async-data.ts`에서 `requestIdRef`로 stale 업데이트만 방지하고, 실제 fetch 요청은 완료될 때까지 실행됩니다. 의존성이 빠르게 변경되면 동시에 여러 요청이 in-flight 상태가 되어 네트워크 대역폭과 CPU를 낭비합니다.
 
-ADR-0018에서 백엔드 Graceful Cancellation이 제안되었으나, 프론트엔드에서 AbortController로 취소 시그널을 전파해야 백엔드까지 완전한 cancellation 체인이 구축됩니다.
+ADR-0021에서 백엔드 Graceful Cancellation이 제안되었으나, 프론트엔드에서 AbortController로 취소 시그널을 전파해야 백엔드까지 완전한 cancellation 체인이 구축됩니다.
 
 ### 문제 3: 네임스페이스 전환 시 페이지네이션 상태 미초기화
 
@@ -59,7 +59,7 @@ useEffect(() => {
 
 ### 2. useAsyncData에 AbortController 도입
 
-브라우저 내장 AbortController API를 활용하여 의존성 변경 시 이전 요청을 자동 취소합니다. ADR-0018의 백엔드 Graceful Cancellation과 결합하여 완전한 요청 취소 체인을 구축합니다.
+브라우저 내장 AbortController API를 활용하여 의존성 변경 시 이전 요청을 자동 취소합니다. ADR-0021의 백엔드 Graceful Cancellation과 결합하여 완전한 요청 취소 체인을 구축합니다.
 
 ```typescript
 useEffect(() => {
@@ -111,7 +111,7 @@ interface ConnectionHealth {
 ### 긍정적
 - 프론트엔드 메모리 사용량 감소 (폴링 인터벌 누수 제거)
 - 백엔드 API 호출 30-50% 감소 (AbortController + stale 요청 제거)
-- ADR-0018 (Graceful Cancellation)과 결합하여 프론트엔드→백엔드 완전한 요청 취소 체인 구축
+- ADR-0021 (Graceful Cancellation)과 결합하여 프론트엔드→백엔드 완전한 요청 취소 체인 구축
 - 사용자 경험 향상 (정확한 에러 메시지, 일관된 UI 상태)
 - 대규모 클러스터 관리 시 브라우저 성능 안정성 확보 (프로젝트 목표 2-8 부합)
 - ADR-0016 (SSE) 전환 과도기에서의 폴링 안정성 확보
@@ -124,6 +124,6 @@ interface ConnectionHealth {
 ## 관련 ADR
 
 - [ADR-0016: SSE 기반 실시간 이벤트 스트리밍](/docs/architecture/adr/2026-03-29-sse-event-streaming) — 장기적으로 폴링을 SSE로 대체하지만, 전환 과도기 및 fallback에서 폴링 정리 패턴은 여전히 필요
-- [ADR-0018: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — 백엔드 cancellation과 프론트엔드 AbortController가 결합하여 완전한 요청 취소 체인 구축
-- [ADR-0017: 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 레코드 브라우저 성능 개선과 함께 상태 관리 정합성 향상
+- [ADR-0021: Graceful Cancellation](/docs/architecture/adr/2026-03-30-graceful-cancellation) — 백엔드 cancellation과 프론트엔드 AbortController가 결합하여 완전한 요청 취소 체인 구축
+- [ADR-0020: 가상 스크롤 도입](/docs/architecture/adr/2026-03-30-virtual-scroll-record-browser) — 레코드 브라우저 성능 개선과 함께 상태 관리 정합성 향상
 - [ADR-0005: DaisyUI 제거 및 Tailwind CSS 4 전환](/docs/architecture/adr/2026-02-25-daisyui-removal) — 프론트엔드 기술 스택 기준 확립

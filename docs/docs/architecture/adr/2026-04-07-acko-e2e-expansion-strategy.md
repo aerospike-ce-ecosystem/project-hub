@@ -104,5 +104,5 @@ GitHub Actions matrix로 시나리오별 병렬 실행.
 - [ADR-0012: Pod Readiness Gates 도입](/docs/architecture/adr/2026-02-20-pod-readiness-gates) — rolling update 시나리오 E2E 검증 대상
 - [ADR-0013: Reconciliation Circuit Breaker 도입](/docs/architecture/adr/2026-03-01-reconciliation-circuit-breaker) — scale up/down 시나리오에서 circuit breaker 동작 검증
 - [ADR-0015: asinfo 기반 Health Check 도입](/docs/architecture/adr/2026-03-05-asinfo-health-checks) — health check 기반 readiness 판단 E2E 검증
-- [ADR-0020: Webhook Validation 강화](/docs/architecture/adr/2026-03-30-webhook-validation-enhancement) — CE 제약 검증의 E2E 레벨 회귀 방지
+- [ADR-0036: Webhook Validation 강화](/docs/architecture/adr/2026-03-30-webhook-validation-enhancement) — CE 제약 검증의 E2E 레벨 회귀 방지
 - [ADR-0038: ACKO 외부 네트워크 접근](/docs/architecture/adr/2026-04-05-external-network-access) — Kind에서 LB 시뮬레이션 테스트 필요성

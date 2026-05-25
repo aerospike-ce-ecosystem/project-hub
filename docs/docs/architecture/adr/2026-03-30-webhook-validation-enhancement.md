@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증"
+title: "ADR-0036: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증"
 description: ACKO webhook에 replication-factor, 포트 충돌, batch size 검증을 추가하여 런타임 오류를 admission 단계에서 차단하는 아키텍처 결정
 sidebar_position: 36
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, acko, webhook, validation, stabilization]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증
+# ADR-0036: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증
 
 ## 상태
 
@@ -34,9 +34,9 @@ ACKO webhook은 현재 Aerospike CE 라이선스 제약(≤8 노드, ≤2 네임
 
 `maxUnavailable: "10%"`이면 1~9노드 클러스터에서 batch size가 0으로 계산될 수 있다. Rolling restart가 영구 대기 상태에 진입하며, ADR-0013 (Reconciliation Circuit Breaker)의 circuit breaker가 최종적으로 발동하기까지 최대 50분의 불필요한 재시도가 발생한다.
 
-### ADR-0019와의 관계
+### ADR-0028와의 관계
 
-ADR-0019 (ValidationError Circuit Breaker)는 "Webhook Validation Enhancement — Prevent as many ValidationErrors as possible at admission stage"를 명시적으로 권장하고 있다. 위 3가지 오류는 모두 런타임에서 `ValidationError`로 분류될 영구 오류이며, admission 단계에서 차단하면 circuit breaker 활성화 자체를 불필요하게 만든다.
+ADR-0028 (ValidationError Circuit Breaker)는 "Webhook Validation Enhancement — Prevent as many ValidationErrors as possible at admission stage"를 명시적으로 권장하고 있다. 위 3가지 오류는 모두 런타임에서 `ValidationError`로 분류될 영구 오류이며, admission 단계에서 차단하면 circuit breaker 활성화 자체를 불필요하게 만든다.
 
 ## 결정 (Decision)
 
@@ -84,7 +84,7 @@ if batchSize < 1 {
 ### Option B: Controller-level 검증만
 
 - **장점**: webhook 없이도 동작
-- **단점**: Pod 생성 후에야 오류 발견, CrashLoopBackOff 발생 후 디버깅 필요, ADR-0019의 circuit breaker에 의존해야 함
+- **단점**: Pod 생성 후에야 오류 발견, CrashLoopBackOff 발생 후 디버깅 필요, ADR-0028의 circuit breaker에 의존해야 함
 
 ### Option C: Defaulting webhook으로 자동 보정
 
@@ -97,7 +97,7 @@ if batchSize < 1 {
 
 - **즉각적 피드백**: `kubectl apply` 시점에 명확한 에러 메시지로 구성 오류 차단
 - **운영 안정성 향상**: CrashLoopBackOff, split-brain, 영구 대기 상태를 원천 방지
-- **ADR-0019 시너지**: admission 단계에서 영구 오류를 차단하여 reconciliation circuit breaker 불필요 활성화 감소
+- **ADR-0028 시너지**: admission 단계에서 영구 오류를 차단하여 reconciliation circuit breaker 불필요 활성화 감소
 - **Goal 3-5 직접 지원**: CE 제약 Webhook 검증 신뢰성 목표에 부합
 - **Goal 3-4 지원**: E2E 테스트 시나리오 확장 (검증 실패 케이스)
 - **낮은 위험**: 기존 유효한 CR에 영향 없음, 추가 검증만 도입
@@ -110,7 +110,7 @@ if batchSize < 1 {
 
 ## 관련 ADR
 
-- **ADR-0019**: ValidationError Circuit Breaker — webhook validation 강화를 명시적으로 권장
+- **ADR-0028**: ValidationError Circuit Breaker — webhook validation 강화를 명시적으로 권장
 - **ADR-0013**: Reconciliation Circuit Breaker — admission 단계 검증으로 불필요한 reconciliation 실패 방지
 - **ADR-0012**: Pod Readiness Gates — 포트 충돌 방지로 readiness gate 정상 동작 보장
 - **ADR-0002**: Kubebuilder v4 — webhook scaffolding 인프라 기반

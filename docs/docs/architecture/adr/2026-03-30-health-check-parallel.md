@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: Cluster Manager Health Check 병렬화 및 연결 실패 컨텍스트 전파"
+title: "ADR-0034: Cluster Manager Health Check 병렬화 및 연결 실패 컨텍스트 전파"
 description: Cluster Manager 초기 로딩 시 순차 health check를 병렬화하고, 연결 실패 시 에러 유형을 UI에 표시하여 디버깅 편의성을 개선
 sidebar_position: 34
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, cluster-manager, health-check, performance, ux]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: Cluster Manager Health Check 병렬화 및 연결 실패 컨텍스트 전파
+# ADR-0034: Cluster Manager Health Check 병렬화 및 연결 실패 컨텍스트 전파
 
 ## 상태
 
@@ -88,7 +88,7 @@ Optional `error` 필드를 추가하여 기존 API 호환성을 유지하면서 
 - **장점**: ADR-0016(SSE 이벤트 스트리밍)과 통합 가능
 - **단점**: SSE는 상태 변경 이벤트에 적합하며, 초기 로딩 시 일괄 health check와는 목적이 다름. SSE 도입 후에도 초기 병렬 health check는 여전히 필요
 
-**추천안 선택 이유**: `Promise.allSettled`는 JavaScript 네이티브 API로 추가 의존성 없이 최소한의 변경으로 최대 효과(10x 성능 개선)를 달성한다. 에러 컨텍스트 추가는 ADR-0019의 구조화된 에러 코드 패턴과 일관된 방향이다.
+**추천안 선택 이유**: `Promise.allSettled`는 JavaScript 네이티브 API로 추가 의존성 없이 최소한의 변경으로 최대 효과(10x 성능 개선)를 달성한다. 에러 컨텍스트 추가는 ADR-0027의 구조화된 에러 코드 패턴과 일관된 방향이다.
 
 ## 결과 (Consequences)
 
@@ -98,7 +98,7 @@ Optional `error` 필드를 추가하여 기존 API 호환성을 유지하면서 
 - **에러 원인 즉시 파악**: DevTools 없이 UI에서 네트워크/인증/타임아웃 등 에러 유형 확인 가능
 - **점진적 UX**: 전체 완료까지 빈 화면 대신 진행률 표시 + 개별 결과 점진적 업데이트
 - **기존 API 호환성 유지**: HealthStatus의 `error` 필드는 optional이므로 기존 코드에 영향 없음
-- **에코시스템 일관성**: ADR-0019(구조화된 에러 코드)의 Frontend 적용 사례로 패턴 확립
+- **에코시스템 일관성**: ADR-0027(구조화된 에러 코드)의 Frontend 적용 사례로 패턴 확립
 
 ### 부정적
 
@@ -109,5 +109,5 @@ Optional `error` 필드를 추가하여 기존 API 호환성을 유지하면서 
 
 - [ADR-0015: asinfo 기반 Health Check](/docs/architecture/adr/2026-03-05-asinfo-health-checks) — ACKO K8s 레벨의 health check 전략. 본 ADR은 Cluster Manager UI 레벨의 health check 최적화로 계층이 다름
 - [ADR-0016: SSE 기반 실시간 이벤트 스트리밍](/docs/architecture/adr/2026-03-29-sse-event-streaming) — 실시간 상태 변경 스트리밍과 상호 보완적. SSE 도입 후에도 초기 health check 병렬화는 별도로 필요
-- [ADR-0019: 구조화된 에러 코드 체계](/docs/architecture/adr/2026-03-30-structured-result-code) — aerospike-py의 구조화된 에러 분류 패턴을 Frontend HealthStatus에도 적용하는 일관된 방향
+- [ADR-0027: 구조화된 에러 코드 체계](/docs/architecture/adr/2026-03-30-structured-result-code) — aerospike-py의 구조화된 에러 분류 패턴을 Frontend HealthStatus에도 적용하는 일관된 방향
 - [ADR-0006: Semaphore 기반 Backpressure](/docs/architecture/adr/2026-03-05-backpressure-semaphore) — 동시성 제어 패턴이 에코시스템에 확립되어 있으며, Promise.allSettled도 같은 맥락의 동시 실행 관리
