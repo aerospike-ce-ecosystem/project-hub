@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 
 interface Props {
   weeksAxis: string[];
-  weeksKorean: string[];
+  weeksDisplay: string[];
   weeksDateRange: string[];
   repos: string[];
   repoSeries: Record<string, number[]>;
@@ -39,7 +39,7 @@ function totalHeatStyle(value: number, max: number): React.CSSProperties {
 
 export default function RepoMatrix({
   weeksAxis,
-  weeksKorean,
+  weeksDisplay,
   weeksDateRange,
   repos,
   repoSeries,
@@ -58,14 +58,14 @@ export default function RepoMatrix({
       <table className={styles.matrix}>
         <thead>
           <tr>
-            <th className={styles.weekHeader}>주차</th>
+            <th className={styles.weekHeader}>Week</th>
             {repos.map((r) => (
               <th key={r} className={styles.repoHeader}>
                 <span className={styles.repoDot} style={{background: repoColor(r)}} />
                 {repoLabel(r)}
               </th>
             ))}
-            <th className={styles.totalHeader}>합계</th>
+            <th className={styles.totalHeader}>Total</th>
           </tr>
         </thead>
         <tbody>
@@ -73,7 +73,7 @@ export default function RepoMatrix({
             <tr key={w}>
               <td className={styles.weekCell}>
                 <div className={styles.weekCellInner}>
-                  <span className={styles.weekMain}>{weeksKorean[i]}</span>
+                  <span className={styles.weekMain}>{weeksDisplay[i]}</span>
                   <span className={styles.weekSub}>{weeksDateRange[i]}</span>
                 </div>
               </td>
@@ -102,7 +102,7 @@ export default function RepoMatrix({
           <tr>
             <td className={styles.weekCell}>
               <div className={styles.weekCellInner}>
-                <span className={styles.weekMain}>전체 합계</span>
+                <span className={styles.weekMain}>Total</span>
               </div>
             </td>
             {repos.map((r) => (

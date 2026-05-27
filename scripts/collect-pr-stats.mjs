@@ -90,24 +90,30 @@ function isoWeekEnd(label) {
   return end;
 }
 
+const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 /**
- * "5월 1주차" — Thursday-of-week determines which month the week belongs to,
+ * "May W1" — Thursday-of-week determines which month the week belongs to,
  * matching the ISO 8601 convention used to assign weeks to years. For a week
  * that straddles a month boundary, the side with 4+ days wins (Mon–Thu rule).
  */
-function koreanWeekLabel(isoLabel) {
+function weekDisplayLabel(isoLabel) {
   const monday = isoWeekStart(isoLabel);
   const thu = new Date(monday);
   thu.setUTCDate(monday.getUTCDate() + 3);
   const weekInMonth = Math.floor((thu.getUTCDate() - 1) / 7) + 1;
-  return `${thu.getUTCMonth() + 1}월 ${weekInMonth}주차`;
+  return `${MONTH_SHORT[thu.getUTCMonth()]} W${weekInMonth}`;
 }
 
 function dateRangeLabel(isoLabel) {
   const s = isoWeekStart(isoLabel);
   const e = isoWeekEnd(isoLabel);
   const pad = (n) => String(n).padStart(2, '0');
-  return `${s.getUTCMonth() + 1}/${pad(s.getUTCDate())}–${e.getUTCMonth() + 1}/${pad(e.getUTCDate())}`;
+  // e.g. "May 18–24" (same month) or "Apr 27 – May 03" (cross-month)
+  if (s.getUTCMonth() === e.getUTCMonth()) {
+    return `${MONTH_SHORT[s.getUTCMonth()]} ${pad(s.getUTCDate())}–${pad(e.getUTCDate())}`;
+  }
+  return `${MONTH_SHORT[s.getUTCMonth()]} ${pad(s.getUTCDate())} – ${MONTH_SHORT[e.getUTCMonth()]} ${pad(e.getUTCDate())}`;
 }
 
 async function gh(args) {
@@ -294,13 +300,13 @@ async function main() {
     repos: activeRepos,
     perRepoTotal,
     weeksAxis,
-    weeksKorean: weeksAxis.map(koreanWeekLabel),
+    weeksDisplay: weeksAxis.map(weekDisplayLabel),
     weeksDateRange: weeksAxis.map(dateRangeLabel),
     repoSeries,
     totalPerWeek,
     recent4Weeks: recent4,
     recent4Total,
-    peakWeek: peakWeek ? {week: peakWeek, korean: koreanWeekLabel(peakWeek), count: peakCount} : null,
+    peakWeek: peakWeek ? {week: peakWeek, display: weekDisplayLabel(peakWeek), count: peakCount} : null,
     avgPerWeek: weeksAxis.length ? Number((totalPrs / weeksAxis.length).toFixed(2)) : 0,
     stateCounts: Object.fromEntries(stateCounter),
     topContributors,
@@ -312,7 +318,7 @@ async function main() {
   await writeFile(OUT_PATH, JSON.stringify(out, null, 2) + '\n');
   console.error(`\nWrote ${OUT_PATH}`);
   console.error(`  ${totalPrs} PRs across ${weeksAxis.length} weeks (${activeRepos.length} active repos)`);
-  console.error(`  peak: ${out.peakWeek?.korean} (${peakCount})  avg/week: ${out.avgPerWeek}`);
+  console.error(`  peak: ${out.peakWeek?.display} (${peakCount})  avg/week: ${out.avgPerWeek}`);
 }
 
 main().catch((err) => {
