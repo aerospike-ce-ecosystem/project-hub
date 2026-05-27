@@ -1,0 +1,115 @@
+name: weekly-pr-stats
+
+on:
+  # Every Monday at 09:00 KST (= 00:00 UTC)
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      open_pr:
+        description: 'PR로 열기 (기본). false면 main에 직접 commit'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: weekly-pr-stats
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+
+      - name: Collect PR stats
+        # Prefer ORG_READ_TOKEN (a fine-grained PAT or App installation token
+        # with org:read + repo:read) when available — the default GITHUB_TOKEN
+        # is repo-scoped and may not be able to list org repos under strict
+        # org policies. Falls back to GITHUB_TOKEN for public-only setups.
+        env:
+          GH_TOKEN: ${{ secrets.ORG_READ_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/collect-pr-stats.mjs
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --quiet -- docs/src/data/pr-stats.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No PR stat changes — skipping."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- docs/src/data/pr-stats.json
+          fi
+
+      - name: Summary
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          {
+            echo "## Weekly PR Stats"
+            echo ""
+            echo "Updated \`docs/src/data/pr-stats.json\`."
+            echo ""
+            echo "<details><summary>diff</summary>"
+            echo ""
+            echo '```diff'
+            git diff -- docs/src/data/pr-stats.json | head -200
+            echo '```'
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open PR (default)
+        if: |
+          steps.changes.outputs.changed == 'true' &&
+          (github.event_name == 'schedule' || inputs.open_pr != false)
+        # Pinned to a commit SHA per OpenSSF Scorecard guidance.
+        # SHA = peter-evans/create-pull-request v7 head (2025-12-05).
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bot/weekly-pr-stats
+          base: main
+          delete-branch: true
+          commit-message: 'chore: refresh weekly PR stats'
+          title: 'chore: refresh weekly PR stats'
+          body: |
+            ## Weekly PR Stats Refresh
+
+            This PR was opened automatically by the `weekly-pr-stats` workflow.
+
+            - Source: `node scripts/collect-pr-stats.mjs`
+            - Output: `docs/src/data/pr-stats.json`
+            - Schedule: 매주 월요일 09:00 KST
+
+            데이터를 검토한 뒤 머지하면 메인 페이지의 통계 카드가 갱신됩니다.
+          labels: |
+            automation
+            stats
+          author: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+          committer: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
+
+      - name: Commit to main (manual override)
+        if: |
+          steps.changes.outputs.changed == 'true' &&
+          github.event_name == 'workflow_dispatch' &&
+          inputs.open_pr == false
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/src/data/pr-stats.json
+          git commit -m 'chore: refresh weekly PR stats'
+          git push origin HEAD:main
