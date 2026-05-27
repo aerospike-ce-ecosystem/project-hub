@@ -8,15 +8,15 @@ import styles from './styles.module.css';
 
 const data: PrStatsData = statsData as PrStatsData;
 
-function formatDateKr(iso: string | null): string {
+function formatDate(iso: string | null): string {
   if (!iso) return '';
   const d = new Date(iso);
   return `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
 }
 
-function formatGeneratedKr(iso: string): string {
-  // Render in UTC and label it explicitly — formatDateKr also uses UTC, so the
-  // header (집계 ~ / 마지막 업데이트) stays on one consistent timezone.
+function formatGenerated(iso: string): string {
+  // Render in UTC and label it explicitly so the panel header reads on one
+  // consistent timezone (formatDate also uses UTC).
   const d = new Date(iso);
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, '0');
@@ -67,7 +67,7 @@ function StateBar(): React.JSX.Element {
 function TopContributors(): React.JSX.Element {
   const top = data.topContributors;
   if (top.length === 0) {
-    return <p className={styles.muted}>아직 기여자 데이터가 없습니다.</p>;
+    return <p className={styles.muted}>No contributor data yet.</p>;
   }
   const max = top[0].count || 1;
   const denom = data.totalPrs || 1;
@@ -147,44 +147,44 @@ function StatsPanel(): React.JSX.Element {
       <div className={styles.statsHeader}>
         <div>
           <span className={styles.eyebrow}>ORG Activity</span>
-          <h2 className={styles.statsTitle}>주간 PR 활동 지표</h2>
+          <h2 className={styles.statsTitle}>Weekly PR Activity</h2>
           <p className={styles.statsSub}>
-            <code>{data.org}</code> · 집계 <strong>{formatDateKr(data.earliest)} ~ {formatDateKr(data.latest)}</strong>
+            <code>{data.org}</code> · range <strong>{formatDate(data.earliest)} – {formatDate(data.latest)}</strong>
             <span className={styles.metaDot}>·</span>
-            매주 월요일 09:00 KST 자동 갱신
+            Refreshed every Monday 00:00 UTC
             <span className={styles.metaDot}>·</span>
-            마지막 업데이트 {formatGeneratedKr(data.generatedAt)}
+            Last updated {formatGenerated(data.generatedAt)}
           </p>
         </div>
       </div>
 
       <div className={styles.kpiGrid}>
         <div className={`${styles.kpi} ${styles.kpiAccent}`}>
-          <div className={styles.kpiLabel}>총 PR</div>
+          <div className={styles.kpiLabel}>Total PRs</div>
           <div className={styles.kpiValue}>{data.totalPrs.toLocaleString()}</div>
-          <div className={styles.kpiHint}>{data.repos.length}개 활성 repo</div>
+          <div className={styles.kpiHint}>{data.repos.length} active repos</div>
         </div>
         <div className={styles.kpi}>
-          <div className={styles.kpiLabel}>평균 / 주</div>
+          <div className={styles.kpiLabel}>Avg / week</div>
           <div className={styles.kpiValue}>{data.avgPerWeek.toFixed(1)}</div>
-          <div className={styles.kpiHint}>{data.weeksAxis.length}주 기준</div>
+          <div className={styles.kpiHint}>over {data.weeksAxis.length} weeks</div>
         </div>
         <div className={styles.kpi}>
-          <div className={styles.kpiLabel}>피크 주차</div>
+          <div className={styles.kpiLabel}>Peak week</div>
           <div className={styles.kpiValue}>{data.peakWeek?.count ?? 0}</div>
-          <div className={styles.kpiHint}>{data.peakWeek?.korean ?? '—'}</div>
+          <div className={styles.kpiHint}>{data.peakWeek?.display ?? '—'}</div>
         </div>
         <div className={styles.kpi}>
-          <div className={styles.kpiLabel}>최근 4주</div>
+          <div className={styles.kpiLabel}>Last 4 weeks</div>
           <div className={styles.kpiValue}>{data.recent4Total}</div>
           <div className={styles.kpiHint}>
             {last4.length > 0
-              ? `${data.weeksKorean[data.weeksAxis.indexOf(last4[0])]} ~ ${data.weeksKorean[data.weeksAxis.indexOf(last4[last4.length - 1])]}`
+              ? `${data.weeksDisplay[data.weeksAxis.indexOf(last4[0])]} – ${data.weeksDisplay[data.weeksAxis.indexOf(last4[last4.length - 1])]}`
               : '—'}
           </div>
         </div>
         <div className={styles.kpi}>
-          <div className={styles.kpiLabel}>Merge Rate</div>
+          <div className={styles.kpiLabel}>Merge rate</div>
           <div className={styles.kpiValue}>
             {mergeRate.toFixed(1)}
             <span className={styles.kpiUnit}>%</span>
@@ -195,12 +195,12 @@ function StatsPanel(): React.JSX.Element {
 
       <div className={styles.card}>
         <div className={styles.cardHead}>
-          <h3>주차별 PR 생성 추이</h3>
-          <span className={styles.cardTag}>Repo 누적 · 월·주차 단위</span>
+          <h3>Weekly PR creation trend</h3>
+          <span className={styles.cardTag}>Stacked by repo · month-week buckets</span>
         </div>
-        <p className={styles.cardDesc}>막대에 마우스를 올리면 repo별 세부 카운트를 확인할 수 있습니다.</p>
+        <p className={styles.cardDesc}>Hover (or focus) a bar to see the per-repo breakdown.</p>
         <WeeklyChart
-          weeksKorean={data.weeksKorean}
+          weeksDisplay={data.weeksDisplay}
           weeksDateRange={data.weeksDateRange}
           weeksAxis={data.weeksAxis}
           repos={data.repos}
@@ -222,31 +222,31 @@ function StatsPanel(): React.JSX.Element {
       <div className={styles.row2}>
         <div className={styles.card}>
           <div className={styles.cardHead}>
-            <h3>PR 상태 분포</h3>
-            <span className={styles.cardTag}>{data.totalPrs}건</span>
+            <h3>PR state distribution</h3>
+            <span className={styles.cardTag}>{data.totalPrs} total</span>
           </div>
           <p className={styles.cardDesc}>Merge rate: <strong>{mergeRate.toFixed(1)}%</strong></p>
           <StateBar />
         </div>
         <div className={styles.card}>
           <div className={styles.cardHead}>
-            <h3>Top Contributors</h3>
-            <span className={styles.cardTag}>bot 포함</span>
+            <h3>Top contributors</h3>
+            <span className={styles.cardTag}>bots included</span>
           </div>
-          <p className={styles.cardDesc}>PR 생성자 기준 상위 15명</p>
+          <p className={styles.cardDesc}>Top 15 PR authors</p>
           <TopContributors />
         </div>
       </div>
 
       <div className={styles.card}>
         <div className={styles.cardHead}>
-          <h3>주차 × Repo 매트릭스</h3>
-          <span className={styles.cardTag}>{data.weeksAxis.length}주 × {data.repos.length}개 repo</span>
+          <h3>Week × Repo matrix</h3>
+          <span className={styles.cardTag}>{data.weeksAxis.length} weeks × {data.repos.length} repos</span>
         </div>
-        <p className={styles.cardDesc}>셀 배경 진하기 = 해당 repo 내 상대적 활동량 · <span className={styles.zeroHint}>·</span> 표기는 0건</p>
+        <p className={styles.cardDesc}>Cell shading scales with each repo&apos;s activity for that week · <span className={styles.zeroHint}>·</span> means zero.</p>
         <RepoMatrix
           weeksAxis={data.weeksAxis}
-          weeksKorean={data.weeksKorean}
+          weeksDisplay={data.weeksDisplay}
           weeksDateRange={data.weeksDateRange}
           repos={data.repos}
           repoSeries={data.repoSeries}
@@ -258,10 +258,10 @@ function StatsPanel(): React.JSX.Element {
 
       <div className={styles.card}>
         <div className={styles.cardHead}>
-          <h3>최근 PR</h3>
-          <span className={styles.cardTag}>생성일 내림차순 · 30건</span>
+          <h3>Recent PRs</h3>
+          <span className={styles.cardTag}>Latest 30 · by created date</span>
         </div>
-        <p className={styles.cardDesc}>PR 번호 클릭 시 GitHub에서 열림</p>
+        <p className={styles.cardDesc}>Click a PR number to open it on GitHub.</p>
         <RecentPrs />
       </div>
     </section>

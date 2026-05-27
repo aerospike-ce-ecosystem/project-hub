@@ -3,7 +3,7 @@ import {repoColor, repoLabel} from './constants';
 import styles from './styles.module.css';
 
 interface Props {
-  weeksKorean: string[];
+  weeksDisplay: string[];
   weeksDateRange: string[];
   weeksAxis: string[];
   repos: string[];
@@ -16,7 +16,7 @@ interface Props {
  * Hover a bar to see per-repo breakdown in the tooltip.
  */
 export default function WeeklyChart({
-  weeksKorean,
+  weeksDisplay,
   weeksDateRange,
   weeksAxis,
   repos,
@@ -50,7 +50,7 @@ export default function WeeklyChart({
         preserveAspectRatio="xMidYMid meet"
         className={styles.chartSvg}
         role="img"
-        aria-label="주차별 PR 생성 추이"
+        aria-label="Weekly PR creation trend"
       >
         {/* Y grid + labels */}
         {yTicks.map((t) => {
@@ -80,7 +80,7 @@ export default function WeeklyChart({
               key={i}
               role="button"
               tabIndex={0}
-              aria-label={`${weeksKorean[i]}, 합계 ${totalPerWeek[i]}건`}
+              aria-label={`${weeksDisplay[i]}, total ${totalPerWeek[i]} PRs`}
               onPointerEnter={() => setHover(i)}
               onPointerLeave={() => setHover(null)}
               onPointerDown={() => setHover(i)}
@@ -119,7 +119,7 @@ export default function WeeklyChart({
         })}
 
         {/* X labels — show every other tick on small viewports via CSS class */}
-        {weeksKorean.map((label, i) => {
+        {weeksDisplay.map((label, i) => {
           const x = M.left + bandWidth * i + bandWidth / 2;
           return (
             <g key={i}>
@@ -153,7 +153,7 @@ export default function WeeklyChart({
           }}
         >
           <div className={styles.tooltipTitle}>
-            {weeksKorean[hover]} <span className={styles.tooltipSub}>· {weeksDateRange[hover]}</span>
+            {weeksDisplay[hover]} <span className={styles.tooltipSub}>· {weeksDateRange[hover]}</span>
           </div>
           {repos
             .map((r) => ({repo: r, count: repoSeries[r]?.[hover] ?? 0}))
@@ -167,7 +167,7 @@ export default function WeeklyChart({
               </div>
             ))}
           <div className={styles.tooltipFooter}>
-            합계 <strong>{totalPerWeek[hover]}</strong>건
+            Total <strong>{totalPerWeek[hover]}</strong>
           </div>
         </div>
       )}

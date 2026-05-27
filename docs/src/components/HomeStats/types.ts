@@ -7,13 +7,13 @@ export interface PrStatsData {
   repos: string[];
   perRepoTotal: Record<string, number>;
   weeksAxis: string[];
-  weeksKorean: string[];
+  weeksDisplay: string[];
   weeksDateRange: string[];
   repoSeries: Record<string, number[]>;
   totalPerWeek: number[];
   recent4Weeks: string[];
   recent4Total: number;
-  peakWeek: {week: string; korean: string; count: number} | null;
+  peakWeek: {week: string; display: string; count: number} | null;
   avgPerWeek: number;
   stateCounts: Record<string, number>;
   topContributors: {name: string; count: number}[];

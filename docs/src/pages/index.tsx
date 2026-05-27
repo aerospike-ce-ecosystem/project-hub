@@ -8,7 +8,7 @@ import styles from './index.module.css';
 const repos = [
   {
     name: 'aerospike-py',
-    description: 'Rust(PyO3) 기반 고성능 Python 클라이언트',
+    description: 'High-performance Python client backed by Rust (PyO3)',
     tech: 'Python / Rust',
     docs: 'https://aerospike-ce-ecosystem.github.io/aerospike-py/',
     github: 'https://github.com/aerospike-ce-ecosystem/aerospike-py',
@@ -22,21 +22,21 @@ const repos = [
   },
   {
     name: 'Cluster Manager',
-    description: '웹 기반 클러스터 관리 UI',
+    description: 'Web UI for managing CE clusters',
     tech: 'Next.js / FastAPI',
     docs: null,
     github: 'https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager',
   },
   {
     name: 'ackoctl',
-    description: 'cluster-manager CLI · Aerospike 운영 자동화',
+    description: 'CLI for cluster-manager and day-2 Aerospike operations',
     tech: 'Go / cobra',
     docs: null,
     github: 'https://github.com/aerospike-ce-ecosystem/ackoctl',
   },
   {
     name: 'Plugins',
-    description: 'Claude Code 에코시스템 플러그인 (9 skills)',
+    description: 'Claude Code plugin pack for the ecosystem (9 skills)',
     tech: 'Claude Code',
     docs: null,
     github: 'https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins',
@@ -52,7 +52,7 @@ function HomepageHeader() {
         <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
         <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
         <p className={styles.heroLead}>
-          Aerospike CE를 위한 모던 Python 클라이언트 · Kubernetes Operator · 웹 UI · CLI · AI 개발 도구를 한 곳에서.
+          A modern Python client, Kubernetes operator, web UI, CLI, and AI development tooling for Aerospike CE — all in one place.
         </p>
         <div className={styles.heroCtas}>
           <Link className="button button--primary button--lg" to="/docs/intro">
@@ -97,15 +97,15 @@ export default function Home(): React.JSX.Element {
   return (
     <Layout
       title="Aerospike CE Ecosystem Hub"
-      description="Aerospike CE 생태계 — Python 클라이언트, Kubernetes Operator, Cluster Manager, ackoctl, Plugins를 위한 단일 허브"
+      description="The Aerospike CE ecosystem — one hub for the Python client, Kubernetes operator, cluster manager, ackoctl, and plugins."
     >
       <HomepageHeader />
       <main className={styles.mainWrap}>
         <section className={clsx('container', styles.section)}>
           <div className={styles.sectionHead}>
-            <h2>Core Repositories</h2>
+            <h2>Core repositories</h2>
             <p className={styles.sectionDesc}>
-              생태계를 구성하는 핵심 리포지토리. 각 프로젝트는 독립적으로 사용할 수 있도록 느슨하게 결합되어 있습니다.
+              The repositories that make up the ecosystem. Each project is loosely coupled so it can be adopted on its own.
             </p>
           </div>
           <div className="row">

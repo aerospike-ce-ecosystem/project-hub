@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       open_pr:
-        description: 'PR로 열기 (기본). false면 main에 직접 commit'
+        description: 'Open a PR (default). If false, commit directly to main.'
         required: false
         type: boolean
         default: true
@@ -87,15 +87,15 @@ jobs:
           commit-message: 'chore: refresh weekly PR stats'
           title: 'chore: refresh weekly PR stats'
           body: |
-            ## Weekly PR Stats Refresh
+            ## Weekly PR stats refresh
 
             This PR was opened automatically by the `weekly-pr-stats` workflow.
 
             - Source: `node scripts/collect-pr-stats.mjs`
             - Output: `docs/src/data/pr-stats.json`
-            - Schedule: 매주 월요일 09:00 KST
+            - Schedule: every Monday at 00:00 UTC
 
-            데이터를 검토한 뒤 머지하면 메인 페이지의 통계 카드가 갱신됩니다.
+            Review the diff and merge to refresh the home-page stats panel.
           labels: |
             automation
             stats

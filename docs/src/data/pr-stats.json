@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-05-27T03:13:42.741Z",
+  "generatedAt": "2026-05-27T03:39:19.258Z",
   "org": "aerospike-ce-ecosystem",
   "earliest": "2026-02-05T15:28:20.000Z",
-  "latest": "2026-05-27T03:08:25.000Z",
-  "totalPrs": 987,
+  "latest": "2026-05-27T03:38:47.000Z",
+  "totalPrs": 990,
   "repos": [
     "aerospike-py",
     "aerospike-cluster-manager",
@@ -15,11 +15,11 @@
     ".github"
   ],
   "perRepoTotal": {
-    "aerospike-py": 278,
+    "aerospike-py": 279,
     "aerospike-cluster-manager": 350,
     "aerospike-ce-kubernetes-operator": 210,
-    "ackoctl": 48,
-    "project-hub": 46,
+    "ackoctl": 49,
+    "project-hub": 47,
     "aerospike-ce-ecosystem-plugins": 34,
     "workspace": 17,
     ".github": 4
@@ -43,43 +43,43 @@
     "2026-W21",
     "2026-W22"
   ],
-  "weeksKorean": [
-    "2월 1주차",
-    "2월 2주차",
-    "2월 3주차",
-    "2월 4주차",
-    "3월 1주차",
-    "3월 2주차",
-    "3월 3주차",
-    "3월 4주차",
-    "4월 1주차",
-    "4월 2주차",
-    "4월 3주차",
-    "4월 4주차",
-    "4월 5주차",
-    "5월 1주차",
-    "5월 2주차",
-    "5월 3주차",
-    "5월 4주차"
+  "weeksDisplay": [
+    "Feb W1",
+    "Feb W2",
+    "Feb W3",
+    "Feb W4",
+    "Mar W1",
+    "Mar W2",
+    "Mar W3",
+    "Mar W4",
+    "Apr W1",
+    "Apr W2",
+    "Apr W3",
+    "Apr W4",
+    "Apr W5",
+    "May W1",
+    "May W2",
+    "May W3",
+    "May W4"
   ],
   "weeksDateRange": [
-    "2/02–2/08",
-    "2/09–2/15",
-    "2/16–2/22",
-    "2/23–3/01",
-    "3/02–3/08",
-    "3/09–3/15",
-    "3/16–3/22",
-    "3/23–3/29",
-    "3/30–4/05",
-    "4/06–4/12",
-    "4/13–4/19",
-    "4/20–4/26",
-    "4/27–5/03",
-    "5/04–5/10",
-    "5/11–5/17",
-    "5/18–5/24",
-    "5/25–5/31"
+    "Feb 02–08",
+    "Feb 09–15",
+    "Feb 16–22",
+    "Feb 23 – Mar 01",
+    "Mar 02–08",
+    "Mar 09–15",
+    "Mar 16–22",
+    "Mar 23–29",
+    "Mar 30 – Apr 05",
+    "Apr 06–12",
+    "Apr 13–19",
+    "Apr 20–26",
+    "Apr 27 – May 03",
+    "May 04–10",
+    "May 11–17",
+    "May 18–24",
+    "May 25–31"
   ],
   "repoSeries": {
     "aerospike-py": [
@@ -99,7 +99,7 @@
       8,
       11,
       18,
-      4
+      5
     ],
     "aerospike-cluster-manager": [
       0,
@@ -156,7 +156,7 @@
       0,
       28,
       18,
-      2
+      3
     ],
     "project-hub": [
       0,
@@ -175,7 +175,7 @@
       2,
       1,
       7,
-      2
+      3
     ],
     "aerospike-ce-ecosystem-plugins": [
       0,
@@ -252,7 +252,7 @@
     106,
     75,
     110,
-    19
+    22
   ],
   "recent4Weeks": [
     "2026-W19",
@@ -260,22 +260,22 @@
     "2026-W21",
     "2026-W22"
   ],
-  "recent4Total": 310,
+  "recent4Total": 313,
   "peakWeek": {
     "week": "2026-W21",
-    "korean": "5월 3주차",
+    "display": "May W3",
     "count": 110
   },
-  "avgPerWeek": 58.06,
+  "avgPerWeek": 58.24,
   "stateCounts": {
-    "MERGED": 885,
+    "MERGED": 886,
     "CLOSED": 81,
-    "OPEN": 21
+    "OPEN": 23
   },
   "topContributors": [
     {
       "name": "KimSoungRyoul",
-      "count": 848
+      "count": 850
     },
     {
       "name": "app/dependabot",
@@ -283,7 +283,7 @@
     },
     {
       "name": "app/github-actions",
-      "count": 4
+      "count": 5
     },
     {
       "name": "app/claude",
@@ -305,10 +305,37 @@
     },
     {
       "month": "2026-05",
-      "count": 335
+      "count": 338
     }
   ],
   "recentPrs": [
+    {
+      "repo": "aerospike-py",
+      "number": 381,
+      "title": "chore(ci): bump GitHub Actions to latest versions",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/381",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:38:47Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "ackoctl",
+      "number": 55,
+      "title": "chore(ci): bump GitHub Actions to latest major versions",
+      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/55",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:37:24Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "project-hub",
+      "number": 105,
+      "title": "chore: refresh weekly PR stats",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/105",
+      "author": "app/github-actions",
+      "createdAt": "2026-05-27T03:32:54Z",
+      "state": "OPEN"
+    },
     {
       "repo": "project-hub",
       "number": 104,
@@ -316,7 +343,7 @@
       "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/104",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-27T03:08:25Z",
-      "state": "OPEN"
+      "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
@@ -550,33 +577,6 @@
       "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/100",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-23T17:37:49Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-ce-ecosystem-plugins",
-      "number": 50,
-      "title": "feat(skills): align aerospike-py SKILLs with LazyBatchRecords + to_numpy/to_dict",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/50",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-23T17:12:52Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 374,
-      "title": "feat!: LazyBatchRecords handle + GIL-detach to_numpy(dtype)",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/374",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-23T16:43:36Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-cluster-manager",
-      "number": 392,
-      "title": "fix: extend bin-name validation to remaining models and UI dialogs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/392",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-23T02:29:35Z",
       "state": "MERGED"
     }
   ]
