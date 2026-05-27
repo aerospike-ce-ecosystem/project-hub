@@ -50,9 +50,9 @@ I/O path, NumPy-aware batch interfaces, and complete `.pyi` stubs.
 Approximately **2.4× the throughput** of the official C client on standard
 mixed workloads.
 
-### 2. Aerospike CE has no community-maintained cloud-native ecosystem
+### 2. Aerospike has no community-maintained cloud-native ecosystem
 
-Aerospike CE does not ship with a community-maintained Kubernetes operator
+Aerospike does not ship with a community-maintained Kubernetes operator
 — the official AKO is restricted to the Enterprise Edition. There is no
 maintained web management interface, and most operational tooling is
 designed for bare-metal deployments. Day-2 operations on Kubernetes —

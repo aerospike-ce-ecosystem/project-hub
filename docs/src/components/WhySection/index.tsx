@@ -63,7 +63,7 @@ const CONTENT: Record<Lang, Content> = {
       },
       {
         tag: '02 · Cloud-native gap',
-        title: 'Aerospike CE has no community-maintained cloud-native ecosystem',
+        title: 'Aerospike has no community-maintained cloud-native ecosystem',
         problem: (
           <ul>
             <li>No community Kubernetes operator — the official AKO is Enterprise-only.</li>
@@ -176,7 +176,7 @@ const CONTENT: Record<Lang, Content> = {
       },
       {
         tag: '02 · 클라우드 네이티브 갭',
-        title: 'Aerospike CE에는 커뮤니티 수준의 cloud-native 생태계가 없다',
+        title: 'Aerospike에는 커뮤니티 수준의 cloud-native 생태계가 없다',
         problem: (
           <ul>
             <li>커뮤니티가 유지보수하는 쿠버네티스 오퍼레이터 없음 — 공식 AKO는 Enterprise Edition 전용.</li>
