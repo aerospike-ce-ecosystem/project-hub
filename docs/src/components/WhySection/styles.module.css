@@ -2,10 +2,54 @@
   padding: 3.5rem 0 1rem;
 }
 
-/* ── Intro ───────────────────────────────────────────────────── */
+/* ── Intro + language tabs ───────────────────────────────────── */
+.introRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 2.25rem;
+}
+@media (max-width: 720px) {
+  .introRow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+}
 .intro {
   max-width: 760px;
-  margin-bottom: 2.25rem;
+  flex: 1;
+}
+.langTabs {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 999px;
+  background: var(--ifm-card-background-color);
+  flex-shrink: 0;
+}
+.langTab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  font-family: inherit;
+}
+.langTab:hover {
+  color: var(--ifm-color-content);
+}
+.langTabActive {
+  background: var(--ifm-color-primary);
+  color: var(--ifm-color-primary-contrast-background, #fff);
+}
+.langTabActive:hover {
+  color: var(--ifm-color-primary-contrast-background, #fff);
 }
 .eyebrow {
   display: inline-flex;
@@ -44,15 +88,20 @@
 
 /* ── Problem grid ────────────────────────────────────────────── */
 .problemRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
   align-items: stretch;
-}
-.problemCol {
   margin-bottom: 1rem;
+}
+@media (max-width: 1024px) {
+  .problemRow {
+    grid-template-columns: 1fr;
+  }
 }
 .problemCard {
   display: flex;
   flex-direction: column;
-  height: 100%;
   padding: 22px 22px 20px;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 14px;
