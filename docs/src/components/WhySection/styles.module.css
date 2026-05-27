@@ -133,9 +133,23 @@
 .problemBody {
   margin: 0 0 14px;
   font-size: 13.5px;
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--ifm-color-emphasis-700);
   flex-grow: 1;
+}
+.problemBody ul {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+.problemBody li {
+  margin-bottom: 6px;
+}
+.problemBody li:last-child {
+  margin-bottom: 0;
+}
+.problemBody li::marker {
+  color: var(--ifm-color-emphasis-500);
 }
 .problemSolution {
   margin: 0;

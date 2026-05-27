@@ -34,9 +34,9 @@ three structural gaps make production adoption difficult today —
 particularly in large organizations and on Kubernetes. This ecosystem was
 created to close those gaps.
 
-### 1. The upstream Python client cannot sustain ML feature-store workloads
+### 1. The official Python client cannot sustain ML feature-store workloads
 
-The upstream Python client is a CFFI binding to the C library. The GIL is
+The official Python client is a CFFI binding to the C library. The GIL is
 held across the I/O path, asynchronous I/O is not natively supported, and
 the published type stubs are not kept in sync with the runtime. For ML
 serving — where Python is the primary language of the pipeline and
@@ -47,13 +47,13 @@ otherwise be a strong fit.
 **Response:** `aerospike-py` — a client implemented from the ground up in
 Rust (PyO3), with native asynchronous I/O, GIL release across the entire
 I/O path, NumPy-aware batch interfaces, and complete `.pyi` stubs.
-Approximately **2.4× the throughput** of the upstream C client on standard
+Approximately **2.4× the throughput** of the official C client on standard
 mixed workloads.
 
-### 2. Aerospike CE has no community Kubernetes story
+### 2. Aerospike CE has no community-maintained cloud-native ecosystem
 
 Aerospike CE does not ship with a community-maintained Kubernetes operator
-— the upstream AKO is restricted to the Enterprise Edition. There is no
+— the official AKO is restricted to the Enterprise Edition. There is no
 maintained web management interface, and most operational tooling is
 designed for bare-metal deployments. Day-2 operations on Kubernetes —
 scaling, rolling upgrades, warm restarts, ACL synchronization, dynamic
@@ -97,14 +97,15 @@ tooling behave identically on either edition. Adoption is not gated on the
 procurement timeline: CE today, EE later, with no integration changes
 required.
 
-### Cloud-native by default
+### Cloud-native advancement
 
 Kubernetes is a first-class deployment target rather than a secondary
-concern. Declarative cluster management is provided through ACKO (CRDs and
-reconciliation), day-2 operations are exposed through both a web
-management interface (Cluster Manager) and a CLI (`ackoctl`), and the data
-path is OpenTelemetry-instrumented end to end. None of these capabilities
-require an Enterprise Edition license.
+concern, and the ecosystem actively advances the cloud-native story for
+Aerospike CE. Declarative cluster management is provided through ACKO
+(CRDs and reconciliation), day-2 operations are exposed through both a
+web management interface (Cluster Manager) and a CLI (`ackoctl`), and the
+data path is OpenTelemetry-instrumented end to end. None of these
+capabilities require an Enterprise Edition license.
 
 ### Agent-driven operations
 
@@ -126,11 +127,11 @@ Detailed goals and reference docs live under
 restated here so external readers can follow the contract.
 
 1. **Hold the performance gap.** Maintain the throughput and latency
-   advantage over the upstream C client. The Rust (PyO3) layer always
+   advantage over the official C client. The Rust (PyO3) layer always
    does the heavy lifting; Python is a thin wrapper.
 2. **Track `aerospike-client-rust` v2.** Stay current with the upstream
-   Rust crate as it evolves; pick up new features behind opt-in flags
-   when they land.
+   `aerospike-client-rust` crate as it evolves; pick up new features
+   behind opt-in flags when they land.
 3. **NumPy batch surface.** `batch_read_numpy` and `batch_write_numpy`
    keep working at production quality for ML feature-store workloads.
 4. **First-class observability.** Logging, Prometheus metrics, and
