@@ -15,13 +15,15 @@ function formatDateKr(iso: string | null): string {
 }
 
 function formatGeneratedKr(iso: string): string {
+  // Render in UTC and label it explicitly — formatDateKr also uses UTC, so the
+  // header (집계 ~ / 마지막 업데이트) stays on one consistent timezone.
   const d = new Date(iso);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  const h = String(d.getHours()).padStart(2, '0');
-  const min = String(d.getMinutes()).padStart(2, '0');
-  return `${y}.${m}.${day} ${h}:${min}`;
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  const h = String(d.getUTCHours()).padStart(2, '0');
+  const min = String(d.getUTCMinutes()).padStart(2, '0');
+  return `${y}.${m}.${day} ${h}:${min} UTC`;
 }
 
 function Sparkline({values, color}: {values: number[]; color: string}): React.JSX.Element {
@@ -64,7 +66,11 @@ function StateBar(): React.JSX.Element {
 
 function TopContributors(): React.JSX.Element {
   const top = data.topContributors;
-  const max = top[0]?.count ?? 1;
+  if (top.length === 0) {
+    return <p className={styles.muted}>아직 기여자 데이터가 없습니다.</p>;
+  }
+  const max = top[0].count || 1;
+  const denom = data.totalPrs || 1;
   return (
     <div className={styles.contribList}>
       {top.map(({name, count}, i) => (
@@ -75,7 +81,7 @@ function TopContributors(): React.JSX.Element {
             <span className={styles.contribBarFill} style={{width: `${(count / max) * 100}%`}} />
           </span>
           <span className={styles.contribCount}>{count}</span>
-          <span className={styles.contribShare}>{((count / data.totalPrs) * 100).toFixed(1)}%</span>
+          <span className={styles.contribShare}>{((count / denom) * 100).toFixed(1)}%</span>
         </div>
       ))}
     </div>

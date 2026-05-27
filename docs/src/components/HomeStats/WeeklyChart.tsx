@@ -71,23 +71,30 @@ export default function WeeklyChart({
           );
         })}
 
-        {/* Stacked bars */}
+        {/* Stacked bars — pointer events cover mouse + touch + pen in one path */}
         {weeksAxis.map((_, i) => {
           const x = M.left + bandWidth * i + (bandWidth - barWidth) / 2;
           let cumY = M.top + innerH;
           return (
             <g
               key={i}
-              onMouseEnter={() => setHover(i)}
-              onMouseLeave={() => setHover(null)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${weeksKorean[i]}, 합계 ${totalPerWeek[i]}건`}
+              onPointerEnter={() => setHover(i)}
+              onPointerLeave={() => setHover(null)}
+              onPointerDown={() => setHover(i)}
+              onFocus={() => setHover(i)}
+              onBlur={() => setHover(null)}
             >
-              {/* Hover hit area (full column) */}
+              {/* Hit area — fillOpacity 0 keeps the rect interactive in Safari */}
               <rect
                 x={M.left + bandWidth * i}
                 y={M.top}
                 width={bandWidth}
                 height={innerH}
-                fill="transparent"
+                fill="black"
+                fillOpacity={0}
               />
               {repos.map((repo) => {
                 const v = repoSeries[repo]?.[i] ?? 0;
