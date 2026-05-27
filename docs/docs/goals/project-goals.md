@@ -62,10 +62,10 @@ rolling upgrades, warm restarts, ACL management, and an
 OpenTelemetry-instrumented data path — all driven by CRDs and exposed
 through both a UI and a CLI.
 
-### 3. Enterprise Edition is often out of reach inside large organisations
+### 3. Enterprise Edition is often out of reach inside large corporations
 
-Adopting Aerospike EE requires an org-level contract. Inside a large
-organisation, the procurement, legal, finance, and architecture sign-off
+Adopting Aerospike EE requires a corporate-level contract. Inside a large
+corporation, the procurement, legal, finance, and architecture sign-off
 chain becomes its own blocker — a classic *bell-the-cat* problem where
 everyone agrees EE would help, but nobody owns pushing the contract
 through, and the cost-justification burden lands on whoever raises their

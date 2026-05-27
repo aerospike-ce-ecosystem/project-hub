@@ -35,7 +35,7 @@ const CONTENT: Record<Lang, Content> = {
         excellent fit for online feature stores and other low-latency
         serving paths. Three practical gaps make it hard to actually ship
         on Aerospike at production quality today — especially inside large
-        organizations and on Kubernetes. The{' '}
+        corporations and on Kubernetes. The{' '}
         <strong>aerospike-ce-ecosystem</strong> closes those gaps with an
         open-source, cloud-native, agent-friendly toolchain.
       </>
@@ -93,11 +93,11 @@ const CONTENT: Record<Lang, Content> = {
       },
       {
         tag: '03 · EE gate',
-        title: 'Enterprise Edition is often out of reach inside large orgs',
+        title: 'Enterprise Edition is often out of reach inside large corporations',
         problem: (
           <>
-            Adopting Aerospike EE requires an org-level contract. Inside a
-            large organisation, procurement, legal, finance, and architecture
+            Adopting Aerospike EE requires a corporate-level contract. Inside
+            a large corporation, procurement, legal, finance, and architecture
             sign-offs become their own blocker — a classic <em>bell-the-cat</em>{' '}
             problem where everyone agrees EE would help, but no one owns
             pushing the contract through, and the cost-justification burden
@@ -158,7 +158,7 @@ const CONTENT: Record<Lang, Content> = {
       <>
         Aerospike는 고성능·저지연 NoSQL 데이터베이스로, 온라인 피처 스토어를
         비롯한 저지연 서빙 경로에 자연스럽게 들어맞는다. 그러나 실제로 운영
-        수준에서 Aerospike에 올라타려고 하면 — 특히 대규모 조직에서, 그리고
+        수준에서 Aerospike에 올라타려고 하면 — 특히 대기업 환경과
         쿠버네티스 위에서 — 현실적인 세 가지 갭이 가로막는다.{' '}
         <strong>aerospike-ce-ecosystem</strong>은 이 세 갭을 오픈소스 ·
         클라우드 네이티브 · 에이전트 친화적인 도구 모음으로 메운다.
@@ -215,10 +215,10 @@ const CONTENT: Record<Lang, Content> = {
       },
       {
         tag: '03 · EE 게이트',
-        title: '대규모 조직에서는 Enterprise Edition 도입 자체가 가로막힌다',
+        title: '대기업에서는 Enterprise Edition 도입 자체가 가로막힌다',
         problem: (
           <>
-            Aerospike EE 도입은 조직 수준의 계약이 필요하다. 큰 조직에서는
+            Aerospike EE 도입은 전사 차원의 계약이 필요하다. 대기업에서는
             구매·법무·재무·아키텍처 승인 체인 그 자체가 블로커가 된다 —
             모두가 EE가 도움이 된다는 데에는 동의하지만, 정작 계약을
             밀어붙이는 책임은 아무도 가져가지 않는, 전형적인{' '}
