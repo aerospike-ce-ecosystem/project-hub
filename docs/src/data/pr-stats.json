@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-27T03:13:42.741Z",
+  "generatedAt": "2026-05-27T03:32:51.603Z",
   "org": "aerospike-ce-ecosystem",
   "earliest": "2026-02-05T15:28:20.000Z",
   "latest": "2026-05-27T03:08:25.000Z",
@@ -268,9 +268,9 @@
   },
   "avgPerWeek": 58.06,
   "stateCounts": {
-    "MERGED": 885,
+    "MERGED": 886,
     "CLOSED": 81,
-    "OPEN": 21
+    "OPEN": 20
   },
   "topContributors": [
     {
@@ -316,7 +316,7 @@
       "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/104",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-27T03:08:25Z",
-      "state": "OPEN"
+      "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
