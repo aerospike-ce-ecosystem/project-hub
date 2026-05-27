@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-05-27T03:39:19.258Z",
+  "generatedAt": "2026-05-27T03:43:41.511Z",
   "org": "aerospike-ce-ecosystem",
   "earliest": "2026-02-05T15:28:20.000Z",
-  "latest": "2026-05-27T03:38:47.000Z",
-  "totalPrs": 990,
+  "latest": "2026-05-27T03:42:29.000Z",
+  "totalPrs": 995,
   "repos": [
     "aerospike-py",
     "aerospike-cluster-manager",
@@ -16,11 +16,11 @@
   ],
   "perRepoTotal": {
     "aerospike-py": 279,
-    "aerospike-cluster-manager": 350,
-    "aerospike-ce-kubernetes-operator": 210,
+    "aerospike-cluster-manager": 351,
+    "aerospike-ce-kubernetes-operator": 211,
     "ackoctl": 49,
-    "project-hub": 47,
-    "aerospike-ce-ecosystem-plugins": 34,
+    "project-hub": 49,
+    "aerospike-ce-ecosystem-plugins": 35,
     "workspace": 17,
     ".github": 4
   },
@@ -118,7 +118,7 @@
       61,
       14,
       31,
-      8
+      9
     ],
     "aerospike-ce-kubernetes-operator": [
       0,
@@ -137,7 +137,7 @@
       19,
       8,
       25,
-      2
+      3
     ],
     "ackoctl": [
       0,
@@ -175,7 +175,7 @@
       2,
       1,
       7,
-      3
+      5
     ],
     "aerospike-ce-ecosystem-plugins": [
       0,
@@ -194,7 +194,7 @@
       8,
       7,
       8,
-      1
+      2
     ],
     "workspace": [
       0,
@@ -252,7 +252,7 @@
     106,
     75,
     110,
-    22
+    27
   ],
   "recent4Weeks": [
     "2026-W19",
@@ -260,22 +260,22 @@
     "2026-W21",
     "2026-W22"
   ],
-  "recent4Total": 313,
+  "recent4Total": 318,
   "peakWeek": {
     "week": "2026-W21",
     "display": "May W3",
     "count": 110
   },
-  "avgPerWeek": 58.24,
+  "avgPerWeek": 58.53,
   "stateCounts": {
-    "MERGED": 886,
-    "CLOSED": 81,
-    "OPEN": 23
+    "MERGED": 888,
+    "CLOSED": 82,
+    "OPEN": 25
   },
   "topContributors": [
     {
       "name": "KimSoungRyoul",
-      "count": 850
+      "count": 855
     },
     {
       "name": "app/dependabot",
@@ -305,10 +305,55 @@
     },
     {
       "month": "2026-05",
-      "count": 338
+      "count": 343
     }
   ],
   "recentPrs": [
+    {
+      "repo": "project-hub",
+      "number": 107,
+      "title": "chore(ci): bump GitHub Actions to latest major versions",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/107",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:42:29Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "project-hub",
+      "number": 106,
+      "title": "refactor(home-stats): translate user-facing strings to English",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/106",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:40:48Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "aerospike-ce-ecosystem-plugins",
+      "number": 56,
+      "title": "chore(ci): bump actions/checkout to v6 in link-check workflow",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/56",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:40:38Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 297,
+      "title": "chore(ci): bump GitHub Actions to latest major versions",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/297",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:40:14Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 402,
+      "title": "chore(ci): bump astral-sh/setup-uv to v8",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/402",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:39:12Z",
+      "state": "OPEN"
+    },
     {
       "repo": "aerospike-py",
       "number": 381,
@@ -334,7 +379,7 @@
       "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/105",
       "author": "app/github-actions",
       "createdAt": "2026-05-27T03:32:54Z",
-      "state": "OPEN"
+      "state": "CLOSED"
     },
     {
       "repo": "project-hub",
@@ -370,7 +415,7 @@
       "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/379",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-26T01:59:47Z",
-      "state": "OPEN"
+      "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
@@ -533,51 +578,6 @@
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-24T12:34:27Z",
       "state": "CLOSED"
-    },
-    {
-      "repo": "aerospike-cluster-manager",
-      "number": 393,
-      "title": "fix: pass KEK env through compose",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/393",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-24T12:34:27Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 294,
-      "title": "fix: restore kustomize image placeholder",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/294",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-24T12:34:27Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "ackoctl",
-      "number": 52,
-      "title": "docs: refresh README command surface",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/52",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-24T12:34:27Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 375,
-      "title": "feat(rust): free-threaded build + batch_to_dict_py per-stage timing",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/375",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-24T11:37:36Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "project-hub",
-      "number": 100,
-      "title": "docs(adr): ADR-0052 — aerospike-py batch_read profiling + LazyBatchRecords/to_numpy GIL-detach validation",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/100",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-23T17:37:49Z",
-      "state": "MERGED"
     }
   ]
 }
