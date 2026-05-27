@@ -46,28 +46,18 @@ const CONTENT: Record<Lang, Content> = {
         tag: '01 · Client performance',
         title: 'The official Python client cannot sustain ML feature-store workloads',
         problem: (
-          <>
-            Aerospike fits the online feature store profile well —
-            sub-millisecond point reads, predictable tail latency, and
-            native list and map types for feature vectors. However, Python
-            is the primary language of ML pipelines, and the official
-            client is a CFFI binding to the C library: the GIL is held
-            across the I/O path, asynchronous I/O is not natively
-            supported, and the published type stubs are not kept in sync
-            with the runtime. At feature-store throughput levels, that
-            overhead is significant enough to exclude Aerospike from
-            workloads where it would otherwise be a strong fit.
-          </>
+          <ul>
+            <li>CFFI binding to the C client — the GIL is held across the entire I/O path.</li>
+            <li>Asynchronous I/O is not natively supported; the published type stubs drift from the runtime.</li>
+            <li>At feature-store throughput, the overhead excludes Aerospike from workloads where it would otherwise be a strong fit.</li>
+          </ul>
         ),
         solution: (
           <>
-            →&nbsp;<code>aerospike-py</code> — a client implemented from
-            the ground up in Rust&nbsp;(PyO3), with native asynchronous
-            I/O, GIL release across the entire I/O path, NumPy-aware
-            batch interfaces, and complete type stubs. Approximately{' '}
-            <strong>2.4× the throughput</strong> of the official C client
-            on standard mixed workloads, and first-class support for ML
-            inference servers.
+            →&nbsp;<code>aerospike-py</code> — Rust&nbsp;(PyO3) client with native
+            async, GIL release across the I/O path, and NumPy-aware batch
+            interfaces. Approximately <strong>2.4× the throughput</strong> of
+            the official C client on standard mixed workloads.
           </>
         ),
       },
@@ -75,26 +65,19 @@ const CONTENT: Record<Lang, Content> = {
         tag: '02 · Cloud-native gap',
         title: 'Aerospike CE has no community-maintained cloud-native ecosystem',
         problem: (
-          <>
-            Aerospike CE does not ship with a community-maintained
-            Kubernetes operator — the official AKO is restricted to the
-            Enterprise Edition. There is no maintained web management
-            interface, and most operational tooling is designed for
-            bare-metal deployments. Day-2 operations on Kubernetes —
-            scaling, rolling upgrades, warm restarts, dynamic
-            configuration changes — are left to each team to
-            reimplement.
-          </>
+          <ul>
+            <li>No community Kubernetes operator — the official AKO is Enterprise-only.</li>
+            <li>No maintained web management interface; most tooling assumes bare-metal deployments.</li>
+            <li>Day-2 operations (scaling, rolling upgrades, warm restarts, dynamic config) are left to each team to reimplement.</li>
+          </ul>
         ),
         solution: (
           <>
-            →&nbsp;<strong>ACKO</strong> (a CE-focused Kubernetes operator),{' '}
-            <strong>Cluster Manager</strong> (a FastAPI + Next.js management
-            interface), and <code>ackoctl</code> (a CLI). Declarative
-            cluster lifecycle management, rolling upgrades, warm-restart
-            workflows, ACL management, and an OpenTelemetry-instrumented
-            data path — all defined through CRDs and exposed via both UI
-            and CLI.
+            →&nbsp;<strong>ACKO</strong> (operator) +{' '}
+            <strong>Cluster Manager</strong> (UI) +{' '}
+            <code>ackoctl</code> (CLI). Declarative cluster lifecycle,
+            rolling upgrades, warm-restart workflows, ACL management, and
+            an OpenTelemetry-instrumented data path — all CRD-driven.
           </>
         ),
       },
@@ -102,24 +85,17 @@ const CONTENT: Record<Lang, Content> = {
         tag: '03 · License model',
         title: 'Enterprise Edition adoption is not an individual decision',
         problem: (
-          <>
-            Aerospike Enterprise Edition is licensed at the organization
-            level. Adoption requires a commercial agreement that involves
-            procurement, legal, finance, and architecture review — by
-            design, the decision sits above any individual engineer or
-            team. As a result, teams that would benefit from Enterprise
-            Edition features cannot adopt them on their own initiative,
-            and Community Edition becomes the practical production
-            baseline for those teams.
-          </>
+          <ul>
+            <li>Enterprise Edition is licensed at the organization level — adoption requires a commercial agreement.</li>
+            <li>Procurement, legal, finance, and architecture review are involved by design.</li>
+            <li>The decision sits above any individual engineer or team, so CE becomes the practical production baseline.</li>
+          </ul>
         ),
         solution: (
           <>
-            →&nbsp;Every component in this ecosystem supports both
-            Aerospike CE and the Enterprise Edition through a single,
-            consistent API. Teams can build and operate on CE today with
-            the same operator, client, and observability stack, and
-            migrate to EE if and when the organizational decision is
+            →&nbsp;Every component supports both <strong>CE and Enterprise
+            Edition</strong> through a single, consistent API. Build on CE
+            today, migrate to EE if and when the organizational decision is
             made — without changes to application code or operational
             tooling.
           </>
@@ -183,27 +159,18 @@ const CONTENT: Record<Lang, Content> = {
         tag: '01 · 클라이언트 성능',
         title: '공식 Python 클라이언트로는 ML feature store 워크로드를 감당하기 어렵다',
         problem: (
-          <>
-            Aerospike는 온라인 feature store의 요구 사항에 잘 부합한다 —
-            서브밀리세컨드 포인트 리드, 예측 가능한 tail latency, feature
-            vector에 적합한 list/map 네이티브 타입. 그러나 ML
-            파이프라인의 주 언어는 Python이며, 공식 클라이언트는 C
-            라이브러리에 대한 CFFI 바인딩으로 구현되어 있다. I/O 경로
-            전반에서 GIL이 유지되고, 비동기 I/O가 네이티브로 지원되지
-            않으며, 게시된 type stub은 런타임과 일치하지 않는다. feature
-            store 처리량 수준에서는 이 오버헤드가 충분히 커서, 본래
-            적합한 워크로드에서조차 Aerospike가 채택 후보에서 제외되는
-            결과로 이어진다.
-          </>
+          <ul>
+            <li>C 클라이언트에 대한 CFFI 바인딩 — I/O 경로 전반에서 GIL이 유지된다.</li>
+            <li>비동기 I/O가 네이티브로 지원되지 않고, 게시된 type stub은 런타임과 일치하지 않는다.</li>
+            <li>feature store 처리량 수준에서 본래 적합한 워크로드조차 Aerospike가 채택 후보에서 제외된다.</li>
+          </ul>
         ),
         solution: (
           <>
-            →&nbsp;<code>aerospike-py</code> — Rust(PyO3) 기반으로 처음
-            부터 다시 구현한 클라이언트. 네이티브 비동기 I/O, I/O 경로
-            전체에서 GIL release, NumPy 친화 배치 인터페이스, 완전한 type
-            stub을 제공한다. 표준 mixed 워크로드 기준으로 공식 C
-            클라이언트 대비 <strong>약 2.4배의 처리량</strong>을 보이며,
-            ML 추론 서버를 first-class로 지원한다.
+            →&nbsp;<code>aerospike-py</code> — Rust(PyO3) 기반 클라이언트.
+            네이티브 비동기 I/O, I/O 경로 GIL release, NumPy 친화 배치
+            인터페이스 제공. 표준 mixed 워크로드 기준 공식 C 클라이언트
+            대비 <strong>약 2.4배의 처리량</strong>.
           </>
         ),
       },
@@ -211,23 +178,19 @@ const CONTENT: Record<Lang, Content> = {
         tag: '02 · 클라우드 네이티브 갭',
         title: 'Aerospike CE에는 커뮤니티 수준의 cloud-native 생태계가 없다',
         problem: (
-          <>
-            Aerospike CE는 커뮤니티가 유지보수하는 쿠버네티스
-            오퍼레이터를 제공하지 않으며, 공식 AKO는 Enterprise Edition에
-            한정된다. 유지보수되는 웹 관리 인터페이스도 없고, 대부분의
-            운영 도구는 bare-metal 배포를 전제로 설계되어 있다. 쿠버네티스
-            위에서의 day-2 운영 — 스케일링, 롤링 업그레이드, warm restart,
-            동적 설정 변경 — 은 팀마다 개별적으로 다시 구현해야 한다.
-          </>
+          <ul>
+            <li>커뮤니티가 유지보수하는 쿠버네티스 오퍼레이터 없음 — 공식 AKO는 Enterprise Edition 전용.</li>
+            <li>유지보수되는 웹 관리 인터페이스 없음, 대부분의 운영 도구는 bare-metal 배포 전제.</li>
+            <li>스케일링·롤링 업그레이드·warm restart 등 day-2 운영을 팀마다 개별적으로 재구현해야 한다.</li>
+          </ul>
         ),
         solution: (
           <>
-            →&nbsp;<strong>ACKO</strong>(CE 전용 쿠버네티스 오퍼레이터),{' '}
-            <strong>Cluster Manager</strong>(FastAPI + Next.js 기반 관리
-            인터페이스), <code>ackoctl</code>(CLI). 선언적 클러스터
-            라이프사이클 관리, 롤링 업그레이드, warm-restart 워크플로우,
-            ACL 관리, OpenTelemetry로 계측된 데이터 경로 — 모두 CRD로
-            정의하고 UI와 CLI 양쪽에서 노출한다.
+            →&nbsp;<strong>ACKO</strong>(오퍼레이터) +{' '}
+            <strong>Cluster Manager</strong>(UI) +{' '}
+            <code>ackoctl</code>(CLI). 선언적 클러스터 라이프사이클, 롤링
+            업그레이드, warm-restart 워크플로우, ACL 관리, OpenTelemetry로
+            계측된 데이터 경로 — 모두 CRD 기반.
           </>
         ),
       },
@@ -235,23 +198,19 @@ const CONTENT: Record<Lang, Content> = {
         tag: '03 · 라이선스 모델',
         title: 'Enterprise Edition 도입은 개인 차원에서 결정할 수 있는 사안이 아니다',
         problem: (
-          <>
-            Aerospike Enterprise Edition은 조직 단위로 라이선스가
-            발급된다. 도입을 위해서는 구매·법무·재무·아키텍처 검토를
-            수반하는 상업 계약이 필요하며, 결정 권한은 설계상 개별
-            엔지니어나 팀의 범위를 벗어난다. 그 결과, EE 기능이 필요한
-            팀이라 하더라도 자체 판단으로 도입하기는 어렵고, 해당 팀에는
-            Community Edition이 실질적인 프로덕션 기준이 된다.
-          </>
+          <ul>
+            <li>Enterprise Edition은 조직 단위 라이선스 — 상업 계약이 필요하다.</li>
+            <li>구매·법무·재무·아키텍처 검토를 설계상 수반한다.</li>
+            <li>결정 권한이 개별 엔지니어나 팀의 범위를 벗어나, 해당 팀에는 CE가 실질적인 프로덕션 기준이 된다.</li>
+          </ul>
         ),
         solution: (
           <>
-            →&nbsp;이 ecosystem의 모든 컴포넌트는 단일하고 일관된 API를
-            통해 Aerospike CE와 Enterprise Edition을 동시에 지원한다.
-            동일한 오퍼레이터, 클라이언트, observability 스택을 그대로
-            사용하면서 오늘은 CE로 구축·운영하고, 조직 차원의 결정이
-            이루어지는 시점에 EE로 이전한다 — 애플리케이션 코드나 운영
-            도구의 변경 없이.
+            →&nbsp;모든 컴포넌트가 단일하고 일관된 API를 통해{' '}
+            <strong>CE와 Enterprise Edition을 동시에 지원</strong>한다.
+            오늘은 CE로 구축·운영하고, 조직 차원의 결정이 이루어지는
+            시점에 EE로 이전한다 — 애플리케이션 코드나 운영 도구의 변경
+            없이.
           </>
         ),
       },
@@ -341,7 +300,7 @@ export default function WhySection(): React.JSX.Element {
           <article key={p.tag} className={styles.problemCard}>
             <div className={styles.problemTag}>{p.tag}</div>
             <h3 className={styles.problemTitle}>{p.title}</h3>
-            <p className={styles.problemBody}>{p.problem}</p>
+            <div className={styles.problemBody}>{p.problem}</div>
             <p className={styles.problemSolution}>{p.solution}</p>
           </article>
         ))}
