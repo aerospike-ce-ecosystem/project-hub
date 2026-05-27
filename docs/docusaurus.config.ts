@@ -57,7 +57,17 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'docsSidebar',
           position: 'left',
-          label: 'Docs',
+          label: 'Docs (Project Hub)',
+        },
+        {
+          href: 'https://aerospike-ce-ecosystem.github.io/aerospike-py/',
+          label: 'aerospike-py',
+          position: 'left',
+        },
+        {
+          href: 'https://aerospike-ce-ecosystem.github.io/aerospike-ce-kubernetes-operator/',
+          label: 'ACKO',
+          position: 'left',
         },
         {
           href: 'https://github.com/aerospike-ce-ecosystem',

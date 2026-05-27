@@ -93,17 +93,10 @@
   box-shadow: 0 6px 20px color-mix(in srgb, var(--ifm-color-primary) 12%, transparent);
 }
 .repoName {
-  margin: 0 0 4px;
+  margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-}
-.repoTech {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ifm-color-primary);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
 }
 .repoDesc {
   margin: 0;
