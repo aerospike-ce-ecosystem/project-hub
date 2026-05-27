@@ -28,55 +28,59 @@ expected to align with these goals.
 
 ## Why this ecosystem exists
 
-Aerospike is a high-performance, low-latency NoSQL database and a natural fit
-for online feature stores and other latency-critical serving paths. Yet
-adopting Aerospike well today has three rough edges that this ecosystem was
-created to close.
+Aerospike is a high-performance, low-latency NoSQL database with strong fit
+for online feature stores and other latency-critical serving paths. However,
+three structural gaps make production adoption difficult today —
+particularly in large organizations and on Kubernetes. This ecosystem was
+created to close those gaps.
 
-### 1. The official Python client cannot carry an ML feature-store workload
+### 1. The upstream Python client cannot sustain ML feature-store workloads
 
-The upstream Python client wraps the C library through CFFI. The GIL is held
-across the I/O path, async support is bolted on, and the published type stubs
-drift from the runtime. For ML serving — where Python is the working
-language of the pipeline and feature-store reads must keep up with model
-inference — that gap is large enough to disqualify Aerospike from otherwise
-strong-fit use cases.
+The upstream Python client is a CFFI binding to the C library. The GIL is
+held across the I/O path, asynchronous I/O is not natively supported, and
+the published type stubs are not kept in sync with the runtime. For ML
+serving — where Python is the primary language of the pipeline and
+feature-store reads must keep pace with model inference — this overhead is
+significant enough to exclude Aerospike from workloads where it would
+otherwise be a strong fit.
 
-**Response:** `aerospike-py` — a from-scratch client written in Rust (PyO3).
-Native async, GIL release across the entire I/O path, NumPy batch
-fast-paths, and complete `.pyi` stubs. About **2.4× the throughput** of the
-official C client on standard mixed workloads.
+**Response:** `aerospike-py` — a client implemented from the ground up in
+Rust (PyO3), with native asynchronous I/O, GIL release across the entire
+I/O path, NumPy-aware batch interfaces, and complete `.pyi` stubs.
+Approximately **2.4× the throughput** of the upstream C client on standard
+mixed workloads.
 
-### 2. CE has no community Kubernetes story
+### 2. Aerospike CE has no community Kubernetes story
 
-Aerospike CE ships no community Kubernetes operator — the upstream AKO is
-Enterprise-only. There is no maintained web management UI, and the
-operational tooling assumes bare-metal deployments. Day-2 work on
-Kubernetes (scaling, rolling upgrades, warm restarts, ACL sync, dynamic
-config rollout) is left to each team to reinvent.
+Aerospike CE does not ship with a community-maintained Kubernetes operator
+— the upstream AKO is restricted to the Enterprise Edition. There is no
+maintained web management interface, and most operational tooling is
+designed for bare-metal deployments. Day-2 operations on Kubernetes —
+scaling, rolling upgrades, warm restarts, ACL synchronization, dynamic
+configuration changes — must be implemented independently by each team.
 
 **Response:** **ACKO** (a CE-focused Kubernetes operator), **Cluster
-Manager** (a FastAPI + Next.js web UI for cluster operations), and
-`ackoctl` (a CLI surface for both). Declarative cluster management,
-rolling upgrades, warm restarts, ACL management, and an
-OpenTelemetry-instrumented data path — all driven by CRDs and exposed
-through both a UI and a CLI.
+Manager** (a FastAPI + Next.js management interface), and `ackoctl` (a CLI
+surface). Declarative cluster lifecycle management, rolling upgrades,
+warm-restart workflows, ACL management, and an OpenTelemetry-instrumented
+data path — all defined through CRDs and exposed via both UI and CLI.
 
-### 3. Enterprise Edition is often out of reach inside large organisations
+### 3. Enterprise Edition adoption is not an individual-level decision
 
-Adopting Aerospike EE requires an org-level contract. Inside a large
-organisation, the procurement, legal, finance, and architecture sign-off
-chain becomes its own blocker — a classic *bell-the-cat* problem where
-everyone agrees EE would help, but nobody owns pushing the contract
-through, and the cost-justification burden lands on whoever raises their
-hand first. Many teams that should be on Aerospike never get past that
-gate.
+Aerospike Enterprise Edition is licensed at the organization level.
+Adoption requires a commercial agreement that involves procurement, legal,
+finance, and architecture review — by design, the decision sits above the
+individual engineer or team. As a result, teams that would benefit from
+Enterprise Edition features cannot adopt them on their own initiative, and
+Community Edition becomes the practical production baseline for those
+teams.
 
 **Response:** Every component in this ecosystem supports both Aerospike CE
-and EE. Teams ship on CE today with the same operator, the same client,
-and the same observability surface — and transparently move to EE later
-if and when the contract lands. The ecosystem unblocks adoption without
-forcing the EE decision up front.
+and the Enterprise Edition through a single, stable surface. Teams build
+and operate on CE today with the same operator, the same client, and the
+same observability stack, and migrate to EE if and when the organizational
+decision is made — without changes to application integration code or
+operational tooling.
 
 ---
 
@@ -85,29 +89,31 @@ forcing the EE decision up front.
 Three commitments cut across every project in the ecosystem and override
 project-local preferences when they conflict.
 
-### Open-source first, EE-compatible
+### Open-source first, Enterprise-Edition compatible
 
-Every component runs against both Aerospike CE and EE. Integrations, the
-operator, observability hooks, and operational tooling work identically on
-either edition. Adoption is never gated on procurement: CE today, EE later,
-no integration rewrite required.
+Every component operates against both Aerospike CE and the Enterprise
+Edition. Integrations, the operator, observability hooks, and operational
+tooling behave identically on either edition. Adoption is not gated on the
+procurement timeline: CE today, EE later, with no integration changes
+required.
 
 ### Cloud-native by default
 
-Kubernetes is a first-class deployment target, not an afterthought.
-Declarative cluster management lives in ACKO (CRDs + reconciliation),
-day-2 operations are exposed through a web UI (Cluster Manager) and a CLI
-(`ackoctl`), and the data path is OpenTelemetry-instrumented end to end.
-None of it requires an Enterprise licence.
+Kubernetes is a first-class deployment target rather than a secondary
+concern. Declarative cluster management is provided through ACKO (CRDs and
+reconciliation), day-2 operations are exposed through both a web
+management interface (Cluster Manager) and a CLI (`ackoctl`), and the data
+path is OpenTelemetry-instrumented end to end. None of these capabilities
+require an Enterprise Edition license.
 
 ### Agent-driven operations
 
-The same operational primitives that humans use through the UI and the CLI
-are exposed to autonomous agents. `ackoctl` produces structured output
-suitable for parsing, the Claude Code plugin pack ships nine skills covering
-deployment, debugging, day-2 ops, and e2e testing, and the project
-documentation is structured so agents can navigate the surface area without
-human translation.
+The operational primitives that human operators use through the UI and CLI
+are exposed equivalently to autonomous agents. `ackoctl` produces
+structured output suitable for programmatic consumption, the Claude Code
+plugin pack provides nine skills covering deployment, debugging, day-2
+operations, and end-to-end testing, and the project documentation is
+structured to be navigable by agents without manual translation.
 
 ---
 
