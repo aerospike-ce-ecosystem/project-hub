@@ -90,11 +90,17 @@ function isoWeekEnd(label) {
   return end;
 }
 
-/** "5월 1주차" — week number is computed from the Monday's day-of-month. */
+/**
+ * "5월 1주차" — Thursday-of-week determines which month the week belongs to,
+ * matching the ISO 8601 convention used to assign weeks to years. For a week
+ * that straddles a month boundary, the side with 4+ days wins (Mon–Thu rule).
+ */
 function koreanWeekLabel(isoLabel) {
-  const m = isoWeekStart(isoLabel);
-  const weekInMonth = Math.floor((m.getUTCDate() - 1) / 7) + 1;
-  return `${m.getUTCMonth() + 1}월 ${weekInMonth}주차`;
+  const monday = isoWeekStart(isoLabel);
+  const thu = new Date(monday);
+  thu.setUTCDate(monday.getUTCDate() + 3);
+  const weekInMonth = Math.floor((thu.getUTCDate() - 1) / 7) + 1;
+  return `${thu.getUTCMonth() + 1}월 ${weekInMonth}주차`;
 }
 
 function dateRangeLabel(isoLabel) {
@@ -177,8 +183,27 @@ async function main() {
     allPrs.some((p) => p.repo === r)
   );
 
-  const perRepoWeekly = new Map();
+  // First pass: bucket PRs by ISO week so we know the axis range.
   const allWeeks = new Set();
+  const prsByWeek = new Map(); // week -> [pr, ...]
+  for (const pr of allPrs) {
+    if (!activeRepos.includes(pr.repo)) continue;
+    const week = isoWeekLabel(new Date(pr.createdAt));
+    allWeeks.add(week);
+    if (!prsByWeek.has(week)) prsByWeek.set(week, []);
+    prsByWeek.get(week).push(pr);
+  }
+
+  let weeksAxis = buildAxis(allWeeks);
+  if (weeksLimit && weeksAxis.length > weeksLimit) {
+    weeksAxis = weeksAxis.slice(-weeksLimit);
+  }
+  const weeksSet = new Set(weeksAxis);
+
+  // Second pass: accumulate ALL stats (counters, recent, etc.) only over PRs
+  // whose week is included in weeksAxis. Keeps every exported number consistent
+  // with the visualised window — critical when `--weeks N` is supplied.
+  const perRepoWeekly = new Map();
   const authorCounter = new Map();
   const stateCounter = new Map();
   const monthlyTotal = new Map();
@@ -186,42 +211,36 @@ async function main() {
   let earliest = null;
   let latest = null;
 
-  for (const pr of allPrs) {
-    if (!activeRepos.includes(pr.repo)) continue;
-    const created = new Date(pr.createdAt);
-    const week = isoWeekLabel(created);
-    allWeeks.add(week);
+  for (const week of weeksAxis) {
+    for (const pr of prsByWeek.get(week) ?? []) {
+      const created = new Date(pr.createdAt);
 
-    if (!perRepoWeekly.has(pr.repo)) perRepoWeekly.set(pr.repo, new Map());
-    const map = perRepoWeekly.get(pr.repo);
-    map.set(week, (map.get(week) || 0) + 1);
+      if (!perRepoWeekly.has(pr.repo)) perRepoWeekly.set(pr.repo, new Map());
+      const map = perRepoWeekly.get(pr.repo);
+      map.set(week, (map.get(week) || 0) + 1);
 
-    const login = pr.author?.login || 'unknown';
-    authorCounter.set(login, (authorCounter.get(login) || 0) + 1);
+      const login = pr.author?.login || 'unknown';
+      authorCounter.set(login, (authorCounter.get(login) || 0) + 1);
 
-    const effectiveState = pr.mergedAt ? 'MERGED' : pr.state;
-    stateCounter.set(effectiveState, (stateCounter.get(effectiveState) || 0) + 1);
+      const effectiveState = pr.mergedAt ? 'MERGED' : pr.state;
+      stateCounter.set(effectiveState, (stateCounter.get(effectiveState) || 0) + 1);
 
-    const month = `${created.getUTCFullYear()}-${String(created.getUTCMonth() + 1).padStart(2, '0')}`;
-    monthlyTotal.set(month, (monthlyTotal.get(month) || 0) + 1);
+      const month = `${created.getUTCFullYear()}-${String(created.getUTCMonth() + 1).padStart(2, '0')}`;
+      monthlyTotal.set(month, (monthlyTotal.get(month) || 0) + 1);
 
-    if (!earliest || created < earliest) earliest = created;
-    if (!latest || created > latest) latest = created;
+      if (!earliest || created < earliest) earliest = created;
+      if (!latest || created > latest) latest = created;
 
-    recentPrs.push({
-      repo: pr.repo,
-      number: pr.number,
-      title: pr.title,
-      url: pr.url,
-      author: login,
-      createdAt: pr.createdAt,
-      state: effectiveState,
-    });
-  }
-
-  let weeksAxis = buildAxis(allWeeks);
-  if (weeksLimit && weeksAxis.length > weeksLimit) {
-    weeksAxis = weeksAxis.slice(-weeksLimit);
+      recentPrs.push({
+        repo: pr.repo,
+        number: pr.number,
+        title: pr.title,
+        url: pr.url,
+        author: login,
+        createdAt: pr.createdAt,
+        state: effectiveState,
+      });
+    }
   }
 
   const repoSeries = {};
@@ -253,7 +272,9 @@ async function main() {
     activeRepos.map((r) => [r, Object.values(repoSeries[r]).reduce((s, v) => s + v, 0)])
   );
 
-  recentPrs.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  recentPrs.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 
   const topContributors = [...authorCounter.entries()]
     .sort((a, b) => b[1] - a[1])

@@ -209,7 +209,7 @@
 }
 .tooltip {
   position: absolute;
-  bottom: calc(100% + -32px);
+  top: 12px;
   transform: translateX(-50%);
   background: var(--ifm-color-emphasis-900, #18181b);
   color: var(--ifm-color-emphasis-0, #fff);
@@ -218,6 +218,7 @@
   font-size: 12px;
   pointer-events: none;
   min-width: 200px;
+  max-width: 280px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
   z-index: 5;
 }
@@ -427,10 +428,12 @@
 }
 .weekCell {
   border-right: 1px solid var(--hs-border);
+  min-width: 140px;
+}
+.weekCellInner {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  min-width: 140px;
 }
 .weekMain {
   font-weight: 600;

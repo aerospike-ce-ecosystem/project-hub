@@ -72,8 +72,10 @@ export default function RepoMatrix({
           {weeksAxis.map((w, i) => (
             <tr key={w}>
               <td className={styles.weekCell}>
-                <span className={styles.weekMain}>{weeksKorean[i]}</span>
-                <span className={styles.weekSub}>{weeksDateRange[i]}</span>
+                <div className={styles.weekCellInner}>
+                  <span className={styles.weekMain}>{weeksKorean[i]}</span>
+                  <span className={styles.weekSub}>{weeksDateRange[i]}</span>
+                </div>
               </td>
               {repos.map((r) => {
                 const v = repoSeries[r]?.[i] ?? 0;
@@ -99,7 +101,9 @@ export default function RepoMatrix({
         <tfoot>
           <tr>
             <td className={styles.weekCell}>
-              <span className={styles.weekMain}>전체 합계</span>
+              <div className={styles.weekCellInner}>
+                <span className={styles.weekMain}>전체 합계</span>
+              </div>
             </td>
             {repos.map((r) => (
               <td key={r} className={`${styles.numCell} ${styles.totalCell}`}>

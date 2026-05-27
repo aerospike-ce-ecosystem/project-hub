@@ -137,11 +137,13 @@ export default function WeeklyChart({
         })}
       </svg>
 
-      {/* Tooltip */}
+      {/* Tooltip — clamp to [6%, 94%] so it never spills past the chart bounds */}
       {hover !== null && (
         <div
           className={styles.tooltip}
-          style={{left: `${((hover + 0.5) / n) * 100}%`}}
+          style={{
+            left: `${Math.min(94, Math.max(6, ((hover + 0.5) / n) * 100))}%`,
+          }}
         >
           <div className={styles.tooltipTitle}>
             {weeksKorean[hover]} <span className={styles.tooltipSub}>· {weeksDateRange[hover]}</span>

@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-05-27T03:02:24.478Z",
+  "generatedAt": "2026-05-27T03:13:42.741Z",
   "org": "aerospike-ce-ecosystem",
   "earliest": "2026-02-05T15:28:20.000Z",
-  "latest": "2026-05-26T06:33:44.000Z",
-  "totalPrs": 986,
+  "latest": "2026-05-27T03:08:25.000Z",
+  "totalPrs": 987,
   "repos": [
     "aerospike-py",
     "aerospike-cluster-manager",
@@ -19,7 +19,7 @@
     "aerospike-cluster-manager": 350,
     "aerospike-ce-kubernetes-operator": 210,
     "ackoctl": 48,
-    "project-hub": 45,
+    "project-hub": 46,
     "aerospike-ce-ecosystem-plugins": 34,
     "workspace": 17,
     ".github": 4
@@ -52,11 +52,11 @@
     "3월 2주차",
     "3월 3주차",
     "3월 4주차",
-    "3월 5주차",
     "4월 1주차",
     "4월 2주차",
     "4월 3주차",
     "4월 4주차",
+    "4월 5주차",
     "5월 1주차",
     "5월 2주차",
     "5월 3주차",
@@ -175,7 +175,7 @@
       2,
       1,
       7,
-      1
+      2
     ],
     "aerospike-ce-ecosystem-plugins": [
       0,
@@ -252,7 +252,7 @@
     106,
     75,
     110,
-    18
+    19
   ],
   "recent4Weeks": [
     "2026-W19",
@@ -260,22 +260,22 @@
     "2026-W21",
     "2026-W22"
   ],
-  "recent4Total": 309,
+  "recent4Total": 310,
   "peakWeek": {
     "week": "2026-W21",
     "korean": "5월 3주차",
     "count": 110
   },
-  "avgPerWeek": 58,
+  "avgPerWeek": 58.06,
   "stateCounts": {
     "MERGED": 885,
-    "OPEN": 20,
-    "CLOSED": 81
+    "CLOSED": 81,
+    "OPEN": 21
   },
   "topContributors": [
     {
       "name": "KimSoungRyoul",
-      "count": 847
+      "count": 848
     },
     {
       "name": "app/dependabot",
@@ -305,10 +305,19 @@
     },
     {
       "month": "2026-05",
-      "count": 334
+      "count": 335
     }
   ],
   "recentPrs": [
+    {
+      "repo": "project-hub",
+      "number": 104,
+      "title": "feat: add weekly PR activity dashboard to home page",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/104",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-27T03:08:25Z",
+      "state": "OPEN"
+    },
     {
       "repo": "aerospike-cluster-manager",
       "number": 401,
@@ -346,10 +355,10 @@
       "state": "MERGED"
     },
     {
-      "repo": "ackoctl",
-      "number": 54,
-      "title": "fix: preserve default HTTP transport settings",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/54",
+      "repo": "aerospike-py",
+      "number": 378,
+      "title": "docs: sync FastAPI sample defaults",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/378",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-26T00:15:17Z",
       "state": "OPEN"
@@ -364,10 +373,10 @@
       "state": "OPEN"
     },
     {
-      "repo": "aerospike-py",
-      "number": 378,
-      "title": "docs: sync FastAPI sample defaults",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/378",
+      "repo": "ackoctl",
+      "number": 54,
+      "title": "fix: preserve default HTTP transport settings",
+      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/54",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-26T00:15:17Z",
       "state": "OPEN"
@@ -418,28 +427,19 @@
       "state": "OPEN"
     },
     {
-      "repo": "ackoctl",
-      "number": 53,
-      "title": "docs: refresh CLI docs and install examples",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/53",
+      "repo": "aerospike-py",
+      "number": 377,
+      "title": "test: align feasibility test config with env",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/377",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-25T03:31:32Z",
-      "state": "OPEN"
+      "state": "MERGED"
     },
     {
-      "repo": "project-hub",
-      "number": 102,
-      "title": "docs: sync ADR index and repo inventory",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/102",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-25T03:31:32Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-ce-ecosystem-plugins",
-      "number": 52,
-      "title": "fix: tighten plugin docs and link checks",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/52",
+      "repo": "aerospike-cluster-manager",
+      "number": 394,
+      "title": "fix: align UI test dependency peers",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/394",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-25T03:31:32Z",
       "state": "OPEN"
@@ -454,30 +454,30 @@
       "state": "OPEN"
     },
     {
-      "repo": "aerospike-cluster-manager",
-      "number": 394,
-      "title": "fix: align UI test dependency peers",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/394",
+      "repo": "aerospike-ce-ecosystem-plugins",
+      "number": 52,
+      "title": "fix: tighten plugin docs and link checks",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/52",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-25T03:31:32Z",
       "state": "OPEN"
     },
     {
-      "repo": "aerospike-py",
-      "number": 377,
-      "title": "test: align feasibility test config with env",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/377",
+      "repo": "project-hub",
+      "number": 102,
+      "title": "docs: sync ADR index and repo inventory",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/102",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-25T03:31:32Z",
-      "state": "MERGED"
+      "state": "OPEN"
     },
     {
-      "repo": "workspace",
-      "number": 17,
-      "title": "fix: enable scheduled submodule bumps",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/17",
+      "repo": "ackoctl",
+      "number": 53,
+      "title": "docs: refresh CLI docs and install examples",
+      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/53",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-24T12:34:52Z",
+      "createdAt": "2026-05-25T03:31:32Z",
       "state": "OPEN"
     },
     {
@@ -490,10 +490,28 @@
       "state": "OPEN"
     },
     {
-      "repo": "ackoctl",
-      "number": 52,
-      "title": "docs: refresh README command surface",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/52",
+      "repo": "workspace",
+      "number": 17,
+      "title": "fix: enable scheduled submodule bumps",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/17",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-24T12:34:52Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-py",
+      "number": 376,
+      "title": "fix: honor Aerospike env in feasibility tests",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/376",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-05-24T12:34:27Z",
+      "state": "CLOSED"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 393,
+      "title": "fix: pass KEK env through compose",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/393",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-24T12:34:27Z",
       "state": "OPEN"
@@ -508,22 +526,13 @@
       "state": "OPEN"
     },
     {
-      "repo": "aerospike-cluster-manager",
-      "number": 393,
-      "title": "fix: pass KEK env through compose",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/393",
+      "repo": "ackoctl",
+      "number": 52,
+      "title": "docs: refresh README command surface",
+      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/52",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-24T12:34:27Z",
       "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 376,
-      "title": "fix: honor Aerospike env in feasibility tests",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/376",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-24T12:34:27Z",
-      "state": "CLOSED"
     },
     {
       "repo": "aerospike-py",
@@ -568,15 +577,6 @@
       "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/392",
       "author": "KimSoungRyoul",
       "createdAt": "2026-05-23T02:29:35Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 373,
-      "title": "fix: require list/map BY_VALUE ops to specify 'val' to prevent silent Nil substitution",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/373",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-23T02:28:59Z",
       "state": "MERGED"
     }
   ]

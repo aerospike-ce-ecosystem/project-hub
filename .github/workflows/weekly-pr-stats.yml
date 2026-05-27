@@ -36,8 +36,12 @@ jobs:
           node-version: '20'
 
       - name: Collect PR stats
+        # Prefer ORG_READ_TOKEN (a fine-grained PAT or App installation token
+        # with org:read + repo:read) when available — the default GITHUB_TOKEN
+        # is repo-scoped and may not be able to list org repos under strict
+        # org policies. Falls back to GITHUB_TOKEN for public-only setups.
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ORG_READ_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           node scripts/collect-pr-stats.mjs
 
