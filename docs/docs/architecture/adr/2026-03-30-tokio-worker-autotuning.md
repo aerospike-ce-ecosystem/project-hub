@@ -1,5 +1,5 @@
 ---
-title: "ADR-0018: aerospike-py Tokio Runtime Worker Thread 자동 튜닝 및 성능 프로파일링"
+title: "ADR-0024: aerospike-py Tokio Runtime Worker Thread 자동 튜닝 및 성능 프로파일링"
 description: aerospike-py의 Tokio runtime worker thread 수를 CPU 코어 기반 heuristic으로 자동 결정하고, RuntimeMetrics를 Prometheus 메트릭으로 노출하는 아키텍처 결정.
 sidebar_position: 24
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, tokio, runtime, performance, metrics, aerospike-py, profiling]
 last_updated: 2026-03-30
 ---
 
-# ADR-0018: aerospike-py Tokio Runtime Worker Thread 자동 튜닝 및 성능 프로파일링
+# ADR-0024: aerospike-py Tokio Runtime Worker Thread 자동 튜닝 및 성능 프로파일링
 
 ## 상태
 

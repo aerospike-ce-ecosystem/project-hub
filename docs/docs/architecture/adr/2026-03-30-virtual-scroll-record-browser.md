@@ -1,5 +1,5 @@
 ---
-title: "ADR-0017: Cluster Manager 레코드 브라우저 가상 스크롤 도입"
+title: "ADR-0020: Cluster Manager 레코드 브라우저 가상 스크롤 도입"
 description: Cluster Manager 레코드 브라우저에 TanStack Virtual 기반 가상 스크롤을 도입하여 대용량 레코드 렌더링 성능을 개선하는 아키텍처 결정.
 sidebar_position: 20
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, virtual-scroll, performance, frontend, cluster-manager, tanstack]
 last_updated: 2026-03-30
 ---
 
-# ADR-0017: Cluster Manager 레코드 브라우저 가상 스크롤 도입
+# ADR-0020: Cluster Manager 레코드 브라우저 가상 스크롤 도입
 
 ## 상태
 
