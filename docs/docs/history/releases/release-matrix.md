@@ -8,12 +8,13 @@ repos:
   - acko
   - cluster-manager
   - plugins
+  - ackoctl
 tags:
   - releases
   - compatibility
   - matrix
   - versioning
-last_updated: 2026-05-28
+last_updated: 2026-05-29
 ---
 
 # Release Compatibility Matrix
@@ -94,6 +95,16 @@ Cluster Manager follows continuous deployment aligned with ACKO integration mile
 | Version | Date (approx) | Key Changes |
 |:---:|:---:|:---|
 | v1.0.0 | 2026-03-12 | Initial release: 5 skills, 1 agent, 8 deployment examples, 13 reference docs |
+
+---
+
+## ackoctl Releases
+
+:::note
+ackoctl follows the daily-release workflow (Conventional Commits → minor/patch auto-bump). For the authoritative release list, see the upstream releases page: https://github.com/aerospike-ce-ecosystem/ackoctl/releases
+
+Detailed release history will be backfilled into this matrix in a follow-up. The cross-project compatibility matrix below does not yet include an `ackoctl` column.
+:::
 
 ---
 

@@ -73,7 +73,7 @@ Kubernetes의 선언적 패턴을 적극 활용합니다:
 
 에코시스템 전체에 AI 개발 도구를 통합합니다:
 
-- **Claude Code plugins**: 5개 Skills + 1개 Agent로 개발 생산성 향상
+- **Claude Code plugins**: 9개 Skill (별도 Agent 없음)로 개발 생산성 향상
 - **Agentic CI**: claude-code-action으로 PR 자동 리뷰 및 피드백
 - **Agentic workflows**: AI가 코드 생성, 리뷰, 테스트, 문서화를 지원
 
