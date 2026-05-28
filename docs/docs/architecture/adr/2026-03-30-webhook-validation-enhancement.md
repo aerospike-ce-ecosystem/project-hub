@@ -1,5 +1,5 @@
 ---
-title: "ADR-0020: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증"
+title: "ADR-0036: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증"
 description: ACKO webhook에 replication-factor, 포트 충돌, batch size 검증을 추가하여 런타임 오류를 admission 단계에서 차단하는 아키텍처 결정
 sidebar_position: 36
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, acko, webhook, validation, stabilization]
 last_updated: 2026-03-30
 ---
 
-# ADR-0020: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증
+# ADR-0036: ACKO Webhook Validation 강화 — replication-factor, port overlap, batch size 사전 검증
 
 ## 상태
 

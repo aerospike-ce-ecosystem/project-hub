@@ -1,5 +1,5 @@
 ---
-title: "ADR-0018: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입"
+title: "ADR-0022: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입"
 description: Cluster Manager의 K8s 클러스터 목록 API에 Kubernetes 네이티브 cursor 기반 pagination과 namespace 필터링을 도입하여 대규모 환경 확장성을 확보하는 아키텍처 결정.
 sidebar_position: 22
 scope: single-repo
@@ -8,7 +8,7 @@ tags: [adr, pagination, k8s, performance, cluster-manager, filtering]
 last_updated: 2026-03-30
 ---
 
-# ADR-0018: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입
+# ADR-0022: Cluster Manager K8s API에 Server-Side Pagination 및 Namespace Filtering 도입
 
 ## 상태
 
