@@ -13,7 +13,7 @@ tags:
   - compatibility
   - matrix
   - versioning
-last_updated: 2026-05-15
+last_updated: 2026-05-28
 ---
 
 # Release Compatibility Matrix
