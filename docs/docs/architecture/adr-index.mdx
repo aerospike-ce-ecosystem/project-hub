@@ -5,7 +5,7 @@ sidebar_position: 1
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, architecture, decision-record]
-last_updated: 2026-05-23
+last_updated: 2026-07-17
 ---
 
 import Tabs from '@theme/Tabs';
@@ -107,18 +107,18 @@ Architecture Decision Record(ADR)는 프로젝트의 중요한 아키텍처 결�
 | [ADR-0035](./adr/2026-03-30-pod-readiness-watch.md) | ACKO Pod Readiness Watch 전환 및 Status Enrichment 병렬화 | 2026-03-30 | <Status status="Proposed" /> | <Repo name="acko" /> |
 | [ADR-0036](./adr/2026-03-30-webhook-validation-enhancement.md) | ACKO Webhook Validation 강화 | 2026-03-30 | <Status status="Proposed" /> | <Repo name="acko" /> |
 | [ADR-0038](./adr/2026-04-05-external-network-access.md) | 외부 네트워크 접근 — Per-pod LB/NodePort | 2026-04-05 | <Status status="Accepted" /> | <Repo name="acko" /> |
-| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
+| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
 | [ADR-0040](./adr/2026-05-05-multi-cluster-topology-and-keycloak-oidc.md) | Multi-Cluster Topology and Keycloak OIDC | 2026-05-05 | <Status status="Accepted" /> | <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
 | [ADR-0041](./adr/2026-05-07-mcp-federation-gateway.md) | MCP Federation Gateway | 2026-05-07 | <Status status="Proposed" /> | <Repo name="cluster-manager" /> |
 | [ADR-0042](./adr/2026-05-21-acko-observability-otel-export.md) | ACKO·Cluster Manager OpenTelemetry Export 통합 | 2026-05-21 | <Status status="Accepted" /> | <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="aerospike-py" /> |
-| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
+| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
 | [ADR-0044](./adr/2026-04-07-acko-e2e-expansion-strategy.md) | ACKO E2E 테스트 확장 전략 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="acko" /> |
-| [ADR-0045](./adr/2026-04-07-helm-chart-oci-dual-chart.md) | ACKO Helm Chart 버전 관리 체계 — OCI 이중 Chart | 2026-04-07 | <Status status="Proposed" /> | <Repo name="acko" /> |
-| [ADR-0046](./adr/2026-04-07-otel-tracing-integration.md) | OpenTelemetry Tracing 완전 통합 및 에코시스템 전파 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="aerospike-py" /> <Repo name="cluster-manager" /> |
-| [ADR-0047](./adr/2026-04-07-numpy-batch-memory-model.md) | NumPy Batch 연산 인터페이스 확정 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="aerospike-py" /> |
+| [ADR-0045](./adr/2026-04-07-helm-chart-oci-dual-chart.md) | ACKO Helm Chart 버전 관리 체계 — OCI 이중 Chart | 2026-04-07 | <Status status="Accepted" /> | <Repo name="acko" /> |
+| [ADR-0046](./adr/2026-04-07-otel-tracing-integration.md) | OpenTelemetry Tracing 완전 통합 및 에코시스템 전파 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> <Repo name="cluster-manager" /> |
+| [ADR-0047](./adr/2026-04-07-numpy-batch-memory-model.md) | NumPy Batch 연산 인터페이스 확정 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> |
 | [ADR-0048](./adr/2026-04-07-record-browser-perf-strategy.md) | Record 브라우저 대용량 데이터 통합 성능 전략 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="cluster-manager" /> |
-| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
-| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Proposed" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
+| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
+| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
 | [ADR-0051](./adr/2026-04-07-daily-release-pipeline.md) | 에코시스템 일일 자동 릴리스 파이프라인 | 2026-04-07 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> <Repo name="acko" /> <Repo name="cluster-manager" /> <Repo name="plugins" /> |
 | [ADR-0052](./adr/2026-05-23-aerospike-py-batch-read-profiling.md) | aerospike-py batch_read 병목 프로파일링 — 3-Methodology Cross-Validation | 2026-05-23 | <Status status="Accepted" /> | <Repo name="aerospike-py" /> |
 
@@ -138,13 +138,13 @@ Architecture Decision Record(ADR)는 프로젝트의 중요한 아키텍처 결�
 | [ADR-0027](./adr/2026-03-30-structured-result-code.md) | 구조화된 에러 코드(result_code) 체계 도입 | 2026-03-30 | <Status status="Proposed" /> |
 | [ADR-0029](./adr/2026-03-30-asyncclient-connect-leak.md) | AsyncClient 동시 connect() 연결 누수 방지 | 2026-03-30 | <Status status="Proposed" /> |
 | [ADR-0031](./adr/2026-03-30-clientmanager-per-connection-lock.md) | ClientManager 동시성 결함 및 per-connection lock | 2026-03-30 | <Status status="Proposed" /> |
-| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0042](./adr/2026-05-21-acko-observability-otel-export.md) | ACKO·Cluster Manager OpenTelemetry Export 통합 | 2026-05-21 | <Status status="Accepted" /> |
-| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0046](./adr/2026-04-07-otel-tracing-integration.md) | OpenTelemetry Tracing 완전 통합 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0047](./adr/2026-04-07-numpy-batch-memory-model.md) | NumPy Batch 연산 인터페이스 확정 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0046](./adr/2026-04-07-otel-tracing-integration.md) | OpenTelemetry Tracing 완전 통합 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0047](./adr/2026-04-07-numpy-batch-memory-model.md) | NumPy Batch 연산 인터페이스 확정 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0051](./adr/2026-04-07-daily-release-pipeline.md) | 에코시스템 일일 자동 릴리스 파이프라인 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0052](./adr/2026-05-23-aerospike-py-batch-read-profiling.md) | aerospike-py batch_read 병목 프로파일링 | 2026-05-23 | <Status status="Accepted" /> |
 
@@ -168,14 +168,14 @@ Architecture Decision Record(ADR)는 프로젝트의 중요한 아키텍처 결�
 | [ADR-0035](./adr/2026-03-30-pod-readiness-watch.md) | ACKO Pod Readiness Watch 전환 | 2026-03-30 | <Status status="Proposed" /> |
 | [ADR-0036](./adr/2026-03-30-webhook-validation-enhancement.md) | ACKO Webhook Validation 강화 | 2026-03-30 | <Status status="Proposed" /> |
 | [ADR-0038](./adr/2026-04-05-external-network-access.md) | 외부 네트워크 접근 — Per-pod LB/NodePort | 2026-04-05 | <Status status="Accepted" /> |
-| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0040](./adr/2026-05-05-multi-cluster-topology-and-keycloak-oidc.md) | Multi-Cluster Topology and Keycloak OIDC | 2026-05-05 | <Status status="Accepted" /> |
 | [ADR-0042](./adr/2026-05-21-acko-observability-otel-export.md) | ACKO·Cluster Manager OpenTelemetry Export 통합 | 2026-05-21 | <Status status="Accepted" /> |
-| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0044](./adr/2026-04-07-acko-e2e-expansion-strategy.md) | ACKO E2E 테스트 확장 전략 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0045](./adr/2026-04-07-helm-chart-oci-dual-chart.md) | ACKO Helm Chart 버전 관리 체계 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0045](./adr/2026-04-07-helm-chart-oci-dual-chart.md) | ACKO Helm Chart 버전 관리 체계 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0051](./adr/2026-04-07-daily-release-pipeline.md) | 에코시스템 일일 자동 릴리스 파이프라인 | 2026-04-07 | <Status status="Accepted" /> |
 
   </TabItem>
@@ -197,15 +197,15 @@ Architecture Decision Record(ADR)는 프로젝트의 중요한 아키텍처 결�
 | [ADR-0030](./adr/2026-03-30-auth-security-headers.md) | API 인증/인가 및 보안 헤더 강화 | 2026-03-30 | <Status status="Proposed" /> |
 | [ADR-0033](./adr/2026-03-30-frontend-resource-leak-prevention.md) | Frontend 리소스 누수 방지 | 2026-03-30 | <Status status="Proposed" /> |
 | [ADR-0034](./adr/2026-03-30-health-check-parallel.md) | Health Check 병렬화 | 2026-03-30 | <Status status="Proposed" /> |
-| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0039](./adr/2026-04-07-skill-impact-review-pipeline.md) | Skill Impact Review 파이프라인 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0040](./adr/2026-05-05-multi-cluster-topology-and-keycloak-oidc.md) | Multi-Cluster Topology and Keycloak OIDC | 2026-05-05 | <Status status="Accepted" /> |
 | [ADR-0041](./adr/2026-05-07-mcp-federation-gateway.md) | MCP Federation Gateway | 2026-05-07 | <Status status="Proposed" /> |
 | [ADR-0042](./adr/2026-05-21-acko-observability-otel-export.md) | ACKO·Cluster Manager OpenTelemetry Export 통합 | 2026-05-21 | <Status status="Accepted" /> |
-| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0046](./adr/2026-04-07-otel-tracing-integration.md) | OpenTelemetry Tracing 완전 통합 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0043](./adr/2026-04-07-ci-workflow-suite-standardization.md) | 에코시스템 통합 CI 워크플로우 스위트 표준화 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0046](./adr/2026-04-07-otel-tracing-integration.md) | OpenTelemetry Tracing 완전 통합 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0048](./adr/2026-04-07-record-browser-perf-strategy.md) | Record 브라우저 대용량 데이터 성능 전략 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Proposed" /> |
-| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Proposed" /> |
+| [ADR-0049](./adr/2026-04-07-adr-lifecycle-automation.md) | Project Hub ADR Lifecycle 자동화 아키텍처 | 2026-04-07 | <Status status="Accepted" /> |
+| [ADR-0050](./adr/2026-04-07-dependency-chain-merge-order.md) | 에코시스템 의존성 체인 및 Merge 순서 원칙 | 2026-04-07 | <Status status="Accepted" /> |
 | [ADR-0051](./adr/2026-04-07-daily-release-pipeline.md) | 에코시스템 일일 자동 릴리스 파이프라인 | 2026-04-07 | <Status status="Accepted" /> |
 
   </TabItem>

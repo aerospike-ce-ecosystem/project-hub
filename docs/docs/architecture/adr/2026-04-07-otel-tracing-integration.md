@@ -5,16 +5,17 @@ sidebar_position: 46
 scope: ecosystem
 repos: [aerospike-py, cluster-manager]
 tags: [adr, opentelemetry, tracing, observability, prometheus]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0046: OpenTelemetry Tracing 완전 통합 및 에코시스템 전파
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#50
 - 검토 결과: POSITIVE REVIEW
 

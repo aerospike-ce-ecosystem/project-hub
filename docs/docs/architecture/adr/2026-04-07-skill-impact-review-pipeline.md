@@ -5,16 +5,17 @@ sidebar_position: 39
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, automation, cross-repo, skill-sync, pipeline, claude-code-action]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0039: Skill Impact Review 파이프라인 — Core Repo → Plugin Skill 변경 감지 및 자동 디스패치
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#47
 - 검토 결과: POSITIVE REVIEW
 

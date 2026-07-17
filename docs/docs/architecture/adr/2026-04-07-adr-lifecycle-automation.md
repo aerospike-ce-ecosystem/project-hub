@@ -5,16 +5,17 @@ sidebar_position: 49
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, automation, issueops, ai-review, workflow, dispatch]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0049: Project Hub ADR Lifecycle 자동화 아키텍처 — 리뷰/디스패치/상태 관리 3단계 자동화
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#54
 - 검토 결과: POSITIVE REVIEW
 

@@ -5,16 +5,17 @@ sidebar_position: 43
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
 tags: [adr, ci, workflow, standardization, automation, claude-code-action]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0043: 에코시스템 통합 CI 워크플로우 스위트 표준화
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#48
 - 검토 결과: POSITIVE REVIEW
 

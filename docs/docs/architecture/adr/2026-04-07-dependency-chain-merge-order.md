@@ -5,16 +5,17 @@ sidebar_position: 50
 scope: ecosystem
 repos: [aerospike-py, aerospike-ce-kubernetes-operator, aerospike-cluster-manager, aerospike-ce-ecosystem-plugins]
 tags: [adr, dependency-chain, merge-order, cross-repo, ci, release]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0050: 에코시스템 의존성 체인 및 Merge 순서 원칙
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#56
 - 검토 결과: POSITIVE REVIEW
 
