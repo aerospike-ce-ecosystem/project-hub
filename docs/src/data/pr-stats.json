@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-01T04:20:47.474Z",
+  "generatedAt": "2026-07-13T03:16:23.783Z",
   "org": "aerospike-ce-ecosystem",
   "earliest": "2026-02-05T15:28:20.000Z",
-  "latest": "2026-05-31T10:08:52.000Z",
-  "totalPrs": 1116,
+  "latest": "2026-07-06T10:54:02.000Z",
+  "totalPrs": 1164,
   "repos": [
     "aerospike-py",
     "aerospike-cluster-manager",
@@ -15,13 +15,13 @@
     ".github"
   ],
   "perRepoTotal": {
-    "aerospike-py": 301,
-    "aerospike-cluster-manager": 380,
-    "aerospike-ce-kubernetes-operator": 237,
-    "ackoctl": 73,
-    "project-hub": 61,
-    "aerospike-ce-ecosystem-plugins": 40,
-    "workspace": 20,
+    "aerospike-py": 307,
+    "aerospike-cluster-manager": 399,
+    "aerospike-ce-kubernetes-operator": 241,
+    "ackoctl": 75,
+    "project-hub": 63,
+    "aerospike-ce-ecosystem-plugins": 42,
+    "workspace": 33,
     ".github": 4
   },
   "weeksAxis": [
@@ -41,7 +41,13 @@
     "2026-W19",
     "2026-W20",
     "2026-W21",
-    "2026-W22"
+    "2026-W22",
+    "2026-W23",
+    "2026-W24",
+    "2026-W25",
+    "2026-W26",
+    "2026-W27",
+    "2026-W28"
   ],
   "weeksDisplay": [
     "Feb W1",
@@ -60,7 +66,13 @@
     "May W1",
     "May W2",
     "May W3",
-    "May W4"
+    "May W4",
+    "Jun W1",
+    "Jun W2",
+    "Jun W3",
+    "Jun W4",
+    "Jul W1",
+    "Jul W2"
   ],
   "weeksDateRange": [
     "Feb 02–08",
@@ -79,7 +91,13 @@
     "May 04–10",
     "May 11–17",
     "May 18–24",
-    "May 25–31"
+    "May 25–31",
+    "Jun 01–07",
+    "Jun 08–14",
+    "Jun 15–21",
+    "Jun 22–28",
+    "Jun 29 – Jul 05",
+    "Jul 06–12"
   ],
   "repoSeries": {
     "aerospike-py": [
@@ -99,7 +117,13 @@
       8,
       11,
       18,
-      27
+      27,
+      1,
+      3,
+      0,
+      0,
+      2,
+      0
     ],
     "aerospike-cluster-manager": [
       0,
@@ -118,7 +142,13 @@
       61,
       14,
       31,
-      38
+      38,
+      5,
+      5,
+      8,
+      0,
+      0,
+      1
     ],
     "aerospike-ce-kubernetes-operator": [
       0,
@@ -137,7 +167,13 @@
       19,
       8,
       25,
-      29
+      29,
+      0,
+      2,
+      2,
+      0,
+      0,
+      0
     ],
     "ackoctl": [
       0,
@@ -156,7 +192,13 @@
       0,
       28,
       18,
-      27
+      27,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
     ],
     "project-hub": [
       0,
@@ -175,7 +217,13 @@
       2,
       1,
       7,
-      17
+      17,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
     ],
     "aerospike-ce-ecosystem-plugins": [
       0,
@@ -194,7 +242,13 @@
       8,
       7,
       8,
-      7
+      7,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0
     ],
     "workspace": [
       0,
@@ -213,7 +267,13 @@
       6,
       5,
       3,
-      3
+      3,
+      5,
+      4,
+      3,
+      1,
+      0,
+      0
     ],
     ".github": [
       0,
@@ -231,6 +291,12 @@
       0,
       2,
       1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
       0,
       0
     ]
@@ -252,38 +318,44 @@
     106,
     75,
     110,
-    148
+    148,
+    14,
+    17,
+    13,
+    1,
+    2,
+    1
   ],
   "recent4Weeks": [
-    "2026-W19",
-    "2026-W20",
-    "2026-W21",
-    "2026-W22"
+    "2026-W25",
+    "2026-W26",
+    "2026-W27",
+    "2026-W28"
   ],
-  "recent4Total": 439,
+  "recent4Total": 17,
   "peakWeek": {
     "week": "2026-W22",
     "display": "May W4",
     "count": 148
   },
-  "avgPerWeek": 65.65,
+  "avgPerWeek": 50.61,
   "stateCounts": {
-    "MERGED": 1024,
-    "CLOSED": 87,
-    "OPEN": 5
+    "MERGED": 1062,
+    "CLOSED": 89,
+    "OPEN": 13
   },
   "topContributors": [
     {
       "name": "KimSoungRyoul",
-      "count": 975
+      "count": 1005
     },
     {
       "name": "app/dependabot",
-      "count": 134
+      "count": 150
     },
     {
       "name": "app/github-actions",
-      "count": 6
+      "count": 8
     },
     {
       "name": "app/claude",
@@ -306,277 +378,285 @@
     {
       "month": "2026-05",
       "count": 464
+    },
+    {
+      "month": "2026-06",
+      "count": 45
+    },
+    {
+      "month": "2026-07",
+      "count": 3
     }
   ],
   "recentPrs": [
     {
-      "repo": "aerospike-ce-ecosystem-plugins",
-      "number": 71,
-      "title": "fix(skills): sync skills with core changes since 2026-05-28 + compress generic content",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/71",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T10:08:52Z",
+      "repo": "aerospike-cluster-manager",
+      "number": 451,
+      "title": "chore(deps): bump astral-sh/setup-uv from 8.2.0 to 8.3.0",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/451",
+      "author": "app/dependabot",
+      "createdAt": "2026-07-06T10:54:02Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-py",
+      "number": 410,
+      "title": "chore(deps): bump actions/checkout from 6 to 7 in the gha-deps group",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/410",
+      "author": "app/dependabot",
+      "createdAt": "2026-07-01T02:54:37Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-py",
+      "number": 409,
+      "title": "chore(deps): update pyo3-async-runtimes requirement from 0.28 to 0.29 in /rust in the rust-deps group across 1 directory",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/409",
+      "author": "app/dependabot",
+      "createdAt": "2026-07-01T02:54:33Z",
       "state": "OPEN"
     },
     {
       "repo": "workspace",
-      "number": 20,
-      "title": "chore(submodules): bump aerospike-py to 4825e37",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/20",
+      "number": 33,
+      "title": "chore(deps): bump actions/checkout from 6 to 7",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/33",
+      "author": "app/dependabot",
+      "createdAt": "2026-06-22T10:45:22Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "workspace",
+      "number": 32,
+      "title": "chore(submodules): bump aerospike-cluster-manager to 2236668",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/32",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T09:24:05Z",
+      "createdAt": "2026-06-17T11:17:15Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "workspace",
+      "number": 31,
+      "title": "chore(submodules): bump aerospike-ce-kubernetes-operator to 0c19976",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/31",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-16T11:34:04Z",
       "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 432,
-      "title": "fix(api): tolerate per-namespace info failures in GET /connections/{conn_id}/health",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/432",
+      "number": 450,
+      "title": "fix(copilot): reliably invoke tools + inject connection/cluster context (open-model reliability)",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/450",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T08:43:45Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 403,
-      "title": "fix(operations): reject unknown list_sort sort_flags instead of silently defaulting",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/403",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T08:38:00Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "ackoctl",
-      "number": 79,
-      "title": "fix(query): reject inverted numeric bounds for between predicate",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/79",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T08:29:36Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 324,
-      "title": "fix(controller): don't report MigrationComplete when a node is unreachable",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/324",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T08:25:43Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "ackoctl",
-      "number": 78,
-      "title": "test(k8s): cover scale --size out-of-range rejection (CE 1..8 cap)",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/78",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T04:28:31Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-cluster-manager",
-      "number": 431,
-      "title": "fix(api): tolerate per-namespace info failures in GET /metrics/{conn_id}",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/431",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T04:27:25Z",
+      "createdAt": "2026-06-16T08:54:12Z",
       "state": "MERGED"
     },
     {
       "repo": "aerospike-ce-kubernetes-operator",
-      "number": 323,
-      "title": "fix(controller): don't report Completed phase when ACL sync failed",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/323",
+      "number": 328,
+      "title": "feat(chart): first-class ui.web.copilot config for the ACKO Agent",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/328",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T03:14:38Z",
+      "createdAt": "2026-06-16T02:55:21Z",
       "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 430,
-      "title": "fix(api): tolerate per-namespace info failures in GET /clusters/{conn_id}",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/430",
+      "number": 449,
+      "title": "feat(copilot): control-plane + data-plane agent tools (human-in-the-loop)",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/449",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T03:11:31Z",
+      "createdAt": "2026-06-16T02:33:24Z",
       "state": "MERGED"
     },
     {
-      "repo": "ackoctl",
-      "number": 77,
-      "title": "feat(connection): validate --color is a #RRGGBB hex value client-side",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/77",
+      "repo": "workspace",
+      "number": 30,
+      "title": "chore(submodules): bump aerospike-ce-ecosystem-plugins to 381c086",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/30",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T03:09:16Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 402,
-      "title": "fix(operations): reject unknown bit add/subtract overflow action codes",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/402",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T03:08:16Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 401,
-      "title": "fix(operations): reject unknown CDT list/map return_type client-side",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/401",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T02:24:39Z",
+      "createdAt": "2026-06-15T12:42:35Z",
       "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 429,
-      "title": "fix(indexes): tolerate per-namespace sindex failures in GET /indexes",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/429",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T02:24:38Z",
-      "state": "MERGED"
+      "number": 448,
+      "title": "chore(deps): bump @radix-ui/react-select from 2.2.6 to 2.3.0 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/448",
+      "author": "app/dependabot",
+      "createdAt": "2026-06-15T10:56:38Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 447,
+      "title": "chore(deps): bump @radix-ui/react-slot from 1.2.4 to 1.2.5 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/447",
+      "author": "app/dependabot",
+      "createdAt": "2026-06-15T10:56:24Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 446,
+      "title": "chore(deps): bump @copilotkit/react-core from 1.59.5 to 1.60.1 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/446",
+      "author": "app/dependabot",
+      "createdAt": "2026-06-15T10:56:16Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 445,
+      "title": "chore(deps-dev): bump @tailwindcss/postcss from 4.3.0 to 4.3.1 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/445",
+      "author": "app/dependabot",
+      "createdAt": "2026-06-15T10:56:01Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 444,
+      "title": "chore(deps): bump @radix-ui/react-dropdown-menu from 2.1.16 to 2.1.17 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/444",
+      "author": "app/dependabot",
+      "createdAt": "2026-06-15T10:55:49Z",
+      "state": "OPEN"
     },
     {
       "repo": "aerospike-ce-kubernetes-operator",
-      "number": 322,
-      "title": "fix(controller): mark on-demand operation as Error on unknown Kind",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/322",
+      "number": 327,
+      "title": "docs(chart): document COPILOT_BASE_URL for NAMC Open Models in ACKO Agent",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/327",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T02:23:26Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "ackoctl",
-      "number": 76,
-      "title": "feat(config): validate --server is a well-formed http(s) URL at set-context time",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/76",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T02:22:14Z",
-      "state": "MERGED"
+      "createdAt": "2026-06-15T09:26:50Z",
+      "state": "CLOSED"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 428,
-      "title": "fix(api): strip bad port suffix in parse_host_port so SSRF gate sees the bare host",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/428",
+      "number": 443,
+      "title": "feat(copilot): support OpenAI-compatible gateways via COPILOT_BASE_URL",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/443",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T01:42:29Z",
+      "createdAt": "2026-06-15T09:26:47Z",
       "state": "MERGED"
     },
     {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 321,
-      "title": "fix(webhook): parse image tag correctly for registry refs with a port",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/321",
+      "repo": "workspace",
+      "number": 29,
+      "title": "chore(submodules): bump aerospike-cluster-manager to fd6e41e",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/29",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T01:40:41Z",
+      "createdAt": "2026-06-14T09:56:11Z",
       "state": "MERGED"
     },
     {
-      "repo": "aerospike-py",
-      "number": 400,
-      "title": "fix(exp): reject malformed cond/let operand counts client-side",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/400",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T01:15:07Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "ackoctl",
+      "repo": "aerospike-ce-ecosystem-plugins",
       "number": 75,
-      "title": "fix: reject duplicate --label keys on connection create/update",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/75",
+      "title": "fix(skills): add LazyBatchRecords.to_list() example, trim internal trivia",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/75",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-31T01:09:13Z",
+      "createdAt": "2026-06-14T08:01:57Z",
       "state": "MERGED"
     },
     {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 320,
-      "title": "fix(controller): gate on-demand operation batches on readiness/migration; validate maxUnavailable",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/320",
+      "repo": "workspace",
+      "number": 28,
+      "title": "chore(submodules): bump aerospike-cluster-manager to 223d387",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/28",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T22:49:50Z",
+      "createdAt": "2026-06-13T09:34:04Z",
       "state": "MERGED"
     },
     {
-      "repo": "aerospike-py",
-      "number": 399,
-      "title": "fix(host): harden host/port parsing (empty tuple, IPv6 telemetry, default-port consistency)",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/399",
+      "repo": "workspace",
+      "number": 27,
+      "title": "chore(submodules): bump aerospike-ce-kubernetes-operator to 368cea5",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/27",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T22:26:59Z",
+      "createdAt": "2026-06-12T10:40:07Z",
       "state": "MERGED"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 427,
-      "title": "fix(api): return disconnected health instead of 500 on TOCTOU profile deletion",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/427",
+      "number": 442,
+      "title": "fix(ui): 13 UI bug fixes — routing encoding, dead clicks, stale-data races, mobile layout",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/442",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T22:23:07Z",
+      "createdAt": "2026-06-12T03:55:54Z",
       "state": "MERGED"
     },
     {
-      "repo": "ackoctl",
+      "repo": "aerospike-cluster-manager",
+      "number": 441,
+      "title": "refactor(ui): migrate to Tailwind CSS v4",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/441",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-11T17:23:39Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 440,
+      "title": "fix(ui): unwrap cascade layers in the copilot stylesheet, switch to sidebar",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/440",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-11T17:01:57Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 326,
+      "title": "feat(chart): web-scoped extraEnv/extraEnvFrom for the ACKO Agent LLM key",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/326",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-11T15:52:40Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 439,
+      "title": "feat(ui): add optional embedded AI copilot (CopilotKit v2, read-only)",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/439",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-11T13:20:14Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "workspace",
+      "number": 26,
+      "title": "chore(submodules): bump aerospike-py to fc52662",
+      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/26",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-11T10:58:19Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 325,
+      "title": "feat(helm): add rbac.create toggle for cluster-admin / RBAC-only install",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/325",
+      "author": "KimSoungRyoul",
+      "createdAt": "2026-06-11T05:42:14Z",
+      "state": "MERGED"
+    },
+    {
+      "repo": "aerospike-ce-ecosystem-plugins",
       "number": 74,
-      "title": "fix(client): validate connID is non-empty in notes and sets methods",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/74",
+      "title": "fix(skills): sync aerospike-py skills with merged core PRs #361–#405",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/74",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T22:22:56Z",
+      "createdAt": "2026-06-11T01:27:54Z",
       "state": "MERGED"
     },
     {
       "repo": "aerospike-py",
-      "number": 398,
-      "title": "fix(operate): reject non-numeric val for OP_INCR instead of opaque server error",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/398",
+      "number": 408,
+      "title": "perf(batch): two-pass batch key conversion — pointer-memoised ns/set + detached digest pass",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/408",
       "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T21:33:26Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 319,
-      "title": "fix(webhook): validate per-rack aerospikeConfig against CE constraints",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/319",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T21:32:23Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "ackoctl",
-      "number": 73,
-      "title": "fix(client): validate connID is non-empty across client methods",
-      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/73",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T21:26:21Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-cluster-manager",
-      "number": 426,
-      "title": "fix(api): add response_model to POST /connections/test endpoint",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/426",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T21:20:56Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 397,
-      "title": "fix(query): reject non-indexable equals predicate value instead of panicking",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/397",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T20:25:21Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-cluster-manager",
-      "number": 425,
-      "title": "fix(api): pass through real K8s API error statuses instead of collapsing to 500",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/425",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-05-30T20:24:29Z",
+      "createdAt": "2026-06-10T16:54:55Z",
       "state": "MERGED"
     }
   ]
