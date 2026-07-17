@@ -183,6 +183,20 @@
   position: relative;
   width: 100%;
 }
+/* Horizontal scroll host — the plot keeps a per-week min width (set inline on
+   .chartInner) and scrolls once the weeks outgrow the card, matching the
+   overflow-x pattern used by the matrix and recent-PRs tables below. */
+.chartScroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+/* Positioned ancestor for the tooltip, so it tracks its bar while scrolling. */
+.chartInner {
+  position: relative;
+  width: 100%;
+}
 .chartSvg {
   width: 100%;
   height: auto;
