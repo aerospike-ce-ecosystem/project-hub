@@ -29,4 +29,4 @@ Client 구현체에서 작업(operation) 구현부를 `client_ops.rs`라는 전�
 
 ## 영향 범위
 
-내부 Rust 코드 구조 변경으로, 외부 Python API에는 영향 없음. Rust 코드를 직접 수정하는 기여자에게 영향이 있으며, Client와 AsyncClient의 작업 구현이 단일 모듈에서 관리되어 향후 새 작업 추가가 용이해졌다.
+Public Python API는 바뀌지 않지만 Rust contributor의 작업 위치는 달라진다. `Client`와 `AsyncClient` operation을 하나의 module에서 관리하므로 새 operation을 두 번 구현할 필요가 줄었다.

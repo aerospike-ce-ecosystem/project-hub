@@ -20,7 +20,7 @@ last_updated: 2026-04-07
 
 ## 맥락 (Context)
 
-Aerospike CE Ecosystem의 4개 core repo(aerospike-py, ACKO, cluster-manager, plugins)는 `daily-release.yml` 워크플로우를 통해 **매일 KST 09:00**에 자동 릴리스를 실행하고 있습니다. 이 파이프라인은 Q1에 28회 릴리스를 달성하며 안정적으로 운영되고 있으나, 에코시스템의 버전 정책, 릴리스 cadence, 품질 게이트를 결정하는 핵심 아키텍처 결정임에도 불구하고 ADR로 문서화되지 않았습니다.
+Aerospike CE Ecosystem의 네 core repo인 aerospike-py, ACKO, cluster-manager, plugins는 `daily-release.yml` workflow를 통해 **매일 KST 09:00**에 release를 실행합니다. Q1에는 이 pipeline으로 28회 release했습니다. Version policy, release cadence, quality gate를 결정하는 구조이지만 아직 ADR로 기록하지 않았습니다.
 
 ### 현황 (2026-04-07 기준)
 
@@ -33,12 +33,12 @@ Aerospike CE Ecosystem의 4개 core repo(aerospike-py, ACKO, cluster-manager, pl
 
 ### 파이프라인 구성 요소
 
-1. **Conventional Commits 분석**: `feat` → minor, `fix` → patch로 SemVer 버전 자동 결정
-2. **AI 릴리스 노트**: Claude Code Action으로 한국어/영어 이중 릴리스 노트 생성
-3. **GitHub Release 생성**: `gh release create`로 자동 생성
-4. **Helm chart 연쇄 트리거**: ACKO의 경우 tag 생성 시 Helm chart publish가 자동 트리거
+1. **Conventional Commits 분석**: `feat`는 minor, `fix`는 patch로 분류해 SemVer version을 정합니다.
+2. **AI release note**: Claude Code Action으로 한국어와 영어 release note를 생성합니다.
+3. **GitHub Release 생성**: `gh release create`로 release를 만듭니다.
+4. **Helm chart 연쇄 trigger**: ACKO에서는 tag가 생성되면 Helm chart publish workflow를 실행합니다.
 
-이 결정은 ADR-0008 (IssueOps 기반 CI 워크플로우)에서 확립한 AI 기반 자동화 패턴의 자연스러운 확장이며, project-design의 "Transparency: 모든 의사결정을 ADR로 기록" 원칙에 따라 공식 문서화가 필요합니다.
+이 pipeline은 ADR-0008(IssueOps 기반 CI 워크플로우)의 AI automation pattern을 release에 적용합니다. Project-design의 `Transparency: 모든 의사결정을 ADR로 기록` 원칙에 따라 이 운영 방식을 문서화합니다.
 
 ## 결정 (Decision)
 

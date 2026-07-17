@@ -29,4 +29,4 @@ get, select, exists, operate 작업에서 key tuple 반환이 올바르지 않�
 
 ## 영향 범위
 
-CRUD 작업의 반환값에 의존하는 모든 사용자 코드에 영향. 기존에 잘못된 반환값을 우회하던 코드는 수정이 필요할 수 있다. 공식 클라이언트와의 동작 호환성이 크게 향상되었다.
+CRUD result에 의존하는 모든 user code가 영향을 받는다. 잘못된 반환값을 별도로 보정하던 code는 workaround를 제거해야 할 수 있으며, 수정 후에는 official client와 같은 key tuple을 반환한다.

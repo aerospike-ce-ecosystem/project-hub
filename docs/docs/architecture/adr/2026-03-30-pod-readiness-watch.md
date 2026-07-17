@@ -20,11 +20,11 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-ACKO의 reconciliation 루프에서 두 가지 성능 병목이 확인되었다.
+ACKO의 reconciliation loop에서 두 가지 성능 병목을 확인했습니다.
 
 ### 1. Pod Readiness Polling (10초 간격)
 
-`internal/controller/reconciler.go:58`에 정의된 `podReadyPollInterval = 10 * time.Second`로 인해, Pod가 ready 상태가 되어도 최대 10초까지 감지가 지연된다. 8노드 클러스터의 rolling restart 시 이 지연이 누적되어 약 80초의 불필요한 대기 시간이 발생한다. 또한 여러 AerospikeCluster를 관리할 경우 polling에 의한 API 서버 호출이 누적된다.
+`internal/controller/reconciler.go`의 58행은 `podReadyPollInterval = 10 * time.Second`로 설정되어 있습니다. Pod가 ready 상태가 된 뒤 감지하기까지 최대 10초가 걸립니다. 8-node cluster를 rolling restart하면 이 지연이 누적되어 약 80초를 기다리게 됩니다. 여러 `AerospikeCluster`를 관리할 때는 polling에 따른 API server request도 계속 늘어납니다.
 
 현재 구조:
 ```
@@ -33,9 +33,9 @@ Reconcile → waitForPodReady() → 10s sleep → re-check → 10s sleep → ...
 
 ### 2. Status Enrichment 순차 수집
 
-`internal/controller/reconciler_status.go:133`의 `collectAerospikeInfo`가 각 Pod에 대해 순차적으로 `aeroClient.InfoNode`를 호출한다. 8노드 기준 정상 시 400ms(노드당 50ms), 네트워크 지연 시 4초(노드당 500ms)까지 소요되어 reconcile 주기에 비해 과도한 시간을 소비한다.
+`internal/controller/reconciler_status.go`의 133행에 있는 `collectAerospikeInfo`는 각 Pod에 `aeroClient.InfoNode`를 차례로 호출합니다. 8-node 기준으로 정상일 때는 400ms(node당 50ms), network가 느릴 때는 4초(node당 500ms)가 걸려 reconcile 시간의 큰 부분을 차지합니다.
 
-이 문제는 ADR-0002에서 선택한 controller-runtime의 Informer cache를 충분히 활용하지 못하는 것에서 기인하며, ADR-0012(Pod Readiness Gates)에서 확립한 정확한 상태 감지 원칙을 시간 측면에서 개선하는 제안이다.
+현재 구현은 ADR-0002에서 선택한 controller-runtime의 Informer cache를 충분히 사용하지 않습니다. 이 결정은 ADR-0012(Pod Readiness Gates)의 정확한 상태 감지 원칙을 유지하면서 감지 시간을 줄입니다.
 
 ## 결정 (Decision)
 

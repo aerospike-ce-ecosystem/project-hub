@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-모든 Cluster Manager 사용자에게 영향. 네트워크 파티션 상황에서의 조기 감지 능력이 향상되어 데이터 불일치를 방지할 수 있다. ACKO의 서킷 브레이커 기능과 직접 연동된다.
+모든 Cluster Manager 사용자가 영향을 받는다. Network partition으로 인한 split-brain을 더 일찍 감지해 data inconsistency 위험을 줄일 수 있으며, ACKO의 circuit breaker와 직접 연동된다.

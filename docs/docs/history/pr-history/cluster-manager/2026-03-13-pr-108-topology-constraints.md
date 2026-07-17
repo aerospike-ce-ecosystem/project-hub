@@ -29,4 +29,4 @@ Topology spread constraints 설정 UI와 Pod security context 설정 기능을 �
 
 ## 영향 범위
 
-Kubernetes 클러스터에서 Aerospike Pod의 분산 배치와 보안 설정을 관리하는 운영자에게 영향. 노드 장애 시 가용성을 높이기 위한 토폴로지 분산 전략을 UI에서 직관적으로 설정할 수 있다. Pod security context를 통해 컨테이너 보안 정책을 준수할 수 있다.
+Aerospike Pod의 placement와 security를 관리하는 Kubernetes 운영자가 영향을 받는다. UI에서 topology spread policy와 Pod security context를 설정해 장애 domain 분산과 container security policy를 관리할 수 있다.

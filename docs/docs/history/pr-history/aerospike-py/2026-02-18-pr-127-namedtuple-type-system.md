@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-모든 API 반환값을 기존의 일반 튜플에서 NamedTuple/TypedDict로 전환하는 근본적인 타입 시스템 변경이다. 이를 통해 IDE 자동 완성, 타입 검사, 코드 가독성이 크게 향상되며, `record.bins`, `record.meta.gen` 같은 명시적 속성 접근이 가능해졌다.
+API 반환값을 일반 tuple에서 NamedTuple과 TypedDict로 변경했다. 사용자는 `record.bins`, `record.meta.gen`처럼 이름이 있는 attribute로 값에 접근할 수 있고, IDE completion과 static type checking도 활용할 수 있다.
 
 ## 주요 변경 사항
 
@@ -30,4 +30,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-aerospike-py의 모든 API 사용자에게 영향을 미치는 핵심 변경. 기존 코드는 하위 호환성이 유지되어 즉시 깨지지 않지만, 새로운 속성 접근 패턴(`record.bins` 등)으로의 점진적 마이그레이션을 권장한다. 후속 PR #205에서 batch 타입에도 동일 패턴이 적용된다.
+모든 aerospike-py API 사용자가 영향을 받는다. 기존 index access도 당장은 동작하지만 `record.bins`처럼 이름이 있는 attribute로 점진적으로 옮기는 것을 권장한다. 후속 PR #205는 같은 pattern을 batch type에도 적용한다.

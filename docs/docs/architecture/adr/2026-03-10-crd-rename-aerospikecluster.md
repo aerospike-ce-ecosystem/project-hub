@@ -19,12 +19,12 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-ACKO(Aerospike CE Kubernetes Operator)의 초기 CRD는 `AerospikeCECluster`라는 이름을 사용했습니다. 이 이름에는 다음과 같은 문제가 있었습니다:
+ACKO(Aerospike CE Kubernetes Operator)의 초기 CRD 이름은 `AerospikeCECluster`였습니다. 이 이름에는 다음 문제가 있었습니다.
 
-- **중복 접두사**: Operator 자체가 CE(Community Edition) 전용이므로 CRD 이름에 "CE"를 포함하는 것은 불필요한 중복
-- **긴 리소스명**: `kubectl get aerospikececlusters`와 같이 명령어가 지나치게 길어져 운영 편의성 저하
-- **짧은 이름 부재**: 별도의 short name이 정의되지 않아 매번 전체 이름을 입력해야 함
-- **커뮤니티 혼동**: CE와 Enterprise 구분이 CRD 이름이 아닌 Operator 레벨에서 이루어져야 한다는 사용자 피드백
+- **중복 접두사**: Operator 자체가 CE(Community Edition) 전용이므로 CRD 이름의 `CE`가 같은 의미를 반복합니다.
+- **긴 리소스명**: `kubectl get aerospikececlusters`처럼 command가 길어 운영 중 입력하기 불편합니다.
+- **짧은 이름 부재**: Short name이 없어 매번 전체 resource 이름을 입력해야 합니다.
+- **커뮤니티 혼동**: 사용자들은 CE와 Enterprise의 구분을 CRD 이름이 아니라 Operator 범위에서 표현해야 한다고 피드백했습니다.
 
 ## 결정 (Decision)
 
@@ -32,10 +32,10 @@ ACKO(Aerospike CE Kubernetes Operator)의 초기 CRD는 `AerospikeCECluster`라�
 
 ### 구현 세부사항
 
-- CRD Kind: `AerospikeCluster` (Group: `acko.io`, Version: `v1`)
-- Short names: `asc`, `ascluster`
-- 기존 `AerospikeCECluster` 리소스에 대한 마이그레이션 스크립트 제공
-- Webhook에서 구 CRD 요청 시 deprecation warning 반환
+- CRD Kind는 `AerospikeCluster`이며 Group은 `acko.io`, Version은 `v1`입니다.
+- Short name으로 `asc`와 `ascluster`를 제공합니다.
+- 기존 `AerospikeCECluster` resource를 변환하는 migration script를 제공합니다.
+- Webhook은 이전 CRD 요청에 deprecation warning을 반환합니다.
 
 ## 대안 검토 (Alternatives Considered)
 

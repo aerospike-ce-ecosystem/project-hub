@@ -19,7 +19,7 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-현재 Cluster Manager UI는 클러스터 상태를 주기적 폴링(REST API 호출)으로 조회합니다. 이 방식은 다음과 같은 문제를 야기합니다:
+현재 Cluster Manager UI는 REST API를 주기적으로 polling해 cluster 상태를 조회합니다. 이 방식에는 다음과 같은 문제가 있습니다.
 
 1. **이벤트 감지 지연**: 폴링 주기(예: 5초)에 의존하여 migration 시작, split-brain 발생 등 중요 이벤트의 감지가 지연됨
 2. **불필요한 서버 부하**: 상태 변화가 없어도 주기적으로 API를 호출하여 서버 리소스 낭비

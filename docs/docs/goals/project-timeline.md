@@ -10,7 +10,7 @@ last_updated: 2026-03-29
 
 # Project Timeline
 
-Aerospike CE Ecosystem의 전체 프로젝트 타임라인과 주요 이정표를 정리합니다. 2026년 2월 5일 첫 커밋부터 현재까지의 개발 과정을 시간순으로 기록합니다.
+이 문서는 2026년 2월 5일 첫 commit부터 2026년 1분기 말까지의 주요 개발 이력을 시간순으로 정리합니다. 전체 변경 목록이 아니라 프로젝트 방향을 바꾼 milestone과 release를 중심으로 다룹니다.
 
 ---
 
@@ -53,7 +53,7 @@ gantt
 
 **2026-02-05 ~ 2026-02-09** | 5 days
 
-에코시스템의 첫 프로젝트인 aerospike-py가 시작됩니다.
+에코시스템의 첫 프로젝트로 aerospike-py 개발을 시작했습니다.
 
 | Date | Event | Details |
 |------|-------|---------|
@@ -71,7 +71,7 @@ gantt
 
 **2026-02-09 ~ 2026-02-18** | 10 days
 
-핵심 기능을 빠르게 구현하여 alpha 릴리스를 반복합니다.
+CRUD에서 async, CDT, observability, NumPy batch까지 핵심 API를 단계적으로 추가하고 alpha version으로 검증했습니다.
 
 | Date | Event | Details |
 |------|-------|---------|
@@ -91,7 +91,7 @@ gantt
 | 02-17 | Info commands | Aerospike info protocol 지원 |
 | 02-17 | **v0.0.1.alpha6** | Type system + NumPy 통합 |
 
-**하이라이트**: 10일 만에 4개 alpha 릴리스, 핵심 기능 대부분 구현
+**결과:** 10일 동안 alpha release 4개를 배포하며 주요 기능의 기본 형태를 완성했습니다.
 
 ---
 
@@ -99,7 +99,7 @@ gantt
 
 **2026-02-18 ~ 2026-02-28** | 11 days
 
-성능 최적화와 품질 향상에 집중합니다.
+기능 확장보다 성능과 품질 검증에 집중한 단계입니다.
 
 | Date | Event | Details |
 |------|-------|---------|
@@ -120,7 +120,7 @@ gantt
 
 **2026-03-03 ~ 2026-03-08** | 6 days
 
-에코시스템이 확장됩니다. ACKO와 Cluster Manager가 동시에 개발을 시작합니다.
+ACKO와 Cluster Manager 개발을 시작하면서 범위가 client library에서 cluster 운영 도구까지 확장되었습니다.
 
 | Date | Event | Details |
 |------|-------|---------|
@@ -137,7 +137,7 @@ gantt
 | 03-07 | **ACKO v0.0.8~v0.0.9** | CE 제약 webhook + E2E |
 | 03-08 | CM security | 인증/인가, 보안 설정 |
 
-**하이라이트**: 6일 만에 ACKO 9개 릴리스, Cluster Manager MVP 완성
+**결과:** 6일 동안 ACKO release 9개를 배포했고 Cluster Manager MVP를 완성했습니다.
 
 **핵심 결정**: Kubebuilder v4 ([ADR-0002](/docs/architecture/adr/2026-01-18-kubebuilder-v4)), Podman ([ADR-0003](/docs/architecture/adr/2026-02-01-podman-over-docker))
 
@@ -147,7 +147,7 @@ gantt
 
 **2026-03-08 ~ 2026-03-16** | 9 days
 
-4개 프로젝트가 본격적으로 연동되는 시기입니다.
+각 프로젝트가 독립 기능을 넘어 서로의 API와 배포 흐름을 사용하기 시작한 단계입니다.
 
 | Date | Event | Details |
 |------|-------|---------|
@@ -169,7 +169,7 @@ gantt
 | 03-15 | aerospike-py backpressure | BackpressureError, circuit breaker |
 | 03-15 | aerospike-py refactoring | ~1200 lines 중복 코드 제거 |
 
-**하이라이트**: Plugins v1.0.0 릴리스, 4개 프로젝트 첫 통합 릴리스 달성
+**결과:** Plugins v1.0.0을 배포하고 네 프로젝트가 함께 동작하는 첫 통합 구성을 완성했습니다.
 
 ---
 
@@ -177,7 +177,7 @@ gantt
 
 **2026-03-16 ~ 2026-03-25** | 10 days
 
-안정성 강화와 기능 고도화에 집중합니다.
+초기 통합에서 발견된 운영 위험을 줄이고, data safety와 장애 복구 절차를 보강했습니다.
 
 | Date | Event | Details |
 |------|-------|---------|
@@ -197,7 +197,7 @@ gantt
 | 03-25 | **ACKO v0.1.7** | Final Q1 release, agentic CI |
 | 03-26 | **aerospike-py v0.0.4** | Final Q1 release |
 
-**하이라이트**: Agentic CI (claude-code-action) 전 프로젝트 배포 완료
+**결과:** 모든 프로젝트에 `claude-code-action` 기반 Agentic CI를 적용했습니다.
 
 ---
 
@@ -205,7 +205,7 @@ gantt
 
 **2026-03-25 ~ 2026-03-29** | 5 days
 
-Cluster Manager의 대규모 UI 전환과 프로젝트 허브 생성.
+Cluster Manager UI 기반을 정리하고, 에코시스템의 공통 기록을 관리할 Project Hub를 만들었습니다.
 
 | Date | Event | Details |
 |------|-------|---------|

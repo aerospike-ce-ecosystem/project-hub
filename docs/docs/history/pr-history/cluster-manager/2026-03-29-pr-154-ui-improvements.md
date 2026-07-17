@@ -32,4 +32,4 @@ Overview, Record Form, Cluster List 등 여러 UI 영역의 사용성과 접근�
 
 ## 영향 범위
 
-Cluster Manager의 Overview, Record Form, Cluster List 화면에 영향을 미치는 UI/UX 개선. DaisyUI 제거 이후 새로운 디자인 시스템에 맞춰 사용성과 접근성을 보완하는 후속 작업이다.
+Overview, Record Form, Cluster List UI가 영향을 받는다. DaisyUI를 제거한 뒤 새 design system에 맞춰 interaction, form control, accessibility attribute를 정리한 후속 변경이다.

@@ -20,17 +20,17 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager의 초기 로딩 시 모든 등록된 연결에 대해 health check를 수행한다. 현재 구현은 두 가지 문제를 가지고 있다:
+Cluster Manager는 처음 화면을 불러올 때 등록된 모든 connection의 health를 확인합니다. 현재 구현에는 두 가지 문제가 있습니다.
 
 ### 1. 순차 Health Check로 인한 초기 로딩 지연
 
-`connection-store.ts`의 `fetchAllHealth`는 각 연결에 대해 `fetchConnectionHealth`를 호출하지만, 브라우저의 HTTP/1.1 동일 호스트 동시 연결 제한(6개)으로 인해 실질적인 병목이 발생한다. 연결 10개 기준으로 평균 5초/연결 × 10 = ~50초의 초기 로딩 시간이 소요된다.
+`connection-store.ts`의 `fetchAllHealth`는 각 connection에 `fetchConnectionHealth`를 호출합니다. 그러나 browser의 HTTP/1.1 동일 host 동시 연결 제한이 6개이므로 실제로는 병목이 발생합니다. Connection 10개가 각각 평균 5초 걸리면 초기 loading에 약 50초가 필요합니다.
 
 ### 2. 에러 컨텍스트 손실
 
-연결 실패 시 `HealthStatus`에 `connected: false`만 저장되어 사용자가 실패 원인(네트워크 오류, 인증 실패, 타임아웃, 호스트 도달 불가)을 구분할 수 없다. 디버깅을 위해 브라우저 DevTools를 열어야 하는 불편함이 존재한다.
+Connection이 실패하면 `HealthStatus`에는 `connected: false`만 저장됩니다. 사용자는 network error, authentication failure, timeout, host unreachable을 구분할 수 없어 browser DevTools를 열어야 합니다.
 
-이 두 문제는 연결 수가 증가할수록 사용자 경험을 크게 저하시키며, Cluster Manager의 핵심 가치인 편의성 있는 클러스터 관리를 방해한다.
+Connection 수가 늘수록 loading은 더 느려지고 원인 확인도 어려워집니다. 이는 Cluster Manager에서 여러 cluster를 관리하는 흐름을 방해합니다.
 
 ## 결정 (Decision)
 
@@ -48,7 +48,7 @@ fetchAllHealth: async () => {
 },
 ```
 
-`Promise.allSettled`를 사용하여 개별 연결 실패가 전체 health check를 중단하지 않도록 한다. 진행률 표시를 통해 사용자에게 점진적 피드백을 제공한다.
+`Promise.allSettled`를 사용하면 connection 하나가 실패해도 전체 health check를 계속할 수 있습니다. 진행률을 표시해 완료 전에도 사용자에게 상태를 알립니다.
 
 ### 2. HealthStatus에 에러 컨텍스트 추가
 

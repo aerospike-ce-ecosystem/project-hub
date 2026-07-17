@@ -21,21 +21,21 @@ last_updated: 2026-03-29
 
 aerospike-py에서 `get()`, `query()`, `batch_get()` 등의 operation이 반환하는 레코드 결과의 형식을 결정해야 했습니다.
 
-기존 Aerospike 공식 Python 클라이언트(`aerospike` PyPI 패키지)는 결과를 `(key, meta, bins)` tuple 또는 dict를 혼합하여 반환했습니다. 이 방식에는 다음과 같은 문제가 있었습니다:
+기존 Aerospike 공식 Python 클라이언트(`aerospike` PyPI 패키지)는 결과에 `(key, meta, bins)` tuple과 dict를 함께 사용했습니다. 이 방식에는 다음과 같은 문제가 있었습니다.
 
-- **위치 기반 접근의 모호함**: `result[0]`, `result[1]`, `result[2]`와 같은 인덱스 기반 접근은 코드 가독성을 심각하게 저해
-- **타입 안전성 부재**: 반환값이 plain tuple/dict이므로 IDE 자동완성, 타입 체커(pyright, mypy)가 내부 구조를 추론 불가
-- **meta 접근의 불편함**: generation count, TTL 등 메타데이터에 접근하려면 `result[1]['gen']`과 같은 중첩 딕셔너리 접근 필요
-- **일관성 없는 반환 형식**: operation마다 tuple, dict, None 등 반환 형식이 달라 학습 비용 증가
+- **위치 기반 접근의 모호함**: `result[0]`, `result[1]`, `result[2]` 같은 index 기반 코드는 각 값의 의미를 드러내지 않습니다.
+- **타입 안전성 부재**: 반환값이 plain tuple이나 dict이므로 IDE와 type checker(pyright, mypy)가 내부 구조를 추론할 수 없습니다.
+- **meta 접근의 불편함**: Generation count와 TTL 같은 metadata를 읽으려면 `result[1]['gen']`처럼 중첩된 dict에 접근해야 합니다.
+- **일관성 없는 반환 형식**: Operation마다 tuple, dict, `None` 등 서로 다른 형식을 반환해 사용자가 각 형식을 따로 익혀야 합니다.
 
 aerospike-py는 Rust/PyO3 기반으로 새롭게 설계되었으므로, 기존 공식 클라이언트와의 하위 호환성 제약 없이 반환 형식을 자유롭게 결정할 수 있었습니다.
 
 ### 요구사항
 
-1. IDE 자동완성(autocomplete)과 타입 체커가 필드를 인식할 것
-2. 속성(attribute) 접근 방식으로 가독성을 높일 것
-3. PyO3에서 자연스럽게 구현 가능할 것
-4. 직렬화(serialization)가 용이할 것
+1. IDE autocomplete와 type checker가 field를 인식해야 합니다.
+2. Attribute access로 각 값의 의미가 드러나야 합니다.
+3. PyO3에서 자연스럽게 구현할 수 있어야 합니다.
+4. 쉽게 serialize할 수 있어야 합니다.
 
 ## 결정 (Decision)
 

@@ -20,7 +20,7 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-aerospike-py의 `AsyncClient`에서 `connect()` 메서드를 동시에 여러 코루틴에서 호출할 경우 **연결 누수**가 발생할 수 있습니다. 이는 Rust/PyO3 내부의 `ArcSwap::store` 호출이 atomic이지만, 두 코루틴이 각각 독립적으로 client를 생성한 후 순차적으로 store하면 먼저 저장된 client의 참조가 소실되어 `close()`가 호출되지 않는 문제입니다.
+aerospike-py의 `AsyncClient.connect()`를 여러 coroutine이 동시에 호출하면 **연결 누수**가 발생할 수 있습니다. Rust/PyO3 내부의 `ArcSwap::store` 자체는 atomic입니다. 그러나 각 coroutine이 client를 따로 만든 뒤 차례로 저장하면 먼저 저장한 client의 참조를 잃고 `close()`도 호출하지 못합니다.
 
 ### 문제 1: 동시 connect() 호출 시 연결 누수
 
@@ -33,7 +33,7 @@ future_into_py(py, async move {
 })
 ```
 
-두 코루틴이 동시에 `connect()`를 호출하면:
+두 coroutine이 동시에 `connect()`를 호출하면 다음 순서로 누수가 발생합니다.
 - 코루틴 A: client_A 생성 → `inner.store(client_A)`
 - 코루틴 B: client_B 생성 → `inner.store(client_B)` → **client_A의 참조 소실, close() 미호출**
 
@@ -41,11 +41,11 @@ future_into_py(py, async move {
 
 ### 문제 2: close() 후 재연결 시 상태 불일치
 
-`close()`는 `inner`만 `None`으로 설정하지만, `connection_info`(Arc)와 `limiter`(Arc)는 이전 연결의 값을 유지합니다. 재연결 시 이전 메트릭/OTel 속성이 새 연결에 혼입되어 관측 데이터의 정확성이 저하됩니다.
+`close()`는 `inner`만 `None`으로 설정합니다. `connection_info`(Arc)와 `limiter`(Arc)는 이전 연결의 값을 유지하므로, 재연결하면 이전 metric과 OTel attribute가 새 연결의 관측 데이터에 섞일 수 있습니다.
 
 ### 문제 3: AEROSPIKE_RUNTIME_WORKERS 상한 미검증
 
-`runtime.rs` (lines 31-37)에서 환경변수 `AEROSPIKE_RUNTIME_WORKERS`의 하한(1)만 검증하고 상한이 없어, 비정상적으로 큰 값 설정 시 Tokio 런타임 생성 실패로 Python import 시 panic이 발생합니다. 이 문제는 ADR-0018(Tokio Worker Autotuning)과 범위가 중복되므로, 해당 ADR에서 함께 처리하는 것을 권장합니다.
+`runtime.rs`의 31~37행은 환경 변수 `AEROSPIKE_RUNTIME_WORKERS`의 하한인 1만 검증하고 상한은 확인하지 않습니다. 지나치게 큰 값을 설정하면 Tokio runtime 생성이 실패하고 Python import 중 panic이 발생합니다. 이 문제는 ADR-0018(Tokio Worker Autotuning)의 범위와 겹치므로 해당 ADR에서 처리합니다.
 
 ## 결정 (Decision)
 

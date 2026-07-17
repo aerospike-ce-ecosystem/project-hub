@@ -29,4 +29,4 @@ AerospikeCluster CRD에 `priorityClassName` 필드를 추가하여 Pod 스케줄
 
 ## 영향 범위
 
-Kubernetes 클러스터에서 리소스 경합 시 Aerospike Pod의 스케줄링 우선순위를 보장해야 하는 환경에 영향. 프로덕션 환경에서 Aerospike Pod가 다른 워크로드보다 높은 우선순위로 스케줄링되도록 설정할 수 있다.
+AerospikeCluster에 기존 Kubernetes `PriorityClass`의 이름을 지정할 수 있다. 리소스 경합 시 Aerospike Pod에 다른 워크로드보다 높은 스케줄링 우선순위를 적용해야 하는 환경에서 사용할 수 있다.

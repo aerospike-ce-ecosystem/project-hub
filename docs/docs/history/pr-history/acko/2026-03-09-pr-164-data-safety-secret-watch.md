@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-데이터 안전성에 관련된 핵심 개선사항을 포함한다. Kubernetes Secret 변경을 감시하여 ACL(Access Control List) 설정을 자동 동기화하고, 동적 설정 변경 실패 시 자동 롤백 메커니즘을 구현했으며, 스케일다운 시의 데이터 안전성을 강화했다.
+Kubernetes Secret 변경을 감시해 ACL(Access Control List) 설정을 자동으로 동기화하도록 했다. 동적 설정 변경이 실패하면 이전 값으로 롤백하고, 스케일 다운 전에는 노드 수가 최소 replication factor를 충족하는지 확인한다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-ACKO로 운영되는 모든 Aerospike 클러스터에 영향. 특히 ACL을 사용하는 보안 설정 환경에서 Secret 변경이 자동으로 반영되어 수동 작업이 줄어든다. Cluster Manager와의 연동을 통해 설정 변경 이력 추적이 가능하다.
+ACL을 사용하는 ACKO 클러스터에서 Secret을 변경하면 수동 동기화 없이 새 설정이 반영된다. 동적 설정 실패 시의 롤백과 스케일 다운 전 노드 수 검증도 같은 운영 경로에 적용된다. 설정 변경 이력은 Cluster Manager 연동을 통해 추적할 수 있다.

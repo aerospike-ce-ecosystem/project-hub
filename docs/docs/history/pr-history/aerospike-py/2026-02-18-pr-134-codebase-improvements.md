@@ -29,4 +29,4 @@ Client와 AsyncClient 간 공유 로직을 `client_common.rs`로 추출하여 �
 
 ## 영향 범위
 
-내부 Rust 코드 구조 변경으로 외부 Python API에는 영향 없음. 동기/비동기 클라이언트의 핵심 로직이 단일 모듈에서 관리되어 버그 수정과 기능 추가 시 양쪽을 동시에 반영할 수 있게 되었다.
+Public Python API는 바뀌지 않는다. Sync와 async client가 공유하는 Rust logic을 하나의 module로 옮겨 수정 사항을 두 client에 같은 방식으로 적용할 수 있다.

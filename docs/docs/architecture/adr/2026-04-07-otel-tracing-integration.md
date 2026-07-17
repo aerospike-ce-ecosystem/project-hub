@@ -21,20 +21,20 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-ADR-0010(3-Layer Observability Stack)은 aerospike-py에 Logging + Metrics + Tracing 3계층 관측성 스택을 도입하는 결정을 문서화했다. PR #103(Logging), #104(Metrics), #105/#112(Tracing)를 통해 기본 구현이 완료되었으나, Q2 2026 로드맵의 "OpenTelemetry tracing 통합" 목표는 ADR-0010의 범위를 넘는 확장 결정을 요구한다.
+ADR-0010(3-Layer Observability Stack)은 aerospike-py에 Logging, Metrics, Tracing을 도입했습니다. PR #103(Logging), #104(Metrics), #105와 #112(Tracing)로 기본 구현을 마쳤습니다. Q2 2026 roadmap의 `OpenTelemetry tracing 통합` 목표를 달성하려면 trace를 ecosystem의 다른 component까지 연결하는 추가 결정이 필요합니다.
 
 ### 현재 상태
 
-- **aerospike-py**: OTel tracing 부분 구현 (PR #105, #112), Prometheus metrics 노출 완료
-- **cluster-manager**: Prometheus 기반 모니터링 대시보드 존재
+- **aerospike-py**: PR #105와 #112에서 OTel tracing 일부를 구현했으며 Prometheus metrics도 제공합니다.
+- **cluster-manager**: Prometheus 기반 monitoring dashboard가 있습니다.
 
 ### 확장이 필요한 영역
 
-1. **PyO3 경계 trace context 전파**: Python → Rust → Aerospike 전체 경로의 distributed tracing 완성
-2. **opt-in 활성화 메커니즘**: 환경변수, API parameter, decorator 등을 통한 사용자 제어
-3. **cluster-manager trace 소비**: aerospike-py가 생산한 OTel 시그널을 cluster-manager 대시보드에서 활용
-4. **OTel-native metrics vs Prometheus**: Prometheus exposition과 OTel metrics의 공존 전략
-5. **성능 예산**: full instrumentation의 overhead 허용 범위 정의
+1. **PyO3 경계의 trace context 전파**: Python → Rust → Aerospike 전체 경로를 distributed trace로 연결해야 합니다.
+2. **Opt-in 활성화 방식**: 환경 변수, API parameter, decorator 등으로 사용자가 tracing을 제어할 수 있어야 합니다.
+3. **cluster-manager의 trace 사용**: aerospike-py가 만든 OTel signal을 cluster-manager dashboard에서 사용할 방법이 필요합니다.
+4. **OTel-native metrics와 Prometheus의 관계**: Prometheus exposition과 OTel metrics를 함께 운영할 기준이 필요합니다.
+5. **성능 예산**: Full instrumentation에 허용할 overhead 범위를 정해야 합니다.
 
 ## 결정 (Decision)
 

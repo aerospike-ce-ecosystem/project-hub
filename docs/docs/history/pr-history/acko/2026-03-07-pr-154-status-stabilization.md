@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Operator의 status 업데이트 로직을 안정화하여 불필요한 reconcile loop를 방지했다. No-op 변경과 drift reconcile을 감지하고 skip하여 operator의 전반적인 안정성과 성능을 향상시켰다.
+Operator의 status 업데이트 로직을 조정해 불필요한 reconcile loop를 막았다. 실제 변경이 없는 no-op 업데이트와 drift reconciliation을 구분해, 같은 status를 반복해 처리하지 않도록 했다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ Operator의 status 업데이트 로직을 안정화하여 불필요한 reconcile
 
 ## 영향 범위
 
-ACKO operator를 사용하는 모든 환경에 영향. 특히 대규모 클러스터에서 불필요한 reconcile이 반복되던 문제가 해결되어 operator의 CPU 사용량과 API server 호출 횟수가 줄어든다.
+ACKO operator가 status를 반복해 업데이트하던 환경에 적용된다. 실제 변경이 없을 때 status subresource 업데이트와 후속 reconciliation을 건너뛰어 Operator CPU 사용과 API server 호출을 줄인다.

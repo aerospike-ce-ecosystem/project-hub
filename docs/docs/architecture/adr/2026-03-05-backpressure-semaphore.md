@@ -19,14 +19,14 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-aerospike-py를 사용하는 고부하 환경에서 다음과 같은 문제가 반복적으로 발생했습니다:
+높은 부하에서 aerospike-py를 사용할 때 다음 문제가 반복해서 발생했습니다.
 
 ### 문제 상황
 
-1. **서버 과부하**: Python asyncio 애플리케이션에서 수천 개의 동시 coroutine이 Aerospike에 요청을 보내면, 서버의 transaction queue가 포화되어 전체 클러스터 성능 저하
-2. **Timeout 연쇄 발생**: 서버 과부하로 인해 응답 지연이 발생하면, 대기 중인 요청들이 연쇄적으로 timeout되어 에러율 급증 (thundering herd 패턴)
-3. **메모리 증가**: 대기 중인 요청 버퍼가 클라이언트 측에서 무한히 증가하여 OOM 위험
-4. **예측 불가능한 에러**: 서버가 과부하 상태에서 반환하는 에러가 다양하고 (timeout, server not available, partition unavailable 등), 클라이언트에서 일관된 에러 처리가 어려움
+1. **서버 과부하**: Python asyncio 애플리케이션에서 수천 개의 coroutine이 동시에 요청을 보내면 server transaction queue가 포화되고 cluster 전체의 성능이 낮아집니다.
+2. **Timeout 연쇄 발생**: 서버 응답이 늦어지면 대기 중인 request가 연이어 timeout되어 error rate가 급증합니다. 이는 thundering herd pattern으로 이어질 수 있습니다.
+3. **메모리 증가**: 대기 중인 request buffer가 client에서 제한 없이 늘어나 OOM이 발생할 수 있습니다.
+4. **예측하기 어려운 오류**: 과부하 상태의 서버는 timeout, server not available, partition unavailable 등 여러 error를 반환하므로 client가 일관되게 처리하기 어렵습니다.
 
 ### 기술적 배경
 
@@ -34,10 +34,10 @@ aerospike-py는 내부적으로 Rust의 tokio 런타임을 사용하며, aerospi
 
 ### 요구사항
 
-1. 서버에 동시에 전달되는 요청 수를 제한하여 과부하 방지
-2. 한도 초과 시 명확하고 일관된 에러를 반환하여 클라이언트가 대응 가능
-3. 설정 가능한(configurable) 한도로 다양한 환경에 맞게 조절
-4. 성능 오버헤드 최소화 (hot path에서의 latency 증가 최소)
+1. 서버에 동시에 전달하는 request 수를 제한해 과부하를 막아야 합니다.
+2. 한도를 넘으면 client가 처리할 수 있는 명확하고 일관된 error를 반환해야 합니다.
+3. 환경에 맞게 한도를 설정할 수 있어야 합니다.
+4. Hot path의 latency 증가를 최소화해야 합니다.
 
 ## 결정 (Decision)
 
@@ -59,10 +59,10 @@ Aerospike Server CE
 
 ### 동작 방식
 
-1. `AsyncClient` 생성 시 `max_concurrent_ops` 파라미터로 Semaphore 크기 설정 (기본값: 1000)
-2. 모든 operation (`get`, `put`, `query`, `scan`, `batch_*`, `operate` 등) 호출 시 Semaphore permit 획득 시도
-3. permit 획득 성공: operation 실행 후 완료 시 자동 반환
-4. permit 획득 실패 (동시 operation이 `max_concurrent_ops` 초과): 즉시 `BackpressureError` 발생 (대기하지 않음)
+1. `AsyncClient`를 만들 때 `max_concurrent_ops` parameter로 Semaphore 크기를 설정합니다. 기본값은 1000입니다.
+2. 모든 operation(`get`, `put`, `query`, `scan`, `batch_*`, `operate` 등)은 실행 전에 Semaphore permit 획득을 시도합니다.
+3. Permit을 얻으면 operation을 실행하고, 완료할 때 자동으로 반환합니다.
+4. 동시 operation 수가 `max_concurrent_ops`를 넘어 permit을 얻지 못하면 기다리지 않고 `BackpressureError`를 발생시킵니다.
 
 ### API 설계
 

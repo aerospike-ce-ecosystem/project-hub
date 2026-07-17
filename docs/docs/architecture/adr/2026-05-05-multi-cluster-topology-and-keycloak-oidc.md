@@ -1,6 +1,6 @@
 ---
 title: "ADR-0040: Multi-Cluster Topology and Keycloak OIDC for ACKO + Cluster-Manager"
-description: ACKO Helm chart를 multi-cluster 토폴로지(common + per-environment operator cluster)로 확장하고, FastAPI native JWT 검증 + Keycloak external IdP를 표준 인증 수단으로 채택하는 결정.
+description: ACKO의 multi-cluster topology와 Keycloak 기반 OIDC 인증 방식을 정의한 결정
 sidebar_position: 40
 scope: ecosystem
 repos: [acko, cluster-manager, plugins]
@@ -19,115 +19,115 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-지금까지 ACKO Helm chart는 단일 cluster를 가정했고, web/api/operator가 같은 namespace에 함께 배포되는 single-cluster 토폴로지로만 검증되어 있었다. 이 구조에서는 다음과 같은 운영 시나리오를 수용하기 어렵다.
+기존 ACKO Helm chart는 하나의 cluster만 가정했습니다. Web, API, Operator를 같은 namespace에 배포하는 topology로만 검증돼 있어 다음과 같은 운영 요구를 충족하기 어려웠습니다.
 
-- 환경 분리 운영: dev/prod Aerospike cluster를 서로 다른 Kubernetes cluster에 배치하면서 단일 진입점에서 모두 관리
-- 권한 분리: dev cluster는 다수의 개발자가 자유롭게 접근 / prod cluster는 SRE만 접근하는 RBAC 정책
-- 인증의 외부화: 자체 인증 구현이 아니라, 조직 표준 IdP(Keycloak)와 통합하여 SSO/MFA/감사로깅 활용
+- **환경 분리**: dev와 production Aerospike cluster를 서로 다른 Kubernetes cluster에 배치하되 하나의 진입점에서 관리해야 합니다.
+- **권한 분리**: 여러 개발자가 사용하는 dev와 SRE만 접근하는 production에 서로 다른 RBAC policy를 적용해야 합니다.
+- **외부 인증 연동**: 자체 인증을 운영하지 않고 조직의 Keycloak을 사용해 SSO, MFA, audit logging을 활용해야 합니다.
 
-기존 single-cluster 가정 때문에 "common(웹) cluster ↔ 다수의 operator cluster" 구조를 chart 차원에서 표현할 수 없었고, API 인증은 미지원 또는 최소한의 BearerToken 수준이었다.
+Single-cluster 가정에서는 common Web cluster와 여러 Operator cluster의 관계를 Helm values로 표현할 수 없었습니다. API 인증도 지원하지 않거나 최소한의 bearer token만 사용하는 수준이었습니다.
 
 ### 인증 측면 추가 배경
 
-- Aerospike CE에는 enterprise 보안 기능(LDAP/OIDC 직접 연동)이 없다. 따라서 web 계층(cluster-manager)에 IdP-fronted 접근 제어를 두는 것이 현실적이다.
-- ADR-0030 (Cluster Manager API 인증/인가 아키텍처 및 보안 헤더 강화)에서 인증 인터페이스의 자리만 마련해 두었고 외부 IdP 연동 표준은 결정되어 있지 않았다.
+- Aerospike CE는 LDAP 또는 OIDC와 직접 연동하는 Enterprise security 기능을 제공하지 않습니다. 따라서 Cluster Manager 계층에서 IdP 기반 access control을 적용하는 것이 현실적입니다.
+- ADR-0030은 Cluster Manager의 authentication interface를 마련했지만 어떤 external IdP와 어떻게 연동할지는 정하지 않았습니다.
 
 ## 결정 (Decision)
 
 > **ACKO Helm chart에 "common cluster + 환경별 operator cluster" 토폴로지를 1급 옵션으로 추가하고, 인증 표준은 Keycloak을 외부 IdP로 두고 FastAPI가 native하게 JWT를 검증(JWKS)하는 방식으로 통일한다.**
 
-구체 결정은 다음 5가지로 구성된다.
+이 결정은 다음 다섯 부분으로 구성됩니다.
 
 ### 1. 토폴로지: common cluster + per-environment operator cluster
 
-- **common cluster**: web (SPA) 만 배포. 사용자가 가장 먼저 접근하는 진입점.
-- **operator cluster (dev / prod)**: api + operator + 자기 cluster의 Aerospike만 다룬다. 자기 환경의 cluster registry view만 가진다.
-- common cluster의 web pod는 ConfigMap volume으로 마운트된 `/cluster-registry.json`을 읽어 사용자에게 클러스터 목록을 보여준다.
+- **common cluster**에는 Web SPA만 배포하며 사용자가 처음 접근하는 진입점으로 사용합니다.
+- **environment별 Operator cluster**에는 API와 Operator를 배포합니다. 각 instance는 같은 환경의 Aerospike cluster와 registry view만 관리합니다.
+- Common cluster의 Web Pod는 ConfigMap volume으로 mount한 `/cluster-registry.json`을 읽어 사용 가능한 cluster 목록을 표시합니다.
 
-ACKO chart의 `multiCluster.enabled`, `multiCluster.clusters[]` values 키로 이 토폴로지를 표현한다.
+이 topology는 ACKO chart의 `multiCluster.enabled`와 `multiCluster.clusters[]` values로 설정합니다.
 
 ### 2. Browser → 각 cluster ingress 직접 호출 (proxy.js 라우팅 없음)
 
-기존 cluster-manager의 `proxy.js`가 backend를 다중 라우팅하던 패턴 대신, 브라우저가 환경별 ingress(host)를 직접 호출하는 fan-out 모델을 채택한다.
+기존에는 Cluster Manager의 `proxy.js`가 여러 backend로 request를 전달했습니다. 새 topology에서는 browser가 environment별 Ingress host를 직접 호출합니다.
 
-- 각 operator cluster에는 자기만의 API ingress (`api.dev.example.com`, `api.prod.example.com`) 가 있다.
-- common cluster의 web에는 정적 cluster registry가 ConfigMap으로 mount되어 있고, 브라우저는 그 정보를 읽어 직접 그 host를 호출한다.
-- proxy.js의 multi-backend 분기 로직, common cluster의 동적 routing 책임 모두 제거된다.
+- 각 Operator cluster는 자체 API Ingress를 가집니다(예: `api.dev.example.com`, `api.prod.example.com`).
+- Common cluster의 Web에는 static cluster registry를 ConfigMap으로 mount합니다. Browser는 이 정보를 읽어 선택한 host를 직접 호출합니다.
+- `proxy.js`의 multi-backend branch와 common cluster의 dynamic routing 책임은 제거합니다.
 
 ### 3. Cluster registry source-of-truth = static helm values + ConfigMap volume
 
-- chart `values.yaml`의 `multiCluster.clusters[]`가 cluster registry의 단일 원천이다.
-- helm template이 이를 ConfigMap (`cluster-registry`) 으로 렌더링하고 web pod에 `/cluster-registry.json` 경로로 mount한다.
-- 동적 등록(런타임 cluster discovery / DB 저장) 은 의도적으로 채택하지 않는다. 정적 helm values 외 런타임 변경 경로는 두지 않아 chart upgrade가 진실의 단일 경로가 되도록 한다.
+- Chart `values.yaml`의 `multiCluster.clusters[]`를 cluster registry의 source of truth로 사용합니다.
+- Helm template은 이 값을 `cluster-registry` ConfigMap으로 render하고 Web Pod의 `/cluster-registry.json`에 mount합니다.
+- Runtime cluster discovery나 database를 통한 dynamic registration은 지원하지 않습니다. Cluster 목록은 Helm upgrade로만 바꿀 수 있게 해 configuration 변경 경로를 하나로 유지합니다.
 
 ### 4. 인증 = Keycloak external + FastAPI native JWT 검증
 
-- IdP는 외부의 Keycloak (single realm: `acko`).
-- SPA는 public client (`acko-spa`, PKCE), API는 audience `acko-api`.
-- FastAPI는 JWKS를 캐시하고 RS256으로 access token을 verify, audience(`acko-api`)와 issuer를 검증한다. (별도의 oauth2-proxy / authservice를 ingress에 두지 않는다 — 단계 1에서는.)
-- 권한 모델은 `realm_access.roles[]` 기반의 단순 RBAC. cluster-scoped role naming은 `acko:dev`, `acko:prod`. 옵션이며, 미설정 시 기본은 "모든 인증된 사용자에게 read-only" 정책에 가깝게 둔다.
+- 외부 Keycloak의 단일 `acko` realm을 IdP로 사용합니다.
+- SPA는 PKCE를 사용하는 `acko-spa` public client로 등록하고, API token의 audience는 `acko-api`로 설정합니다.
+- FastAPI는 JWKS를 cache하고 RS256 access token의 signature, `acko-api` audience, issuer를 검증합니다. 첫 단계에서는 Ingress 앞에 별도의 oauth2-proxy나 auth service를 두지 않습니다.
+- Authorization은 `realm_access.roles[]`에 기반한 단순한 RBAC를 사용합니다. Cluster별 role은 `acko:dev`, `acko:prod` 형식으로 이름을 붙입니다. Role을 설정하지 않은 초기 구성에서는 인증된 사용자에게 read-only access를 허용하는 방향을 기본으로 합니다.
 
 ### 5. local/e2e: bitnami/keycloak 부트스트랩
 
-- 로컬 개발과 e2e CI에서는 `bitnami/keycloak` chart로 Keycloak을 띄우고, prebuilt realm export(`acko-realm.json`) 를 import한다.
-- 이는 cert-manager가 로컬 e2e에서 jetstack/cert-manager로 standardize되어 있는 기존 패턴(ADR-0002 인근)과 동일한 철학이다 — production runtime 책임을 chart가 부담하지 않고, e2e fixture로만 bundle한다.
+- Local development와 E2E CI에서는 `bitnami/keycloak` chart를 설치하고 미리 준비한 realm export(`acko-realm.json`)를 import합니다.
+- Production Keycloak의 운영 책임을 ACKO chart에 포함하지 않고, E2E fixture로만 제공한다는 점은 local E2E에서 jetstack/cert-manager를 사용하는 기존 원칙과 같습니다.
 
 ## 대안 (Alternatives Considered)
 
 ### 대안 A: Common cluster proxy.js multi-backend routing 유지
 
-- **설명**: 현재의 proxy.js를 그대로 두고, dev/prod backend를 path/host로 라우팅
-- **장점**: 코드 변경 표면 가장 작음
-- **단점**: K8s 표준 ingress 패턴과 어긋남, web pod가 모든 backend ingress에 도달 가능해야 함 (cross-cluster network 가정), proxy.js가 멀티 cluster topology의 단일 SPOF가 됨
-- **미선택 사유**: 표준 ingress 패턴이 아닐 뿐 아니라 cluster 간 routing 책임이 web pod에 집중되어 운영 부담이 커진다.
+- **설명**: 기존 `proxy.js`를 유지하고 dev와 production backend를 path 또는 host에 따라 routing합니다.
+- **장점**: 변경해야 할 code가 가장 적습니다.
+- **단점**: Kubernetes의 일반적인 Ingress pattern과 다르며, Web Pod가 모든 backend Ingress에 접근할 수 있는 cross-cluster network가 필요합니다. 또한 `proxy.js`가 multi-cluster topology 전체의 single point of failure가 됩니다.
+- **미선택 사유**: Cluster 간 routing 책임이 Web Pod에 집중되어 운영이 복잡해지고 표준 Ingress 구성을 활용하기 어렵습니다.
 
 ### 대안 B: Bearer token (Keycloak 없음)
 
-- **설명**: 정적 token 또는 자체 발급 token 만으로 API를 보호
-- **장점**: 의존성 0
-- **단점**: 회전·만료·감사 정책 부재, SSO/MFA/외부 디렉터리 통합 불가, 운영자가 직접 user/group 관리
-- **미선택 사유**: 보안 운영 표준과 맞지 않음. 조직 IdP와 통합되어야 한다는 사용자 요구 미충족.
+- **설명**: Static token 또는 자체 발급 token만으로 API를 보호합니다.
+- **장점**: 외부 dependency가 필요하지 않습니다.
+- **단점**: Rotation, expiration, audit policy를 직접 구현해야 합니다. SSO, MFA, external directory와 연동할 수 없고 운영자가 user와 group도 직접 관리해야 합니다.
+- **미선택 사유**: 조직의 IdP를 사용한다는 요구사항과 security operation 기준을 충족하지 못합니다.
 
 ### 대안 C: Ingress 단에서 oauth2-proxy / Keycloak gatekeeper로 종단 보호
 
-- **설명**: 모든 ingress 앞에 oauth2-proxy를 두고 인증 강제, FastAPI는 X-Auth-Request-* header만 신뢰
-- **장점**: 표준 패턴, defense-in-depth
-- **단점**: cookie domain·CSRF·multi-cluster session 동기화 복잡, 처음 단계에 도입하기에 변경 표면이 큼, 토큰 lifecycle을 proxy가 가지고 있어 SSE/장기 stream 호환성 검증 필요
-- **미선택 사유**: 단계 1에는 과도. **다음 ADR(후속 작업)** 로 분리하여, FastAPI native JWT 검증이 안정화된 뒤 defense-in-depth 레이어로 추가하는 것이 단계적 도입 비용 대비 효과적이다.
+- **설명**: 모든 Ingress 앞에 oauth2-proxy를 두고 인증을 강제하며, FastAPI는 `X-Auth-Request-*` header만 신뢰합니다.
+- **장점**: 널리 사용하는 pattern이며 defense in depth를 제공합니다.
+- **단점**: Cookie domain, CSRF, multi-cluster session synchronization이 복잡해집니다. Proxy가 token lifecycle을 관리하므로 SSE와 장시간 stream의 호환성도 검증해야 합니다.
+- **미선택 사유**: 첫 단계의 범위로는 변경이 너무 큽니다. FastAPI native JWT 검증을 안정화한 뒤 별도의 ADR에서 추가 security layer로 검토합니다.
 
 ### 대안 D: Keycloak을 chart의 subchart로 In-chart bundle (production)
 
-- **설명**: ACKO chart가 `dependencies:`로 bitnami/keycloak을 prod에서도 포함
-- **장점**: 한 번에 설치
-- **단점**: chart 책임이 비대해짐 (Keycloak 자체 운영 — DB, 백업, realm 관리 — 까지 ACKO chart가 떠안음), prod에서는 보통 별도로 운영되는 IdP를 chart가 강제로 띄우는 모양이 됨
-- **미선택 사유**: prod에서는 외부 운영 Keycloak을 가정하는 것이 옳다. local/e2e fixture로만 한정한다.
+- **설명**: ACKO chart의 `dependencies:`에 `bitnami/keycloak`을 추가해 production에도 함께 설치합니다.
+- **장점**: 한 번의 Helm install로 모든 component를 배포할 수 있습니다.
+- **단점**: Keycloak database, backup, realm 관리까지 ACKO chart가 책임져야 합니다. 이미 IdP를 중앙에서 운영하는 조직에도 별도 Keycloak을 강제로 설치하게 됩니다.
+- **미선택 사유**: Production에서는 외부에서 관리하는 Keycloak을 사용하고, bundled Keycloak은 Local/E2E fixture로만 제공합니다.
 
 ## 결과 (Consequences)
 
 ### 긍정적
 
-- K8s native: cluster-per-environment 패턴이 chart values만으로 표현되며 표준 ingress/Service에 머무름.
-- 멀티 cluster가 자연스럽게 확장: 새 환경(예: staging) 추가 시 `multiCluster.clusters[]` 항목 1줄과 helm install 1회로 끝.
-- 인증/권한이 외부 IdP에 위임: SSO/MFA/감사로깅/계정 lifecycle을 조직 표준에 일임.
-- proxy.js가 사라지면서 web 계층이 stateless static asset에 가까워진다 — 캐시·CDN 친화적.
-- ADR-0030(Cluster Manager API 인증/인가 아키텍처)에서 비워둔 외부 IdP 연동 자리가 채워진다.
+- Cluster-per-environment pattern을 Helm values와 표준 Ingress/Service만으로 구성할 수 있습니다.
+- Staging 같은 환경을 추가할 때 `multiCluster.clusters[]` 항목과 해당 cluster의 Helm release만 추가하면 됩니다.
+- SSO, MFA, audit logging, account lifecycle을 조직의 IdP에 위임할 수 있습니다.
+- `proxy.js`를 제거하면 Web 계층이 stateless static asset에 가까워져 cache와 CDN을 활용하기 쉽습니다.
+- ADR-0030에서 열어 둔 external IdP integration 방식을 구체적으로 정의합니다.
 
 ### 부정적
 
-- 각 cluster마다 TLS 인증서 운영이 필요 (cert-manager + LetsEncrypt 권장). cluster 수에 비례.
-- audience가 단일(`acko-api`) 이라 토큰이 cluster 간 replay될 수 있음. 단계 1에서는 cluster role(`acko:dev` / `acko:prod`)으로 권한 분리는 가능하지만, audience 자체 분리는 후속 ADR 대상.
-- 각 operator cluster의 PostgreSQL profile이 그 cluster 안에 갇힘 (silos). cross-cluster aggregation은 후속 ADR 필요.
-- 사용자가 cluster 진입점(common cluster)에서 dev/prod로 fan-out할 때 mixed-content / CORS 설정을 모든 ingress에서 일관되게 유지해야 한다.
+- Cluster 수가 늘어나는 만큼 TLS certificate도 각각 운영해야 합니다. cert-manager와 Let's Encrypt 사용을 권장합니다.
+- 모든 API가 하나의 `acko-api` audience를 사용하므로 token을 cluster 사이에서 replay할 가능성이 있습니다. 첫 단계에서는 `acko:dev`, `acko:prod` role로 권한을 나누고, audience 분리는 후속 ADR에서 검토합니다.
+- 각 Operator cluster의 PostgreSQL connection profile은 해당 cluster에만 저장됩니다. Cross-cluster aggregation에는 별도 설계가 필요합니다.
+- Common cluster의 Web에서 여러 Ingress를 직접 호출하므로 모든 Ingress의 mixed-content와 CORS 설정을 일관되게 유지해야 합니다.
 
 ### 리스크
 
-- Keycloak 가용성이 ACKO 인증의 가용성과 직결됨. Keycloak 장애 = web/api 인증 실패.
-- JWKS rotation 시 짧은 윈도우의 5xx (FastAPI 캐시 만료 ~ 새 키 fetch) 가능. JWKS 캐시 TTL과 retry 정책 튜닝 필요.
-- cluster registry가 정적이므로, cluster를 추가/삭제할 때 helm upgrade 필수. 사용자가 임시 cluster를 동적으로 추가하려는 운영 시나리오는 미지원.
+- Keycloak을 사용할 수 없으면 Web과 API 인증도 실패합니다. Keycloak의 availability와 disaster recovery를 별도로 확보해야 합니다.
+- JWKS rotation 직후 FastAPI cache가 만료되고 새 key를 가져오는 짧은 구간에 5xx가 발생할 수 있습니다. Cache TTL과 retry policy를 조정해야 합니다.
+- Static cluster registry를 사용하므로 cluster를 추가하거나 삭제할 때 Helm upgrade가 필요합니다. 임시 cluster를 runtime에 등록하는 방식은 지원하지 않습니다.
 
 ## 후속 작업 (TODO / Open Questions)
 
-이 ADR은 단계 1을 정의한다. 다음 결정들은 후속 ADR로 분리한다.
+이 ADR은 첫 단계만 정의합니다. 아래 항목은 범위와 security 영향이 다르므로 후속 ADR에서 결정합니다.
 
 - **Ingress 단 oauth2-proxy / Keycloak gatekeeper** — defense-in-depth. native JWT 검증과 병행 가능.
 - **Keycloak realm/client 자동 프로비저닝** — Terraform Keycloak provider로 realm/client/audience mapper IaC화.
@@ -141,12 +141,12 @@ ACKO chart의 `multiCluster.enabled`, `multiCluster.clusters[]` values 키로 �
 
 ### 2026-07-17 — SSE 스트림 인증: JWT query parameter → 단일 사용 stream ticket
 
-본 ADR 구현 당시 native `EventSource`가 `Authorization` 헤더를 설정할 수 없다는 제약 때문에, SSE 스트림 경로에 한해 JWT를 URL query(`?access_token=<jwt>`)로 전달하는 임시 방편이 남아 있었다. 이는 장수 토큰이 ingress access log·브라우저 히스토리·Referer 헤더로 유출되는 P0 보안 이슈로 추적되었고(cluster-manager [#345](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/issues/345)), cluster-manager [#454](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/454)에서 다음과 같이 대체되었다.
+이 ADR을 처음 구현할 때 native `EventSource`가 `Authorization` header를 설정할 수 없어 SSE endpoint에만 JWT를 URL query(`?access_token=<jwt>`)로 전달했습니다. 장기 유효 token이 Ingress access log, browser history, `Referer` header에 노출될 수 있어 P0 security issue로 추적했습니다(cluster-manager [#345](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/issues/345)). Cluster Manager [#454](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/454)는 이를 다음과 같은 one-time stream ticket으로 교체했습니다.
 
-- **발급**: `POST /api/events/ticket` — `Authorization` 헤더 인증 필수(query 자격증명 불허). 검증된 claims에 바인딩된 256-bit opaque ticket을 발급한다. TTL 30초(`SSE_TICKET_TTL_SECONDS`), 동시 pending 상한 1024(`SSE_TICKET_MAX_PENDING`, 초과 시 429).
-- **소비**: `GET /events/stream?ticket=...` — 최초 사용 시 즉시 소모(burn)되어 재사용은 401. redemption 시점에 `OIDC_REQUIRED_ROLES`를 ticket의 claims로 재검증한다.
-- **제거**: `?access_token=` 경로는 완전히 제거되어 401(마이그레이션 힌트 포함)을 반환하며 JWKS 검증도 수행하지 않는다. 헤더 기반 스트리밍(curl/ackoctl)은 그대로 동작한다. 요청 로그는 `?ticket=` 값도 마스킹한다.
-- **제약**: ticket store는 프로세스 로컬이다. API를 multi-replica로 배포하는 경우 `/api/*`에 대한 session affinity 또는 공유 스토어가 필요하다. 본 ADR의 operator-cluster당 API 1 replica 토폴로지에서는 영향이 없다.
+- **발급**: `POST /api/events/ticket`은 `Authorization` header 인증만 허용하고 query credential은 거부합니다. 검증한 claim에 binding된 256-bit opaque ticket을 발급합니다. TTL은 30초(`SSE_TICKET_TTL_SECONDS`)이고 동시에 대기할 수 있는 ticket은 최대 1,024개입니다(`SSE_TICKET_MAX_PENDING`). 한도를 넘으면 429를 반환합니다.
+- **소비**: `GET /events/stream?ticket=...`에서 처음 사용한 ticket은 즉시 폐기하므로 재사용하면 401을 반환합니다. Redeem할 때 ticket claim을 기준으로 `OIDC_REQUIRED_ROLES`를 다시 확인합니다.
+- **기존 경로 제거**: `?access_token=`은 JWKS 검증 없이 401과 migration hint를 반환합니다. `curl`과 ackoctl이 사용하는 header 기반 streaming은 그대로 동작합니다. Request log에서는 `?ticket=` value도 masking합니다.
+- **제약**: Ticket store는 process-local입니다. API를 여러 replica로 배포한다면 `/api/*` session affinity 또는 shared store가 필요합니다. 이 ADR이 정의한 Operator cluster당 API replica 하나의 topology에는 영향을 주지 않습니다.
 
 ## 관련 ADR
 

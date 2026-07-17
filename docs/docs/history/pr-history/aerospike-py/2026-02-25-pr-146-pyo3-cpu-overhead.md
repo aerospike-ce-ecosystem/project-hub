@@ -29,4 +29,4 @@ PyO3 바인딩 레이어의 CPU 오버헤드를 줄이기 위한 최적화를 �
 
 ## 영향 범위
 
-외부 API 변경 없이 내부 성능만 개선. 높은 처리량 워크로드에서 PyO3 바인딩 계층의 CPU 사용량이 감소하며, 특히 대량의 레코드를 반환하는 query/batch 작업에서 효과가 두드러진다.
+Public API는 바뀌지 않는다. 높은 throughput workload에서 PyO3 binding의 CPU 사용량이 줄며, 많은 record를 반환하는 query와 batch operation에서 차이가 커진다.

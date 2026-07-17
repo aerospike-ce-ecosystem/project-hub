@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Kubernetes 오퍼레이터(ACKO)와의 통합을 대폭 강화했다. 멀티 볼륨 스토리지 설정 지원과 듀얼 모드 위저드(직접 연결 + ACKO 관리)를 추가하여, Kubernetes 환경에서의 클러스터 생성 및 관리 경험을 개선했다.
+ACKO integration에 multi-volume storage configuration과 두 가지 wizard mode를 추가했다. 사용자는 기존 cluster에 직접 연결하거나 ACKO가 관리하는 Kubernetes cluster를 만들 수 있다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ Kubernetes 오퍼레이터(ACKO)와의 통합을 대폭 강화했다. 멀티 볼
 
 ## 영향 범위
 
-Kubernetes 환경에서 Cluster Manager를 사용하는 모든 사용자에게 영향. PR #079의 5단계 위저드가 ACKO 모드를 지원하게 되어, GUI를 통한 Kubernetes Aerospike 클러스터 배포가 가능해졌다.
+Kubernetes에서 Cluster Manager를 사용하는 모든 사용자가 영향을 받는다. PR #079의 5단계 wizard에 ACKO mode가 추가돼 GUI에서 Aerospike cluster를 배포할 수 있다.

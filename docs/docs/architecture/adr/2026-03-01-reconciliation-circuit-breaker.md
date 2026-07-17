@@ -19,12 +19,12 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-Kubernetes Operator의 reconciliation loop는 desired state와 actual state의 차이를 해소하기 위해 반복 실행됩니다. 그러나 특정 상황에서 무한 루프가 발생할 수 있었습니다:
+Kubernetes Operator의 reconciliation loop는 desired state와 actual state를 일치시키기 위해 반복 실행됩니다. 같은 오류가 계속되면 이 loop가 유효한 진전 없이 반복될 수 있습니다.
 
-- **잘못된 CR spec**: 유효하지 않은 설정값이 매 reconcile마다 동일한 에러 유발
-- **외부 의존성 장애**: Aerospike 노드 응답 없음 시 지속적인 재시도
-- **API server 과부하**: 빠른 재시도로 인해 kube-apiserver에 과도한 요청 발생
-- **로그 폭증**: 동일 에러의 반복 로깅으로 모니터링 시스템 부하
+- **잘못된 CR spec**: 유효하지 않은 설정값은 reconcile마다 같은 error를 발생시킵니다.
+- **외부 의존성 장애**: Aerospike node가 응답하지 않으면 Operator가 계속 재시도합니다.
+- **API server 과부하**: 짧은 간격의 재시도는 kube-apiserver에 과도한 request를 보냅니다.
+- **로그 폭증**: 같은 error가 반복해서 기록되어 monitoring system에 부하를 줍니다.
 
 운영 환경에서 단일 잘못된 CR이 전체 Operator의 처리 능력을 소진시키는 사례가 보고되었습니다.
 
@@ -34,13 +34,13 @@ Kubernetes Operator의 reconciliation loop는 desired state와 actual state의 �
 
 ### 구현 세부사항
 
-- **Context timeout**: 각 reconcile 호출에 5분 `context.WithTimeout` 적용
-- **지수 백오프**: 실패 시 재시도 간격을 1s, 2s, 4s, ... 최대 5분까지 증가
+- **Context timeout**: 각 reconcile 호출에 5분의 `context.WithTimeout`을 적용합니다.
+- **지수 백오프**: 실패 후 재시도 간격을 1s, 2s, 4s 순서로 늘리며 최대 5분으로 제한합니다.
 - **Circuit breaker**: 동일 CR에 대해 10회 연속 실패 시 reconciliation 일시 중단
   - 상태를 CR의 `.status.conditions`에 `CircuitBreakerOpen`으로 기록
   - 30분 후 자동으로 half-open 상태로 전환하여 1회 재시도
   - 성공 시 circuit 닫힘, 실패 시 다시 open
-- **메트릭 노출**: `acko_reconcile_failures_total`, `acko_circuit_breaker_state` Prometheus 메트릭 추가
+- **메트릭 노출**: `acko_reconcile_failures_total`과 `acko_circuit_breaker_state` Prometheus metric을 추가합니다.
 
 ## 대안 검토 (Alternatives Considered)
 

@@ -22,7 +22,7 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # GitHub Agentic Workflow
 
-[claude-code-action@v1](https://github.com/anthropics/claude-code-action) 기반의 자동화된 개발 파이프라인입니다. 5개 repo(aerospike-py, ACKO, cluster-manager, plugins, project-hub)에 걸쳐 **Plan → Implement → Review** 3단계가 라벨 기반으로 자동 실행됩니다.
+이 workflow는 [claude-code-action@v1](https://github.com/anthropics/claude-code-action)을 사용해 계획, 구현, 리뷰를 자동화합니다. aerospike-py, ACKO, cluster-manager, plugins, project-hub에서 label이 **Plan → Implement → Review** 단계를 전환합니다.
 
 ---
 
@@ -106,13 +106,13 @@ Issue + `agent` label
 
 ### 1. Issue Planner (`issue-planner.yml`)
 
-`agent` 라벨이 추가되면 트리거됩니다.
+Issue에 `agent` label을 추가하면 planner가 실행됩니다.
 
-**동작:**
-- 이슈 내용을 분석하여 구조화된 구현 계획을 코멘트로 작성
-- 파일 변경 목록, 테스트 계획, 영향 범위를 포함
-- 정보가 부족하면 `needs-clarification` 라벨을 추가하고 질문 코멘트 작성
-- 계획이 완성되면 `plan-complete` 라벨 추가
+Planner는 issue를 읽고 다음 작업을 수행합니다.
+
+- 변경할 파일, 검증 방법, 영향 범위를 포함한 구현 계획을 comment로 작성합니다.
+- 정보가 부족하면 `needs-clarification` label을 붙이고 필요한 내용을 질문합니다.
+- 계획을 실행할 수 있는 상태가 되면 `plan-complete` label을 붙입니다.
 
 **Plan 코멘트 형식:**
 ```html
@@ -124,28 +124,29 @@ Issue + `agent` label
 
 ### 2. Agent Implement (`agent-implement.yml`)
 
-`plan-complete` 라벨이 추가되면 트리거됩니다.
+Issue에 `plan-complete` label이 붙으면 구현 workflow가 시작됩니다.
 
-**동작:**
-- `<!-- agent-plan-start -->` 마커가 있는 코멘트에서 Plan을 읽음
-- `in-progress` 라벨 추가 후 코드 구현 시작
-- 빌드/린트/테스트 검증 실행
-- Conventional Commits 형식으로 커밋
-- PR 생성 후 **PR에** `needs-review` 라벨 추가 (issue가 아닌 PR)
+구현 workflow는 marker로 구분된 plan을 읽고 다음 순서로 진행합니다.
+
+- `in-progress` label을 붙인 뒤 코드를 수정합니다.
+- build, lint, test를 실행합니다.
+- Conventional Commits 형식으로 commit하고 PR을 만듭니다.
+- Issue가 아니라 **PR에** `needs-review` label을 붙입니다.
 
 ### 3. PR Reviewer (`pr-reviewer.yml`)
 
-PR에 `needs-review` 라벨이 추가되면 트리거됩니다. 2개 job이 병렬 실행됩니다.
+PR에 `needs-review` label을 붙이면 reviewer의 두 job이 병렬로 실행됩니다.
 
-**Job 1: `skill-impact-advisory`** (aerospike-py, ACKO만, bash only):
-- `gh pr diff --name-only`로 변경 파일 확인
-- Skill-impacting 파일이 포함되면 advisory 코멘트 게시 + `skill-impact` 라벨
+**Job 1: `skill-impact-advisory`** (aerospike-py와 ACKO, Bash only)
 
-**Job 2: `review`** (Claude Code):
-- PR diff를 분석하여 이슈를 심각도별로 분류 (HIGH/MEDIUM/LOW/INFO)
-- HIGH/MEDIUM 이슈를 자동 수정 (최대 5회 반복)
-- 최종 리뷰 요약 코멘트 작성
-- `review-complete` 라벨 추가
+- `gh pr diff --name-only`로 변경된 파일을 확인합니다.
+- Skill에 영향을 주는 파일이 있으면 안내 comment와 `skill-impact` label을 추가합니다.
+
+**Job 2: `review`** (Claude Code)
+
+- PR diff에서 발견한 문제를 HIGH, MEDIUM, LOW, INFO로 분류합니다.
+- HIGH와 MEDIUM 문제를 최대 5회까지 수정하고 다시 검토합니다.
+- 최종 결과를 comment로 정리한 뒤 `review-complete` label을 붙입니다.
 
 ### 레포별 검증 명령
 
@@ -162,7 +163,7 @@ PR에 `needs-review` 라벨이 추가되면 트리거됩니다. 2개 job이 병�
 
 ## Hub Orchestration Layer
 
-project-hub은 크로스-레포 이슈를 조율하는 **허브 오케스트레이터** 역할을 합니다. 4가지 유형의 이슈를 처리하며, 모두 라벨 기반으로 트리거됩니다.
+project-hub는 여러 repository에 걸친 작업을 조율합니다. Issue 유형과 label에 따라 아래 네 가지 workflow를 시작합니다.
 
 ### Hub 워크플로우 구성
 
@@ -190,7 +191,7 @@ ADR Proposal Issue 생성 (adr + discussion 라벨 자동 부착)
             → 각 repo의 Core 파이프라인 동작
 ```
 
-**ADR Status Override:** 사람이 verdict 라벨을 변경하면 `hub-adr-status-override.yml`이 이미 머지된 ADR 문서의 상태(`Proposed`/`Rejected`/`Deferred`)와 `검토 결과` 필드를 자동 업데이트합니다.
+**ADR Status Override:** 사람이 verdict label을 바꾸면 `hub-adr-status-override.yml`이 이미 merge된 ADR의 상태(`Proposed`, `Rejected`, `Deferred`)와 `검토 결과` 필드를 업데이트합니다.
 
 ### Cross-Repo Issue / Epic 흐름
 
@@ -209,7 +210,7 @@ Cross-Repo Issue 또는 Epic 생성 (cross-repo / epic 라벨 자동 부착)
 
 ### Skill Impact Review 흐름
 
-core repo(aerospike-py, ACKO)에서 skill에 영향을 줄 수 있는 파일이 변경되면 자동으로 plugins repo 업데이트를 트리거합니다.
+aerospike-py나 ACKO에서 Skill과 연결된 파일이 바뀌면 Skill Impact Review가 plugins repository의 후속 작업 필요 여부를 확인합니다.
 
 **Tier 1 — Pre-merge advisory** (API 비용 0):
 ```
@@ -249,7 +250,7 @@ Core repo main 머지 (path-filtered)
 
 ### Hub Dispatcher 상세
 
-`hub-issue-dispatcher.yml`은 `start-implement` 라벨로 트리거되며, Plan 코멘트의 HTML 마커를 파싱하여 각 repo에 issue를 생성합니다.
+`start-implement` label을 붙이면 `hub-issue-dispatcher.yml`이 실행됩니다. Dispatcher는 plan comment의 HTML marker를 읽고 대상 repository마다 issue를 만듭니다.
 
 **파싱 마커:**
 ```html
@@ -261,11 +262,12 @@ Core repo main 머지 (path-filtered)
 <!-- agent-plan-end -->
 ```
 
-**안전 장치:**
-- ADR issue는 `adr-positive` 라벨이 반드시 필요 (없으면 dispatch 실패 + 에러 코멘트)
-- `<!-- agent-plan-start -->` 마커가 없으면 dispatch 실패
-- `<!-- repo-list: ... -->` 마커가 없으면 dispatch 실패
-- dispatch 완료 시 `dispatched` 라벨 추가 + 생성된 issue 링크 요약 코멘트
+Dispatcher는 잘못된 plan을 실행하지 않도록 다음 조건을 검사합니다.
+
+- ADR issue에는 `adr-positive` label이 있어야 합니다. 없으면 dispatch를 중단하고 오류 comment를 남깁니다.
+- `<!-- agent-plan-start -->` marker가 없으면 dispatch하지 않습니다.
+- `<!-- repo-list: ... -->` marker가 없으면 dispatch하지 않습니다.
+- Dispatch를 마치면 `dispatched` label과 생성된 issue link를 추가합니다.
 
 ### Hub ↔ Repo 연결
 
@@ -288,15 +290,15 @@ project-hub                          각 Core/Plugin Repo
 
 ## 부가 워크플로우
 
-Core 파이프라인 외에 각 repo에 운영용 워크플로우가 있습니다.
+Plan/Implement/Review pipeline 외에도 release와 CI/CD를 위한 workflow가 있습니다.
 
 ### Daily Release (`daily-release.yml`)
 
-aerospike-py, ACKO, cluster-manager에 각각 설정되어 있습니다.
+Daily Release는 aerospike-py, ACKO, cluster-manager에서 실행됩니다.
 
-- **스케줄**: 매일 UTC 00:00 (KST 09:00) + 수동 `workflow_dispatch`
-- **동작**: 마지막 태그 이후 커밋이 있으면 Conventional Commits 분석 → 버전 범프 → Claude Code로 릴리스 노트 생성 → GitHub Release 생성
-- **버전 범프 규칙**: `BREAKING CHANGE` → major, `feat` → minor, `fix` → patch
+- **스케줄**: 매일 UTC 00:00(KST 09:00)에 실행하며 `workflow_dispatch`로 수동 실행할 수도 있습니다.
+- **동작**: 마지막 tag 이후 commit이 있으면 Conventional Commits를 분석하고 version을 올립니다. 이어서 release note와 GitHub Release를 만듭니다.
+- **버전 규칙**: `BREAKING CHANGE`는 major, `feat`는 minor, `fix`는 patch version을 올립니다.
 
 ### CI/CD (ACKO 전용)
 
@@ -325,17 +327,17 @@ aerospike-py, ACKO, cluster-manager에 각각 설정되어 있습니다.
 | **Skill Impact path filter** | 특정 파일 경로만 트리거 | 모든 커밋이 아닌 API/CRD 변경만 감지 |
 
 :::warning 주의사항
-- `agent` 라벨은 충분한 컨텍스트가 있는 이슈에만 추가하세요
-- 복잡한 크로스-레포 변경은 project-hub에서 Cross-Repo Issue 또는 Epic으로 관리하세요
-- 리뷰 루프가 5회를 초과하면 수동 개입이 필요합니다
-- ADR Proposal은 반드시 `adr-positive` 검토를 받은 후에만 `start-implement` 라벨을 추가하세요
+- `agent` label은 목표, 범위, 완료 조건이 충분히 적힌 issue에만 추가하세요.
+- 복잡한 cross-repo 변경은 project-hub의 Cross-Repo Issue 또는 Epic으로 관리하세요.
+- Review loop가 5회 안에 끝나지 않으면 사람이 원인을 확인해야 합니다.
+- ADR Proposal에는 `adr-positive` verdict가 나온 뒤에만 `start-implement` label을 추가하세요.
 :::
 
 ---
 
 ## Variables & Secrets 설정
 
-모든 repo에서 공통으로 사용하는 GitHub Repository/Organization 설정입니다.
+아래 GitHub Repository/Organization 설정은 모든 repository에서 공통으로 사용합니다.
 
 ### Variables (`vars.*`)
 

@@ -29,4 +29,4 @@ AerospikeClusterTemplate CRD에 `description` 필드를 추가하여 템플릿�
 
 ## 영향 범위
 
-AerospikeClusterTemplate을 사용하는 환경에 영향. 운영 편의성 개선으로 프로덕션 운영 시 여러 템플릿 간 구분이 용이해진다. Cluster Manager UI에서도 템플릿 설명을 확인할 수 있다.
+AerospikeClusterTemplate을 사용하는 환경에 적용된다. 운영자는 `kubectl describe`와 Cluster Manager 템플릿 목록에서 설명을 확인해, 여러 템플릿의 용도를 설정 본문을 열지 않고도 구분할 수 있다.

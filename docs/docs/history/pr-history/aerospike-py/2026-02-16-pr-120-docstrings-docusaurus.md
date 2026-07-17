@@ -29,4 +29,4 @@ Python .pyi 스텁 파일에 상세한 docstring을 추가하고, 이를 기반�
 
 ## 영향 범위
 
-aerospike-py 사용자와 기여자 모두에게 영향. IDE에서 더 풍부한 자동 완성과 인라인 문서를 제공하며, 프로젝트 문서 사이트의 API 참조 섹션이 항상 최신 상태로 유지된다. project-hub 문서와의 연동에도 활용 가능.
+aerospike-py 사용자와 contributor 모두가 영향을 받는다. IDE는 stub의 docstring을 inline documentation으로 표시하고, Docusaurus API reference는 같은 source에서 생성된다. Project Hub에서도 이 reference를 연결할 수 있다.

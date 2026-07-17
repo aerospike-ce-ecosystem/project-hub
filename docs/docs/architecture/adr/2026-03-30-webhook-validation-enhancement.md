@@ -20,19 +20,19 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-ACKO webhook은 현재 Aerospike CE 라이선스 제약(≤8 노드, ≤2 네임스페이스, XDR/TLS 차단)을 검증하지만, **런타임에서만 발견되는 구성 오류** 3가지가 존재한다. 이 오류들은 `kubectl apply` 후 Pod CrashLoopBackOff이나 클러스터 불안정 상태로 나타나며, 디버깅 비용이 높다.
+ACKO webhook은 현재 Aerospike CE 제약인 최대 8개 node, 최대 2개 namespace, XDR/TLS 금지를 검증합니다. 그러나 세 가지 configuration error는 **runtime에서만 발견됩니다**. 이 error는 `kubectl apply` 뒤 Pod의 `CrashLoopBackOff`이나 불안정한 cluster 상태로 나타나 원인을 찾기 어렵습니다.
 
 ### 문제 1: replication-factor vs cluster size 불일치
 
-3노드 클러스터에 `replication-factor: 5`를 설정하면 webhook은 통과하지만, Aerospike 서버가 시작 후 에러를 발생시킨다. 클러스터 전체가 unhealthy 상태에 진입하며 자동 복구가 불가능하다.
+3-node cluster에 `replication-factor: 5`를 설정해도 webhook을 통과합니다. Aerospike server는 시작한 뒤 error를 발생시키고 cluster 전체가 unhealthy 상태가 되어 자동 복구할 수 없습니다.
 
 ### 문제 2: Service/Heartbeat/Fabric 포트 충돌
 
-`spec.aerospikeConfig.network`에서 service.port와 heartbeat.port가 동일하면 mesh 형성이 실패한다. 노드 간 통신이 불가능해지며 split-brain 위험이 발생한다. ADR-0012 (Pod Readiness Gates)의 readiness gate가 영원히 통과하지 못하는 상황으로 이어진다.
+`spec.aerospikeConfig.network`에서 `service.port`와 `heartbeat.port`가 같으면 mesh를 만들지 못합니다. Node 간 통신이 끊겨 split-brain 위험이 생기고 ADR-0012(Pod Readiness Gates)의 readiness gate도 통과하지 못합니다.
 
 ### 문제 3: Rolling update batch size 0
 
-`maxUnavailable: "10%"`이면 1~9노드 클러스터에서 batch size가 0으로 계산될 수 있다. Rolling restart가 영구 대기 상태에 진입하며, ADR-0013 (Reconciliation Circuit Breaker)의 circuit breaker가 최종적으로 발동하기까지 최대 50분의 불필요한 재시도가 발생한다.
+`maxUnavailable: "10%"`이면 1~9-node cluster에서 batch size가 0으로 계산될 수 있습니다. Rolling restart가 계속 대기하고 ADR-0013(Reconciliation Circuit Breaker)의 circuit breaker가 열릴 때까지 최대 50분 동안 불필요하게 재시도합니다.
 
 ### ADR-0019와의 관계
 

@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-ACKO로 관리되는 클러스터에서 스케일 작업이나 설정 변경을 수행하는 모든 사용자에게 영향. ACKO PR #180 (migrationStatus 필드)과 직접 연동되며, PR #183 (마이그레이션 인식 재시작)의 동작 상태를 시각적으로 확인할 수 있다.
+ACKO cluster를 scale하거나 configuration을 변경하는 모든 사용자가 영향을 받는다. UI는 ACKO PR #180의 `migrationStatus` field를 표시하며, PR #183의 migration-aware restart 진행 상태도 확인할 수 있다.

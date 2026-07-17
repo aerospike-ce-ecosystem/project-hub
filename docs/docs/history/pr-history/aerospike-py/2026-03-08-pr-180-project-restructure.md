@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-프로젝트 구조를 전면적으로 개선하여 타입 안전성, 테스트 커버리지, 문서 품질을 동시에 향상시켰다. 코드베이스의 전반적인 정리와 함께 개발 워크플로우를 체계화하여 장기적인 유지보수성을 확보했다.
+Project directory와 module 책임을 정리하고 type check, test, documentation workflow를 함께 개선했다. 이후 변경을 기능별로 검토하고 검증하기 쉬운 구조를 만드는 것이 목적이었다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-프로젝트 전반에 걸친 구조적 변경. 내부 모듈 경로가 변경될 수 있어 직접 import하는 코드에 영향 가능. 공개 API는 유지되지만, 내부 구현을 참조하는 코드는 업데이트가 필요할 수 있다.
+Public API는 유지하지만 internal module path는 바뀔 수 있다. Documented API만 사용하는 code는 영향을 받지 않으며, internal implementation을 직접 import하는 code는 update가 필요할 수 있다.

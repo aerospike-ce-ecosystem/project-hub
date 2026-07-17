@@ -29,4 +29,4 @@ AerospikeCluster CRD의 status에 `migrationStatus` 필드를 추가하여 클�
 
 ## 영향 범위
 
-ACKO 사용자의 클러스터 운영 가시성에 직접적 영향. Cluster Manager UI(PR #114)와 연동하여 시각적 마이그레이션 모니터링이 가능하다. PR #183의 마이그레이션 인식 재시작 기능의 기반이 되는 핵심 기능이다.
+운영자는 `kubectl`에서 Pod별 incoming/outgoing 파티션 수와 마이그레이션 완료 여부를 확인할 수 있다. 같은 status 정보는 Cluster Manager UI(PR #114)의 마이그레이션 모니터링과 PR #183의 마이그레이션 인식 재시작에서도 사용된다.

@@ -16,6 +16,8 @@ last_updated: 2026-03-29
 
 # aerospike-py Changelog
 
+aerospike-py release별 주요 기능, 수정 사항, documentation과 CI/CD 변경을 정리합니다.
+
 ## Unreleased (after v0.0.4)
 
 ### Features
@@ -31,10 +33,6 @@ last_updated: 2026-03-29
 - **IssueOps redesign**: Plan-first IssueOps/CommentOps workflow (PR #216)
 - **gh-aw upgrade**: Upgraded claude-code-action from 0.43.4 to 0.64.0
 - **Docs memory**: Increase Node.js memory for docs build
-
----
-
-aerospike-py 릴리스별 변경 사항을 기록합니다.
 
 ---
 

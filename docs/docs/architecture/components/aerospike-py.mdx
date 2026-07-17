@@ -1,6 +1,6 @@
 ---
 title: "aerospike-py"
-description: aerospike-py 아키텍처. Python API → PyO3 → Rust Core 계층과 K8s/Bare Metal 양쪽 Aerospike 클러스터 연결.
+description: Python API, PyO3 bridge, Rust Core로 이어지는 aerospike-py 아키텍처와 클러스터 연결 방식
 sidebar_position: 1
 scope: single-repo
 repos: [aerospike-py]
@@ -12,7 +12,7 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # aerospike-py Component Diagram
 
-Rust/PyO3 기반 고성능 Aerospike Python 클라이언트. Cluster Manager의 backend에 내장되며, 독립적으로도 Bare Metal 클러스터에 직접 연결합니다.
+aerospike-py는 Rust와 PyO3로 구현한 고성능 Aerospike Python client입니다. Cluster Manager backend가 내부 client로 사용하며, Python application에서 직접 불러와 K8s 또는 Bare Metal 클러스터에 연결할 수도 있습니다.
 
 <FlowDiagram
   height={1000}

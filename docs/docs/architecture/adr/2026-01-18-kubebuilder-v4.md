@@ -21,19 +21,19 @@ last_updated: 2026-03-29
 
 ACKO(Aerospike CE Kubernetes Operator)는 Kubernetes 위에서 Aerospike CE 클러스터를 선언적으로 관리하는 Operator입니다. Operator를 구축하기 위한 프레임워크를 선택해야 했습니다.
 
-고려 사항:
+프레임워크를 선택할 때 다음 요구사항을 고려했습니다.
 
-- **CRD 정의 및 코드 생성**: AerospikeCluster CRD를 효율적으로 정의하고 Go 타입을 자동 생성
-- **Reconcile 루프**: 안정적인 Controller 패턴 구현
-- **Admission Webhook**: CE 제약 사항(최대 8노드, 2 Namespace 등) 검증
-- **테스트**: envtest 등을 활용한 통합 테스트 지원
-- **커뮤니티**: 장기적 유지보수를 위한 활발한 커뮤니티
+- **CRD 정의 및 코드 생성**: AerospikeCluster CRD를 효율적으로 정의하고 Go type을 자동 생성해야 합니다.
+- **Reconcile 루프**: 안정적인 Controller pattern을 구현해야 합니다.
+- **Admission Webhook**: 최대 8개 node와 2개 Namespace 같은 CE 제약을 검증해야 합니다.
+- **테스트**: envtest 등을 사용하는 integration test를 지원해야 합니다.
+- **커뮤니티**: 장기적인 유지보수를 뒷받침할 활발한 커뮤니티가 필요합니다.
 
 ## 결정 (Decision)
 
 > **ACKO는 Kubebuilder v4와 controller-runtime을 기반으로 구축한다.**
 
-Kubebuilder v4의 프로젝트 스캐폴딩과 코드 생성을 활용하고, controller-runtime의 Reconciler 패턴으로 Controller를 구현합니다.
+Kubebuilder v4로 프로젝트를 scaffold하고 코드를 생성합니다. Controller는 controller-runtime의 Reconciler pattern으로 구현합니다.
 
 ### 구현 구조
 
@@ -56,21 +56,21 @@ Kubernetes API Server                    (Watch + Reconcile)
 - **설명**: Red Hat이 관리하는 Operator 프레임워크로, 내부적으로 Kubebuilder를 사용
 - **장점**: OLM(Operator Lifecycle Manager) 통합, Scorecard 테스트, Ansible/Helm Operator 지원
 - **단점**: OLM 의존성 추가, Kubebuilder 위에 추상화 레이어 추가로 복잡성 증가
-- **미선택 사유**: OLM은 CE 프로젝트에 과도한 복잡성. Kubebuilder 직접 사용이 더 가볍고 유연
+- **미선택 사유**: OLM은 CE 프로젝트에 필요 이상의 복잡성을 더합니다. Kubebuilder를 직접 사용하는 편이 더 가볍고 유연합니다.
 
 ### 대안 2: client-go 직접 사용
 
 - **설명**: Kubernetes client-go 라이브러리로 처음부터 직접 구현
 - **장점**: 최대한의 유연성, 프레임워크 의존성 없음
 - **단점**: 보일러플레이트 코드 대량 필요, CRD 코드 생성 직접 구현, 검증된 패턴 부재
-- **미선택 사유**: 개발 속도와 유지보수 부담을 고려하면 프레임워크 사용이 합리적
+- **미선택 사유**: 개발 속도와 유지보수 비용을 고려하면 검증된 프레임워크를 사용하는 편이 낫습니다.
 
 ### 대안 3: Kopf (Python Operator Framework)
 
 - **설명**: Python 기반 Kubernetes Operator 프레임워크
 - **장점**: Python 사용 가능, 빠른 프로토타이핑
 - **단점**: Go 대비 성능 저하, Kubernetes 생태계(CRD codegen, envtest 등)와의 통합 부족
-- **미선택 사유**: Kubernetes Operator는 Go가 사실상 표준이며, 생태계 도구 지원이 압도적
+- **미선택 사유**: Kubernetes Operator 생태계는 Go 도구를 중심으로 구성되어 있으며, CRD codegen과 envtest 지원도 Go 쪽이 더 성숙했습니다.
 
 ## 결과 (Consequences)
 

@@ -29,4 +29,4 @@ Rust unsafe 코드 블록에서 발생할 수 있는 8건의 잠재적 panic 상
 
 ## 영향 범위
 
-모든 작업에 영향을 미치는 안정성 개선. 이전에 특정 입력 패턴이나 서버 응답에서 프로세스가 비정상 종료될 수 있던 상황이 Python 예외로 안전하게 처리된다. 프로덕션 환경의 안정성이 크게 향상되었다.
+모든 operation의 error path가 영향을 받는다. 특정 input이나 server response에서 process가 종료될 수 있던 상황을 Python exception으로 반환하도록 바꿨다.

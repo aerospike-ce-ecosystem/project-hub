@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Rust와 Python 코드 전반에 걸친 포괄적인 코드 품질 개선을 수행했다. 코드 스타일 통일, 린트 규칙 강화, 문서 개선, 벤치마크 코드 정리 등 프로젝트의 전체적인 품질 수준을 한 단계 끌어올렸다.
+Rust와 Python code style을 통일하고 lint rule, documentation, benchmark code를 정리했다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ Rust와 Python 코드 전반에 걸친 포괄적인 코드 품질 개선을 수�
 
 ## 영향 범위
 
-프로젝트 전반의 코드 품질에 영향. 외부 API 변경은 없으나, 코드베이스 기여자에게 더 명확한 코딩 기준을 제공한다. 벤치마크 결과의 재현 가능성이 향상되어 성능 비교가 더 신뢰할 수 있게 되었다.
+Public API는 바뀌지 않지만 contributor의 개발 기준이 영향을 받는다. 강화된 lint rule이 같은 style을 검사하며, 정리한 benchmark setup으로 performance comparison을 더 일관되게 재현할 수 있다.

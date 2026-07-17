@@ -29,4 +29,4 @@ PVC(PersistentVolumeClaim) 상태 모니터링, AerospikeCluster CR의 내보내
 
 ## 영향 범위
 
-ACKO 기반 클러스터 운영에 영향. PVC 상태 모니터링으로 스토리지 문제를 조기에 발견할 수 있고, CR 내보내기/가져오기로 환경 간 클러스터 설정 이식이 가능해진다. 강제 reconcile은 오퍼레이터가 드리프트된 상태를 즉시 교정할 때 사용한다.
+ACKO cluster 운영 flow가 영향을 받는다. PVC status로 storage 문제를 확인하고, CR export/import로 configuration을 다른 환경에 옮길 수 있다. Force reconcile은 Operator가 drift된 상태를 즉시 다시 조정해야 할 때 사용한다.

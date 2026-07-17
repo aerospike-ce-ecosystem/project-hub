@@ -19,7 +19,7 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-Kubernetes의 기본 readiness probe(TCP/HTTP)는 Aerospike 프로세스의 포트 응답 여부만 확인합니다. 그러나 Aerospike 노드가 실제로 서비스 가능한 상태가 되려면 추가 조건이 충족되어야 합니다:
+Kubernetes의 기본 TCP/HTTP readiness probe는 Aerospike process가 port에 응답하는지만 확인합니다. 하지만 node가 실제 traffic을 처리하려면 다음 조건도 충족해야 합니다.
 
 - **클러스터 메시 합류**: 새 노드가 기존 클러스터 메시에 완전히 합류해야 함
 - **데이터 마이그레이션 완료**: 파티션 마이그레이션이 진행 중인 노드는 불완전한 데이터를 반환할 수 있음

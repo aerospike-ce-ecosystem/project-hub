@@ -12,7 +12,7 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Deployment Topology
 
-Aerospike CE Ecosystem의 배포 환경을 로컬 개발부터 프로덕션까지 단계별로 설명합니다.
+이 문서는 로컬 개발, Kubernetes 개발·스테이징·프로덕션, Bare Metal 환경의 차이를 설명합니다. 환경에 맞는 배포 방식을 고를 때 참고하세요.
 
 ## 환경별 토폴로지
 
@@ -66,7 +66,7 @@ Aerospike CE Ecosystem의 배포 환경을 로컬 개발부터 프로덕션까�
 
 ## 로컬 개발 환경
 
-Podman Compose를 사용하여 Cluster Manager와 Aerospike Server를 로컬에서 실행합니다.
+로컬에서는 Podman Compose로 Cluster Manager와 Aerospike Server를 함께 실행합니다. 이 구성은 개발과 기능 테스트에 적합하며 production topology를 대신하지는 않습니다.
 
 ### 구성
 
@@ -90,18 +90,18 @@ podman compose logs -f aerospike
 ```
 
 :::info Podman 사용
-이 프로젝트는 Podman을 컨테이너 런타임으로 사용합니다. Rootless 컨테이너, 데몬 불필요, OCI 호환 등의 장점이 있습니다. 자세한 내용은 [ADR-0003](./adr/2026-02-01-podman-over-docker.md)을 참고하세요.
+이 프로젝트의 기본 container runtime은 Podman입니다. 일반 사용자 권한으로 실행할 수 있고 중앙 daemon이 필요하지 않으며 OCI image를 지원합니다. 선택 배경은 [ADR-0003](./adr/2026-02-01-podman-over-docker.md)에서 확인할 수 있습니다.
 :::
 
 ## Kubernetes 배포 (ACKO)
 
-ACKO(Aerospike CE Kubernetes Operator)를 통해 `AerospikeCluster` CRD로 선언적 배포를 수행합니다.
+Kubernetes에서는 ACKO(Aerospike CE Kubernetes Operator)가 `AerospikeCluster` CR을 읽고 cluster를 배포합니다. 사용자는 CR에 원하는 상태를 선언하고, ACKO가 실제 리소스를 그 상태에 맞춥니다.
 
 ### 배포 템플릿
 
 #### 1. minimal (개발용)
 
-가장 간단한 구성으로, 단일 Aerospike Pod를 배포합니다.
+`minimal` template은 Aerospike Pod 하나를 배포합니다. 로컬 Kubernetes 개발이나 기능 확인에 사용하세요.
 
 ```yaml
 apiVersion: acko.aerospike-ce-ecosystem.io/v1alpha1
@@ -130,7 +130,7 @@ spec:
 
 #### 2. soft-rack (스테이징)
 
-1개의 Kubernetes Node에 여러 Aerospike Pod를 배포하되, 논리적 Rack으로 분리합니다.
+`soft-rack` template은 하나의 Kubernetes Node에 여러 Aerospike Pod를 배치하고 논리적인 rack으로 나눕니다. 물리 장애 도메인을 분리하지는 않으므로 staging과 통합 테스트에 적합합니다.
 
 ```yaml
 apiVersion: acko.aerospike-ce-ecosystem.io/v1alpha1
@@ -165,7 +165,7 @@ spec:
 
 #### 3. hard-rack (프로덕션)
 
-N개의 Kubernetes Node에 Aerospike Pod를 분산 배포하여 물리적 장애 도메인을 보장합니다.
+`hard-rack` template은 여러 Kubernetes Node와 zone에 Pod를 분산합니다. 물리 장애 도메인을 분리해야 하는 production cluster에 사용합니다.
 
 ```yaml
 apiVersion: acko.aerospike-ce-ecosystem.io/v1alpha1
@@ -243,7 +243,7 @@ spec:
 
 ## Bare Metal 배포 (aerospike-py)
 
-Kubernetes 없이 물리 서버에 직접 Aerospike CE를 설치하고, aerospike-py로 연결하는 구조입니다.
+Bare Metal 환경에서는 각 물리 server에 Aerospike CE를 설치하고 application이 aerospike-py로 직접 연결합니다. 배포와 scaling, restart 순서는 운영자가 관리해야 합니다.
 
 <FlowDiagram
   height={350}
@@ -298,7 +298,7 @@ client = Client(hosts=[
 
 ## Aerospike CE 제약 사항
 
-Aerospike Community Edition(CE)에는 Enterprise Edition(EE) 대비 다음과 같은 제약이 있습니다. ACKO는 이 제약 사항을 Admission Webhook에서 검증합니다.
+Aerospike Community Edition(CE)은 Enterprise Edition(EE)과 지원 범위가 다릅니다. ACKO의 Admission Webhook은 아래 제약을 CR 생성·수정 시점에 검사합니다.
 
 | 제약 사항 | CE 제한 | EE |
 |-----------|---------|-----|
@@ -310,7 +310,7 @@ Aerospike Community Edition(CE)에는 Enterprise Edition(EE) 대비 다음과 �
 | **Feature Key** | 불필요 | 필수 |
 
 :::warning CE 제약 주의
-CR에 `security`, `tls`, `xdr` 설정을 포함하면 Aerospike CE Pod가 시작에 실패합니다. ACKO의 Admission Webhook이 이를 사전에 차단합니다.
+CR에 `security`, `tls`, `xdr`를 설정하면 CE Pod가 정상적으로 시작되지 않습니다. ACKO는 이런 CR을 admission 단계에서 거부하고 원인을 알려줍니다.
 
-`feature-key-file` 설정도 CE에서는 불필요하며, 포함 시 Pod crash가 발생합니다.
+CE에는 `feature-key-file`도 필요하지 않습니다. 이 설정을 포함하지 마세요.
 :::

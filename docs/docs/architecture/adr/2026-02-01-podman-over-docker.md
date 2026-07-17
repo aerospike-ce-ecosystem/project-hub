@@ -19,21 +19,21 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-Aerospike CE Ecosystem의 로컬 개발 환경에서 컨테이너 런타임이 필요합니다. Cluster Manager의 로컬 실행, Aerospike Server CE의 로컬 테스트, CI/CD 파이프라인 등에서 컨테이너를 사용합니다.
+Aerospike CE Ecosystem은 Cluster Manager의 로컬 실행, Aerospike Server CE 테스트, CI/CD pipeline에 컨테이너를 사용합니다. 이를 지원할 공통 container runtime이 필요했습니다.
 
-고려 사항:
+다음 조건을 기준으로 runtime을 비교했습니다.
 
-- **보안**: 개발 환경에서의 컨테이너 보안 (rootless 실행 가능 여부)
-- **라이선스**: 상업적 사용 시 라이선스 비용
-- **호환성**: OCI 표준 준수, 기존 Dockerfile/Compose 호환성
-- **아키텍처**: 데몬 프로세스 의존성 여부
-- **Kubernetes 호환**: CRI-O 및 K8s 워크플로우와의 자연스러운 연계
+- **보안**: 개발 환경에서 rootless container를 실행할 수 있어야 합니다.
+- **라이선스**: 상업적 사용에 별도 라이선스 비용이 없어야 합니다.
+- **호환성**: OCI 표준을 따르고 기존 Dockerfile과 Compose 구성을 재사용할 수 있어야 합니다.
+- **아키텍처**: 상시 실행하는 daemon process에 의존하지 않는 방식을 선호합니다.
+- **Kubernetes 호환**: CRI-O와 Kubernetes workflow에 자연스럽게 연결되어야 합니다.
 
 ## 결정 (Decision)
 
 > **Aerospike CE Ecosystem은 컨테이너 런타임으로 Podman을 사용한다.**
 
-모든 레포의 문서, 스크립트, CI/CD에서 Podman 용어와 명령어를 사용합니다. `podman compose`를 로컬 개발 환경 구성에 사용합니다.
+모든 repository의 문서, script, CI/CD에서 Podman 용어와 command를 사용합니다. 로컬 개발 환경은 `podman compose`로 구성합니다.
 
 ## 대안 검토 (Alternatives Considered)
 

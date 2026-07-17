@@ -20,20 +20,20 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-ACKO의 `reconciler_dynamic_config.go`에서 동적 설정 변경 시, 여러 설정 항목을 Pod별로 순차 적용하는 과정에서 두 가지 심각한 문제가 존재한다.
+ACKO의 `reconciler_dynamic_config.go`는 여러 dynamic config 항목을 Pod마다 차례로 적용합니다. 이 과정에는 두 가지 문제가 있습니다.
 
 ### 문제 1: 롤백 실패 시 하이브리드 상태
 
-동적 설정 적용 중 실패하면 `rollbackDynamicChanges()`를 호출하지만, 롤백 명령 자체가 실패할 경우 로그만 남기고 계속 진행한다. 이로 인해 Aerospike 노드가 **일부 변경은 적용, 일부는 롤백, 일부는 미시도**된 하이브리드 상태에 빠질 수 있다.
+설정 적용 중 실패하면 `rollbackDynamicChanges()`를 호출합니다. Rollback command까지 실패하면 log만 남기고 계속 진행하므로 Aerospike node가 **일부 변경은 적용되고, 일부는 rollback되며, 일부는 시도하지 않은** 혼합 상태에 놓일 수 있습니다.
 
 ### 문제 2: Context Cancellation으로 인한 부분 적용
 
-ADR-0013에서 도입한 5분 reconciliation timeout 내에서 동적 설정 변경이 Pod별로 순차 진행된다. 예를 들어 5개 Pod 중 3번째에서 context가 만료되면:
+Dynamic config 변경은 ADR-0013에서 정한 5분 reconciliation timeout 안에서 Pod별로 진행됩니다. 예를 들어 Pod 5개 중 세 번째를 처리할 때 context가 만료되면 다음 상태가 됩니다.
 - Pod 1-3: 새 설정 적용됨
 - Pod 4-5: 이전 설정 유지
 - 클러스터 전체가 설정 불일치 상태에 놓인다
 
-이는 운영 환경에서 예측 불가능한 동작을 초래하며, 특히 네트워크 관련 설정(heartbeat interval 등)의 불일치는 클러스터 분리(split)로 이어질 수 있다.
+이런 불일치는 production 환경에서 예측하기 어려운 동작을 일으킵니다. 특히 heartbeat interval 같은 network 설정이 서로 다르면 cluster split으로 이어질 수 있습니다.
 
 ### 영향받는 코드
 - `internal/controller/reconciler_dynamic_config.go` (lines 38, 72-91)

@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-수백만 건 이상의 레코드를 가진 set을 브라우징하는 사용자에게 직접적 영향. 이전에는 브라우저가 OOM으로 크래시했던 시나리오가 안정적으로 동작한다. 하이콘트라스트 컬러 시스템은 접근성(accessibility)도 개선한다.
+수백만 개의 record를 가진 set을 탐색하는 사용자가 직접 영향을 받는다. Server-side limit으로 browser OOM을 방지하며, high-contrast color system은 accessibility도 개선한다.

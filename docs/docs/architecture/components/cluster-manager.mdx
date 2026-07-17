@@ -1,6 +1,6 @@
 ---
 title: "Cluster Manager"
-description: Cluster Manager 아키텍처. K8s 환경 안에서 Frontend/Backend/aerospike-py로 클러스터를 관리하는 Web UI.
+description: Frontend, Backend, aerospike-py, K8s Client로 구성된 Cluster Manager 아키텍처
 sidebar_position: 3
 scope: single-repo
 repos: [cluster-manager]
@@ -12,7 +12,7 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Cluster Manager Component Diagram
 
-K8s 환경 안에서 동작하는 웹 관리 UI. Backend에 aerospike-py를 내장하여 Aerospike 데이터에 접근하고, K8s API를 통해 ACKO가 관리하는 클러스터를 제어합니다.
+Cluster Manager는 Aerospike CE 클러스터를 관리하는 Web UI입니다. Backend는 aerospike-py를 사용해 Aerospike 데이터에 접근하고, Kubernetes API를 통해 ACKO가 관리하는 cluster와 Pod 상태를 조회하거나 변경합니다.
 
 <FlowDiagram
   height={580}

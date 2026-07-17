@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-**BREAKING CHANGE**: AerospikeClusterTemplate CRD의 스코프를 namespace에서 cluster로 변경했다. 이를 통해 하나의 템플릿을 여러 네임스페이스에서 공유할 수 있게 되어 멀티테넌트 환경에서의 관리 편의성이 크게 향상된다.
+**BREAKING CHANGE**: AerospikeClusterTemplate CRD를 namespace-scoped에서 cluster-scoped 리소스로 변경했다. 템플릿에 namespace가 속하지 않게 되면서 하나의 템플릿을 여러 namespace의 클러스터가 공유할 수 있다.
 
 ## 주요 변경 사항
 
@@ -30,4 +30,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-ACKO를 사용하는 모든 환경에 **BREAKING CHANGE**. 기존 namespace-scoped 템플릿은 cluster-scoped로 마이그레이션해야 한다. Cluster Manager의 템플릿 관련 UI(PR #086)도 이 변경에 맞게 업데이트가 필요하다.
+이 스코프 변경은 ACKO를 사용하는 모든 환경에 적용되는 **BREAKING CHANGE**다. 기존 namespace-scoped 템플릿은 cluster-scoped 리소스로 마이그레이션해야 하며, Cluster Manager의 템플릿 UI(PR #086)도 cluster-scoped 조회 방식에 맞게 업데이트해야 한다.

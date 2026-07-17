@@ -19,19 +19,19 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-Aerospike Cluster Manager의 프론트엔드는 초기에 Tailwind CSS 3 + DaisyUI를 기반으로 구축되었습니다. DaisyUI는 Tailwind 위에 구축된 컴포넌트 라이브러리로, 빠른 프로토타이핑에 유용했으나 프로젝트가 성장하면서 다음과 같은 문제가 발생했습니다:
+Aerospike Cluster Manager frontend는 처음에 Tailwind CSS 3와 DaisyUI로 구축했습니다. DaisyUI는 빠른 prototype을 만드는 데 유용했지만, 프로젝트가 성장하면서 다음 문제가 나타났습니다.
 
 ### DaisyUI의 한계
 
-- **커스터마이제이션 한계**: DaisyUI의 사전 정의된 테마 시스템이 Aerospike 브랜드 디자인 시스템과 충돌. 색상, 간격, 타이포그래피를 세밀하게 제어하기 어려움
-- **스타일 충돌**: DaisyUI의 내부 CSS와 커스텀 Tailwind 유틸리티가 specificity 충돌을 일으켜 `!important` 남발 필요
-- **접근성 부족**: DaisyUI 컴포넌트는 WAI-ARIA 패턴을 완전히 구현하지 않아 스크린 리더, 키보드 내비게이션 지원이 불완전
-- **번들 크기**: 사용하지 않는 DaisyUI 컴포넌트 스타일이 번들에 포함되어 CSS 크기 증가 (약 45KB gzipped 추가)
-- **Tailwind CSS 4 비호환**: Tailwind CSS 4의 새로운 엔진(Oxide)과 DaisyUI의 호환성이 불안정
+- **커스터마이제이션 한계**: DaisyUI의 사전 정의된 theme이 Aerospike brand design system과 충돌해 색상, 간격, typography를 세밀하게 제어하기 어려웠습니다.
+- **스타일 충돌**: DaisyUI 내부 CSS와 custom Tailwind utility가 specificity 충돌을 일으켜 `!important`를 반복해서 사용해야 했습니다.
+- **접근성 부족**: DaisyUI component가 WAI-ARIA pattern을 완전히 구현하지 않아 screen reader와 keyboard navigation 지원이 불완전했습니다.
+- **번들 크기**: 사용하지 않는 DaisyUI component style도 bundle에 포함되어 gzip 기준 CSS가 약 45KB 늘었습니다.
+- **Tailwind CSS 4 비호환**: DaisyUI와 Tailwind CSS 4의 새 Oxide engine 사이의 호환성이 안정적이지 않았습니다.
 
 ### 전환 동기
 
-Cluster Manager는 Aerospike 클러스터의 모니터링 및 관리 도구로, 복잡한 데이터 테이블, 실시간 차트, 다단계 폼 등 고급 UI 패턴이 필요했습니다. 이를 위해 디자인 시스템의 완전한 제어가 필수적이었습니다.
+Cluster Manager에는 복잡한 data table, 실시간 chart, 다단계 form 같은 UI pattern이 필요합니다. 이러한 화면을 일관되게 구현하려면 design system을 직접 제어할 수 있어야 했습니다.
 
 ## 결정 (Decision)
 

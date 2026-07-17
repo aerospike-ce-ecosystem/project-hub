@@ -16,6 +16,8 @@ last_updated: 2026-03-29
 
 # Cluster Manager Changelog
 
+Cluster Manager release별 주요 기능, 수정 사항과 documentation 변경을 정리합니다.
+
 ## Unreleased (latest)
 
 ### Features
@@ -31,10 +33,6 @@ last_updated: 2026-03-29
 
 ### Documentation
 - **README screenshots**: Updated screenshots to reflect current UI (PR #155)
-
----
-
-Aerospike Cluster Manager 릴리스별 변경 사항을 기록합니다.
 
 ---
 

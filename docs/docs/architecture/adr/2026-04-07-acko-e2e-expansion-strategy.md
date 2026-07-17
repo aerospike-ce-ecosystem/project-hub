@@ -20,9 +20,9 @@ last_updated: 2026-04-07
 
 ## 맥락 (Context)
 
-Q2 2026 로드맵과 프로젝트 목표 3-4에서 ACKO의 E2E 테스트 커버리지 확장을 명시하고 있다. 현재 ACKO E2E 테스트는 Ginkgo v2 + Gomega 프레임워크를 사용하며, Kind 클러스터에서 7개 테스트 파일(cluster 생성, features, multirack, PVC, template, 기본 E2E)을 실행한다.
+Q2 2026 roadmap과 프로젝트 목표 3-4는 ACKO의 E2E test coverage 확장을 요구합니다. 현재 test suite는 Ginkgo v2와 Gomega를 사용하며 Kind cluster에서 cluster 생성, feature, multirack, PVC, template, 기본 E2E를 다루는 7개 test file을 실행합니다.
 
-그러나 실제 운영 환경에서 발생하는 핵심 시나리오들이 E2E 레벨에서 검증되지 않고 있다:
+그러나 실제 운영에 필요한 다음 scenario는 E2E 수준에서 검증하지 않습니다.
 
 | 시나리오 | 복잡도 | 위험도 | 관련 ADR |
 |---------|:------:|:------:|---------|
@@ -33,7 +33,7 @@ Q2 2026 로드맵과 프로젝트 목표 3-4에서 ACKO의 E2E 테스트 커버�
 | 외부 네트워크 접근 | 높음 | 중 | ADR-0038 (External Network Access) |
 | Dynamic config 변경 | 중 | 중 | ADR-0020 (Dynamic Config Transaction) |
 
-이러한 시나리오는 기존 ADR에서 설계된 메커니즘(readiness gate, circuit breaker, webhook validation 등)이 실제로 동작하는지를 검증하는 데 필수적이다.
+이 scenario를 추가해야 기존 ADR에서 설계한 readiness gate, circuit breaker, webhook validation이 실제 환경에서도 동작하는지 확인할 수 있습니다.
 
 ## 결정 (Decision)
 
@@ -41,11 +41,11 @@ Q2 2026 로드맵과 프로젝트 목표 3-4에서 ACKO의 E2E 테스트 커버�
 
 ### 구체적 결정 사항
 
-1. **시나리오별 독립 테스트 파일 분리**: 각 운영 시나리오를 독립된 `_test.go` 파일로 구현하여 테스트 간 격리를 보장하고 병렬 실행을 가능하게 한다.
+1. **시나리오별 독립 test file 분리**: 각 운영 scenario를 독립된 `_test.go` file로 구현해 test 사이의 상태를 격리하고 병렬 실행을 지원합니다.
 
-2. **CI matrix strategy 도입**: GitHub Actions의 matrix strategy로 시나리오별 병렬 실행을 지원하되, 리소스 제약에 따라 순차 fallback이 가능하도록 설계한다.
+2. **CI matrix strategy 도입**: GitHub Actions matrix로 scenario를 병렬 실행합니다. Resource가 부족하면 순차 실행으로 fallback할 수 있게 설계합니다.
 
-3. **Kind 클러스터 시나리오 그룹별 공유**: 완전 격리(시나리오당 1개 Kind 클러스터)와 전체 공유(1개 Kind 클러스터) 사이의 절충안으로, 관련 시나리오를 그룹으로 묶어 Kind 클러스터를 공유한다.
+3. **Scenario group별 Kind cluster 공유**: Scenario마다 Kind cluster 하나를 만드는 방식과 전체가 cluster 하나를 공유하는 방식의 중간안을 사용합니다. 관련 scenario를 group으로 묶어 Kind cluster를 공유합니다.
 
 ### 구현 시 결정 필요 사항
 

@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-프로젝트 전반에 걸친 대규모 리팩터링. Lua UDF 지원을 제거하고(Aerospike CE 8.1에서 미지원), aerospike-py를 최신 버전으로 업그레이드하며, 모놀리식 컴포넌트를 분해하여 유지보수성을 개선했다.
+프로젝트 전반을 refactor했다. Aerospike CE 8.1이 지원하지 않는 Lua UDF 기능을 제거하고, aerospike-py를 upgrade했으며, monolithic component를 기능별로 나눠 유지보수하기 쉽게 만들었다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-Cluster Manager의 전체 코드베이스에 영향. Lua UDF 관리 기능을 사용하던 사용자는 해당 기능이 제거됨을 인지해야 한다. aerospike-py 업그레이드로 더 나은 타입 지원과 성능을 제공한다.
+Cluster Manager codebase 전체가 영향을 받는다. Lua UDF 관리 기능은 제거됐으므로 이를 사용하던 사용자는 migration이 필요하다. aerospike-py upgrade로 type support와 성능도 개선됐다.

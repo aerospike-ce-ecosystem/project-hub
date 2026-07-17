@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-보안, 아키텍처, 테스트의 3개 축에서 포괄적인 개선을 수행했다. Fernet 암호화를 도입하여 저장 데이터의 보안을 강화하고, 애플리케이션 아키텍처를 개선하며, 40개의 새로운 테스트를 추가하여 안정성을 높였다.
+Security, architecture, test 영역을 함께 개선했다. 저장 data에 Fernet encryption을 적용하고 application layer를 정리했으며, test 40개를 추가했다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-Cluster Manager의 보안과 안정성 전반에 영향. 기존에 평문으로 저장되던 연결 정보가 Fernet 암호화로 보호된다. 40개의 새로운 테스트로 회귀 방지 능력이 크게 향상되었다.
+Cluster Manager의 security와 stability가 영향을 받는다. 이전에 plain text로 저장하던 connection 정보는 Fernet으로 암호화되며, 추가된 test 40개가 관련 regression을 검사한다.

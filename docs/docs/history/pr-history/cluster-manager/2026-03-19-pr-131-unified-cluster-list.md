@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-Cluster Manager UI 전반에 영향. 여러 클러스터를 관리하는 환경에서 통합된 뷰를 통해 전체 인프라 상황을 한눈에 파악할 수 있다. 타입 체킹 훅으로 코드 품질과 안정성이 향상된다.
+Cluster Manager의 cluster list UI가 영향을 받는다. 여러 클러스터를 하나의 view에서 비교할 수 있으며, 새 type-checking hook은 관련 code의 type error를 더 일찍 찾는다.

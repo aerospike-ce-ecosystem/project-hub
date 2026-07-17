@@ -29,4 +29,4 @@ Seeds finder 서비스 UI와 템플릿 topology spread constraints 기능을 추
 
 ## 영향 범위
 
-클러스터 간 seed 노드 연결과 템플릿 기반 토폴로지 관리가 필요한 운영자에게 영향. Seeds finder 서비스를 통해 클러스터 디스커버리를 자동화할 수 있다. 템플릿에 topology spread constraints를 포함시켜 일관된 분산 배치 정책을 여러 클러스터에 적용할 수 있다.
+클러스터 discovery와 template 기반 topology를 관리하는 운영자가 영향을 받는다. Seeds Finder로 seed node discovery를 자동화하고, template의 `topologySpreadConstraints`를 여러 클러스터에 같은 방식으로 적용할 수 있다.

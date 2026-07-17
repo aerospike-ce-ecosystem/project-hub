@@ -20,15 +20,15 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-ACKO operator는 `spec.paused: true` 설정 시 reconciliation을 중단하는 Pause 기능을 제공한다. 현재 구현(`internal/controller/reconciler.go`, lines 149-162)은 `cluster.Spec.Paused`를 확인하여 true이면 `status.Phase = "Paused"`를 설정하고 reconciliation을 스킵한다.
+ACKO operator는 `spec.paused: true`일 때 reconciliation을 중단하는 Pause 기능을 제공합니다. 현재 `internal/controller/reconciler.go`의 149~162행은 `cluster.Spec.Paused`가 `true`이면 `status.Phase = "Paused"`를 설정하고 reconciliation을 건너뜁니다.
 
-이 구현에는 세 가지 문제가 존재한다:
+이 구현에는 세 가지 문제가 있습니다.
 
-1. **Status 업데이트 실패 시 불일치**: `r.Status().Update()` 호출이 실패하면 클러스터는 실질적으로 paused 상태이지만, `status.Phase`는 이전 상태(예: "Running")를 유지한다. 사용자가 `kubectl get aerospikecluster`로 확인 시 "Running"으로 표시되지만 실제로는 관리되지 않는 상태가 된다. Cluster Manager UI에서도 잘못된 상태를 표시하게 된다.
+1. **Status update 실패 시 불일치**: `r.Status().Update()`가 실패하면 cluster는 실제로 paused 상태지만 `status.Phase`는 `Running` 같은 이전 값을 유지합니다. `kubectl get aerospikecluster`와 Cluster Manager UI는 관리가 중단된 cluster를 `Running`으로 표시합니다.
 
-2. **Resume 시 Condition 클린업 부재**: Paused → Running 전환 시 이전 에러 condition들이 클리어되지 않는다. Pause 전 발생한 `ReconcileFailed` condition이 Resume 후에도 남아있어 운영자가 과거 에러와 현재 에러를 구분할 수 없다.
+2. **Resume 시 Condition 정리 누락**: Paused에서 Running으로 전환해도 이전 error condition을 지우지 않습니다. Pause 전에 발생한 `ReconcileFailed`가 Resume 뒤에도 남아 운영자가 과거와 현재 error를 구분할 수 없습니다.
 
-3. **Pause 중 외부 변경 감지 불가**: Pause 상태에서 Pod가 삭제되거나 PVC가 변경되어도 operator가 인지하지 못한다. Resume 시 예상치 못한 상태 divergence가 발생할 수 있다.
+3. **Pause 중 외부 변경 미감지**: Pause 상태에서 Pod가 삭제되거나 PVC가 바뀌어도 operator는 이를 확인하지 않습니다. Resume할 때 예상하지 못한 state divergence가 나타날 수 있습니다.
 
 이 문제는 ADR-0013(Reconciliation Circuit Breaker)에서 도입한 condition 기반 상태 노출 패턴의 확장선에 있으며, ADR-0012(Pod Readiness Gates)에서 확립한 "정확한 상태 반영" 원칙과 직결된다.
 

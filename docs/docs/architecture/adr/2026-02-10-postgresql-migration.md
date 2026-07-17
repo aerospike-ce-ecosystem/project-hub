@@ -19,12 +19,12 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-Aerospike Cluster Manager는 클러스터 메타데이터, 사용자 설정, 감사 로그 등을 저장하기 위해 SQLite를 사용해왔습니다. 초기 단일 사용자 환경에서는 적합했으나, 다음과 같은 한계가 드러났습니다:
+Aerospike Cluster Manager는 cluster metadata, 사용자 설정, audit log를 SQLite에 저장해 왔습니다. 초기의 단일 사용자 환경에는 적합했지만, 사용 범위가 넓어지면서 다음 한계가 드러났습니다.
 
-- **동시 쓰기 제한**: SQLite의 WAL 모드에서도 writer lock 경합으로 동시 쓰기 성능 저하
-- **수평 확장 불가**: 파일 기반 DB로 인해 다중 인스턴스 배포 시 공유 불가
-- **비동기 지원 미흡**: Python의 `aiosqlite`는 내부적으로 스레드풀을 사용하여 진정한 비동기가 아님
-- **운영 환경 부적합**: 데이터 무결성, 백업, 복제 등 운영에 필요한 기능 부재
+- **동시 쓰기 제한**: SQLite의 WAL mode에서도 writer lock이 경합하면 동시 쓰기 성능이 낮아집니다.
+- **수평 확장 불가**: File 기반 DB이므로 여러 instance가 같은 DB를 공유할 수 없습니다.
+- **비동기 지원 미흡**: Python의 `aiosqlite`는 내부에서 thread pool을 사용하므로 native async I/O를 제공하지 않습니다.
+- **운영 기능 부족**: Production에 필요한 data integrity, backup, replication 기능이 제한적입니다.
 
 다중 사용자가 동시에 클러스터를 관리하는 시나리오에서 SQLite의 한계가 사용자 경험에 직접적인 영향을 미치고 있었습니다.
 
@@ -34,12 +34,12 @@ Aerospike Cluster Manager는 클러스터 메타데이터, 사용자 설정, 감
 
 ### 구현 세부사항
 
-- **DB Backend 추상화**: `DatabaseBackend` 프로토콜 정의로 dual-backend 지원
-- **asyncpg 드라이버**: PostgreSQL 연결에 네이티브 비동기 드라이버 사용
-- **환경 변수 전환**: `DATABASE_URL` 값에 따라 자동으로 backend 선택
+- **DB Backend 추상화**: `DatabaseBackend` protocol을 정의해 두 backend를 지원합니다.
+- **asyncpg 드라이버**: PostgreSQL 연결에는 native async driver를 사용합니다.
+- **환경 변수 전환**: `DATABASE_URL` 값에 따라 backend를 자동으로 선택합니다.
   - `postgresql://...` -> PostgreSQL (asyncpg)
   - `sqlite:///...` 또는 미설정 -> SQLite (aiosqlite)
-- **마이그레이션 도구**: Alembic으로 스키마 버전 관리, 양쪽 dialect 모두 지원
+- **마이그레이션 도구**: Alembic으로 schema version을 관리하며 두 dialect를 모두 지원합니다.
 
 ## 대안 검토 (Alternatives Considered)
 

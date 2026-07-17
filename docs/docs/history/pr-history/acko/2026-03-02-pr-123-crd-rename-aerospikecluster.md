@@ -31,4 +31,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-ACKO를 사용하는 모든 환경에 **BREAKING CHANGE**. 기존 `AerospikeCECluster` 리소스는 새 `AerospikeCluster` CRD로 마이그레이션해야 한다. Cluster Manager UI와 모든 예제 매니페스트도 새 이름에 맞게 업데이트가 필요하다.
+이 이름 변경은 ACKO를 사용하는 모든 환경에 적용되는 **BREAKING CHANGE**다. 기존 `AerospikeCECluster` 리소스는 새 `AerospikeCluster` CRD로 마이그레이션해야 한다. Cluster Manager UI와 예제 매니페스트의 리소스 이름도 함께 수정해야 한다.

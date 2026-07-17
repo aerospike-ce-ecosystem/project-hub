@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-NumPy 배열 기반의 `batch_write_numpy` API를 새로 추가하여 대용량 벌크 쓰기 작업의 성능을 극대화했다. NumpyBatchRecords 타입을 개선하여 NumPy 네이티브 데이터를 Python 객체 변환 없이 직접 Aerospike 서버로 전송할 수 있게 되었다.
+NumPy array를 받는 `batch_write_numpy` API를 추가했다. 개선한 `NumpyBatchRecords` type은 NumPy data를 Python object로 변환하지 않고 Aerospike server에 전달한다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ NumPy 배열 기반의 `batch_write_numpy` API를 새로 추가하여 대용량 
 
 ## 영향 범위
 
-대용량 데이터 적재(bulk loading) 워크로드에 큰 성능 개선. 기존 `batch_write()`와 병행 사용 가능하며, NumPy 기반 데이터 파이프라인에서 특히 효과적이다. 데이터 사이언스, ETL 파이프라인 등의 사용 사례에 영향.
+Bulk loading workload가 영향을 받는다. 기존 `batch_write()`는 그대로 사용할 수 있으며, NumPy 기반 data science와 ETL pipeline은 Python object conversion을 줄이기 위해 새 API를 선택할 수 있다.

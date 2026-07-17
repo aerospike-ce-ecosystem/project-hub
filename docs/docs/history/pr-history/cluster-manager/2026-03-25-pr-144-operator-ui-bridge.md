@@ -29,4 +29,4 @@ ACKO 오퍼레이터와 Cluster Manager UI 간의 연동을 강화했다. Promet
 
 ## 영향 범위
 
-ACKO와 Cluster Manager를 함께 사용하는 환경에 영향. 특히 Prometheus 모니터링과 PVC 기반 스토리지를 사용하는 클러스터에서 운영 가시성이 향상된다. ACKO PR #202의 METRIC_LABELS 수정과 연관된다.
+ACKO와 Cluster Manager를 함께 사용하는 환경이 영향을 받는다. Prometheus monitoring configuration과 PVC-Pod binding을 UI에서 확인할 수 있으며, ACKO PR #202의 `METRIC_LABELS` 수정과도 관련된다.

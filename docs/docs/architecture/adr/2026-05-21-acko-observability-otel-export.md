@@ -20,16 +20,16 @@ last_updated: 2026-05-21
 
 ## 맥락 (Context)
 
-ADR-0010과 ADR-0046으로 `aerospike-py`는 logging·metrics·tracing 3계층 observability를 갖췄고, OpenTelemetry trace context가 PyO3 경계를 넘어 전파된다. 그러나 그 위 계층은 단절돼 있었다.
+ADR-0010과 ADR-0046을 통해 `aerospike-py`는 logging, metrics, tracing을 제공하며 OpenTelemetry trace context도 PyO3 경계를 넘어 전달합니다. 그러나 ACKO operator와 Cluster Manager까지 같은 trace로 연결되지는 않았습니다.
 
-- **ACKO operator (Go)** — Prometheus `/metrics`(controller-runtime + `acko_*`)만 노출했고 tracing이나 OTLP export는 전혀 없었다. reconcile 루프의 동작은 trace로 관찰할 수 없었다.
-- **Cluster Manager API (FastAPI)** — OpenTelemetry SDK는 구성돼 있었지만 `aerospike_py.init_tracing()`을 호출하지 않았다. `[otel]` extra는 context 전파만 연결할 뿐 span *emission*은 시작하지 않으므로, aerospike-py의 `aerospike.<op>` span은 문서의 설명과 달리 실제로는 전량 누락됐다.
+- **ACKO operator (Go)** — controller-runtime과 `acko_*` metric을 Prometheus `/metrics`로만 제공했습니다. Tracing과 OTLP export가 없어 reconcile loop를 trace로 확인할 수 없었습니다.
+- **Cluster Manager API (FastAPI)** — OpenTelemetry SDK는 설정했지만 `aerospike_py.init_tracing()`을 호출하지 않았습니다. `[otel]` extra는 context propagation만 연결하고 span *emission*은 시작하지 않습니다. 따라서 문서의 설명과 달리 aerospike-py의 `aerospike.<op>` span은 생성되지 않았습니다.
 
-결과적으로 한 요청이 UI → API → operator → Aerospike로 흐를 때 end-to-end trace가 끊겼다. 스택 전체가 동일한 OTLP collector로 신호를 보내 하나의 trace로 이어지는 통합 관찰성이 필요했고, 활성화 전에는 비용이 0이어야 하며 설정은 OpenTelemetry SDK 표준 환경변수만으로 이뤄져야 했다.
+그 결과 UI → API → operator → Aerospike로 이어지는 request를 end-to-end trace로 볼 수 없었습니다. Stack 전체가 같은 OTLP collector로 signal을 보내야 했습니다. 기능을 켜지 않았을 때는 비용이 없어야 하며, 설정에는 OpenTelemetry SDK 표준 환경 변수만 사용해야 했습니다.
 
 ## 결정 (Decision)
 
-> **"우리는 ACKO operator와 cluster-manager API가 OpenTelemetry로 traces·metrics·logs를 OTLP collector에 직접 export하도록 한다. 그 이유는 aerospike-py에서 시작된 trace를 스택 전체로 이어 end-to-end 관찰성을 확보하기 위함이다."**
+> **ACKO operator와 cluster-manager API가 OpenTelemetry traces, metrics, logs를 OTLP collector에 직접 export하도록 한다. aerospike-py에서 시작한 trace를 stack 전체로 연결해 end-to-end로 관찰하기 위함이다.**
 
 선택한 방안의 상세 내용:
 

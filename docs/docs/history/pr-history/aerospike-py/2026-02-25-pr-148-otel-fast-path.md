@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-OpenTelemetry 트레이싱이 비활성 상태일 때의 CPU 오버헤드를 최소화하기 위한 fast-path를 도입했다. `OTEL_ACTIVE` AtomicBool 플래그로 트레이싱 비활성 시 span 생성 경로를 완전히 건너뛰고, `Cow<'static, str>`로 span 이름의 동적 할당을 제거했다.
+OpenTelemetry tracing을 끈 상태에서 span creation path를 건너뛰는 fast path를 추가했다. `OTEL_ACTIVE` `AtomicBool`로 tracing 상태를 확인하고, `Cow<'static, str>`로 span name을 만들 때의 dynamic allocation을 줄였다.
 
 ## 주요 변경 사항
 

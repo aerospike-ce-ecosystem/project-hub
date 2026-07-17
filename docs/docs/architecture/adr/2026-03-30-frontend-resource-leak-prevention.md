@@ -20,23 +20,23 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager 프론트엔드에서 여러 리소스 누수 패턴과 불필요한 API 호출이 확인되었습니다. 이는 사용자 경험 저하와 백엔드 부하 증가를 유발합니다.
+Cluster Manager frontend에서 resource가 정리되지 않거나 불필요한 API request가 계속되는 pattern을 확인했습니다. 이 문제는 UI 상태를 부정확하게 만들고 backend 부하를 높입니다.
 
 ### 문제 1: K8s 클러스터 폴링 메모리 누수
 
-`k8s-cluster-store.ts`에서 `startDetailPolling()`이 모듈 레벨 `_k8sDetailIntervalId`를 설정합니다. 컴포넌트 unmount 시 `stopDetailPolling()`이 호출되지 않으면 인터벌이 백그라운드에서 계속 실행되어 스토어 상태를 불필요하게 업데이트하고, API 서버에 불필요한 요청이 지속됩니다.
+`k8s-cluster-store.ts`의 `startDetailPolling()`은 module-level `_k8sDetailIntervalId`를 설정합니다. Component가 unmount될 때 `stopDetailPolling()`을 호출하지 않으면 interval이 background에서 계속 실행됩니다. 그 결과 store 상태를 불필요하게 갱신하고 API server에 request를 계속 보냅니다.
 
 ADR-0016에서 SSE 기반 실시간 이벤트 스트리밍이 제안되어 장기적으로 폴링이 SSE로 대체될 예정이나, 전환 과도기 및 SSE fallback 상황에서 폴링 정리 패턴은 여전히 필수적입니다.
 
 ### 문제 2: useAsyncData Hook의 AbortController 미사용
 
-`use-async-data.ts`에서 `requestIdRef`로 stale 업데이트만 방지하고, 실제 fetch 요청은 완료될 때까지 실행됩니다. 의존성이 빠르게 변경되면 동시에 여러 요청이 in-flight 상태가 되어 네트워크 대역폭과 CPU를 낭비합니다.
+`use-async-data.ts`는 `requestIdRef`로 stale update만 막습니다. 실제 fetch request는 완료될 때까지 실행되므로 dependency가 빠르게 바뀌면 여러 request가 동시에 in-flight 상태로 남아 network bandwidth와 CPU를 사용합니다.
 
 ADR-0018에서 백엔드 Graceful Cancellation이 제안되었으나, 프론트엔드에서 AbortController로 취소 시그널을 전파해야 백엔드까지 완전한 cancellation 체인이 구축됩니다.
 
 ### 문제 3: 네임스페이스 전환 시 페이지네이션 상태 미초기화
 
-`browser-store.ts`에서 `setNamespace()` 호출 시 레코드와 selectedSet만 초기화하고 페이지네이션 상태(`pageSize`, `total`, `hasMore`)가 유지되어, 이전 네임스페이스의 페이지네이션 정보가 새 네임스페이스에서 표시되는 문제가 있습니다.
+`browser-store.ts`에서 `setNamespace()`를 호출하면 record와 `selectedSet`만 초기화됩니다. Pagination 상태인 `pageSize`, `total`, `hasMore`가 남아 이전 namespace의 정보가 새 namespace 화면에 표시됩니다.
 
 ### 문제 4: Connection Health Check 에러 정보 미노출
 

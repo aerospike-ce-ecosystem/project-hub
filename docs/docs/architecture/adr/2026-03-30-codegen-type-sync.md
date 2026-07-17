@@ -20,20 +20,20 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager는 FastAPI(Pydantic v2) 백엔드와 Next.js(TypeScript) 프론트엔드로 구성됩니다. 현재 API 타입은 개발자가 수동으로 동기화하고 있으며, 이는 프로젝트 목표 2-7에 "수동 동기화 필수"로 명시되어 있습니다.
+Cluster Manager는 FastAPI(Pydantic v2) backend와 Next.js(TypeScript) frontend로 구성됩니다. 현재 개발자가 양쪽 API type을 직접 맞춰야 합니다. 프로젝트 목표 2-7에도 이 상태가 `수동 동기화 필수`로 기록되어 있습니다.
 
 ### 현재 문제점
 
-1. **타입 불일치 리스크**: 백엔드 Pydantic 모델 변경 시 프론트엔드 TypeScript 타입 업데이트 누락 가능. 실제로 `backend/main.py`에 타입 레벨에서 미반영된 TODO가 존재
-2. **개발 속도 저하**: 모든 API 변경마다 `backend/src/.../schemas/`와 `frontend/src/lib/api/types.ts` 두 곳을 수정해야 함
-3. **런타임 에러**: 컴파일 타임에 잡히지 않는 필드 이름/타입 불일치가 런타임까지 전파
-4. **CI 미검증**: 타입 동기화 여부를 검증하는 자동화가 없어 불일치가 merge될 수 있음
+1. **Type 불일치 위험**: Backend Pydantic model을 바꾼 뒤 frontend TypeScript type을 갱신하지 않을 수 있습니다. 실제로 `backend/main.py`에는 type에 반영되지 않은 TODO가 있습니다.
+2. **개발 속도 저하**: API를 바꿀 때마다 `backend/src/.../schemas/`와 `frontend/src/lib/api/types.ts`를 모두 수정해야 합니다.
+3. **Runtime error**: Field 이름이나 type의 차이를 compile time에 찾지 못하면 runtime까지 전파됩니다.
+4. **CI 검증 부재**: Type이 동기화되었는지 검사하는 자동화가 없어 불일치가 merge될 수 있습니다.
 
 ### 배경 요인
 
-- ADR-0016에서 SSE 기반 실시간 이벤트 스트리밍을 도입하면서 백엔드-프론트엔드 간 계약(contract)이 더 복잡해지고 있음
-- ADR-0014에서 PostgreSQL로 마이그레이션하면서 스키마 변경이 프론트엔드에 영향을 주는 패턴이 빈번해짐
-- FastAPI가 이미 `/openapi.json` 엔드포인트를 자동 생성하고 있어 활용 가능한 인프라가 존재
+- ADR-0016에서 SSE 기반 실시간 event streaming을 도입하면서 backend와 frontend 사이의 contract가 더 복잡해졌습니다.
+- ADR-0014의 PostgreSQL migration 이후 schema 변경이 frontend에 영향을 주는 경우가 늘었습니다.
+- FastAPI가 이미 `/openapi.json` endpoint를 생성하므로 이를 codegen 입력으로 사용할 수 있습니다.
 
 ## 결정 (Decision)
 

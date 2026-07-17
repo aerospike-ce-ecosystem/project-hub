@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-Cluster Manager를 통해 새 클러스터를 생성하는 모든 사용자에게 영향. 클러스터 생성 UX가 크게 개선되어 온보딩 시간이 줄어든다. ACKO의 AerospikeClusterTemplate과 연동하여 사전 정의된 설정으로 빠르게 클러스터를 배포할 수 있다.
+Cluster Manager에서 새 클러스터를 만드는 모든 사용자가 영향을 받는다. Wizard 단계가 줄어 초기 설정이 간단해졌고, ACKO의 `AerospikeClusterTemplate`을 선택해 미리 정의한 configuration으로 배포할 수 있다.

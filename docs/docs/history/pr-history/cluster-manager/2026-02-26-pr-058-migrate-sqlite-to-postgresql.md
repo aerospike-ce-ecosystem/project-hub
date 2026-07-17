@@ -1,6 +1,6 @@
 ---
 title: "PR #058: Migrate SQLite to PostgreSQL (asyncpg)"
-description: SQLite에서 PostgreSQL로 전면 마이그레이션, asyncpg 커넥션 풀 기반 비동기 데이터베이스 레이어 구축
+description: SQLite를 PostgreSQL로 교체하고 asyncpg connection pool 기반의 비동기 database layer를 도입한 변경
 scope: single-repo
 repos: [aerospike-cluster-manager]
 tags: [refactor, database, postgresql, asyncpg, migration]
@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-기존 SQLite 기반의 데이터 저장소를 PostgreSQL로 전면 마이그레이션했다. asyncpg를 사용한 비동기 커넥션 풀을 도입하여 동시 접속 처리 능력을 크게 향상시켰다.
+기존 SQLite data store를 PostgreSQL로 옮겼다. `asyncpg` connection pool을 사용해 여러 request가 database connection을 효율적으로 공유하도록 했다.
 
 ## 주요 변경 사항
 
@@ -31,4 +31,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-데이터 레이어의 근본적인 변경으로, 이후 모든 백엔드 기능이 PostgreSQL 위에서 동작한다. 운영 환경에서 PostgreSQL 인스턴스가 필수 요구사항이 되었으며, 동시성과 확장성이 크게 개선되었다.
+이후 모든 Backend 기능은 PostgreSQL을 사용한다. 따라서 production deployment에는 PostgreSQL instance가 필요하며, 기존 SQLite data를 옮기는 migration 절차도 필요하다.

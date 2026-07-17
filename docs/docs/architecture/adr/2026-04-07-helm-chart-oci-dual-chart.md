@@ -21,20 +21,20 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-ACKO는 `publish-chart.yml` 워크플로우를 통해 2개의 Helm chart를 GHCR OCI registry에 배포하고 있다:
+ACKO는 `publish-chart.yml` workflow에서 두 개의 Helm chart를 GHCR OCI registry에 배포합니다.
 
-1. **aerospike-ce-kubernetes-operator-crds** — CRD 정의만 포함
-2. **aerospike-ce-kubernetes-operator** — Operator deployment, RBAC, crds chart 의존
+1. **aerospike-ce-kubernetes-operator-crds** — CRD definition만 포함합니다.
+2. **aerospike-ce-kubernetes-operator** — Operator deployment와 RBAC을 포함하며 CRD chart에 의존합니다.
 
-배포 과정에서 CRD chart를 먼저 publish한 후, operator chart의 의존성 참조를 `file://` → `oci://`로 전환하는 패턴을 사용한다. Chart 버전은 git tag에서 자동 추출된다.
+배포할 때 CRD chart를 먼저 publish한 뒤 operator chart의 dependency를 `file://`에서 `oci://`로 바꿉니다. Chart version은 git tag에서 자동으로 가져옵니다.
 
-이 패턴은 Q2 로드맵 항목 "Helm chart 버전 관리 체계화"의 대상이며, 설계 근거가 ADR로 기록되어 있지 않았다.
+이 방식은 Q2 roadmap의 `Helm chart 버전 관리 체계화` 항목에 해당하지만 선택 근거가 ADR로 남아 있지 않았습니다.
 
 ### 기술적 배경
 
-- Kubernetes에서 CRD는 cluster-scoped 리소스로 Operator보다 긴 lifecycle을 가진다. CRD 업그레이드와 Operator 업그레이드를 독립적으로 수행할 수 있어야 zero-downtime 운영이 가능하다.
-- Helm 3.8+부터 OCI registry가 GA(General Availability)로 지원되며, `helm pull oci://` 명령으로 OCI 아티팩트를 직접 설치할 수 있다.
-- ADR-0011에서 CRD 이름을 AerospikeCluster로 변경하면서 CRD 독립 관리의 중요성이 더 커졌다.
+- Kubernetes에서 CRD는 cluster-scoped resource이며 Operator보다 lifecycle이 깁니다. CRD와 Operator를 따로 upgrade할 수 있어야 zero-downtime으로 운영할 수 있습니다.
+- Helm 3.8부터 OCI registry를 GA(General Availability)로 지원하며 `helm pull oci://` command로 OCI artifact를 직접 설치할 수 있습니다.
+- ADR-0011에서 CRD 이름을 `AerospikeCluster`로 바꾸면서 CRD를 독립적으로 관리할 필요가 더 커졌습니다.
 
 ## 결정 (Decision)
 

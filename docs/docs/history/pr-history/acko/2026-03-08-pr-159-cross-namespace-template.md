@@ -29,4 +29,4 @@ AerospikeClusterTemplate을 다른 namespace에서도 참조할 수 있도록 cr
 
 ## 영향 범위
 
-멀티 테넌트 환경에서 템플릿 관리가 크게 개선된다. 중앙 namespace에 표준 템플릿을 정의하고 각 팀의 namespace에서 참조하는 패턴이 가능해져 설정 일관성과 관리 효율성이 향상된다.
+멀티테넌트 환경에서 표준 템플릿을 중앙 namespace에 두고 각 팀의 namespace에서 참조할 수 있다. 참조 대상 namespace를 `templateRef`에 명시하며, 접근 권한이 없거나 템플릿이 없으면 오류로 확인할 수 있다.

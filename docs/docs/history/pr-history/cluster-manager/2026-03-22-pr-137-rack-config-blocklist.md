@@ -29,4 +29,4 @@ Rack 설정 편집과 노드 blocklist picker를 edit dialog에 추가했다. Ae
 
 ## 영향 범위
 
-Rack-aware 데이터 분산과 노드 관리를 수행하는 운영자에게 영향. Rack 설정을 통해 데이터 복제본이 서로 다른 rack에 분산되도록 보장할 수 있다. 노드 blocklist로 유지보수 중인 노드나 문제 있는 노드를 제외하여 클러스터 안정성을 유지할 수 있다.
+Rack-aware data distribution과 node 관리를 담당하는 운영자가 영향을 받는다. Rack 설정으로 replica를 서로 다른 rack에 분산하고, node blocklist로 유지보수 중이거나 문제가 있는 node를 대상에서 제외할 수 있다.
