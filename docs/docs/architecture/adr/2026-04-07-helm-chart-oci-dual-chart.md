@@ -5,16 +5,17 @@ sidebar_position: 45
 scope: single-repo
 repos: [acko]
 tags: [adr, acko, helm, oci, crd, versioning, kubernetes]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0045: ACKO Helm Chart 버전 관리 체계 — OCI Registry 기반 CRD/Operator 이중 Chart 릴리스
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#49
 - 검토 결과: POSITIVE REVIEW
 

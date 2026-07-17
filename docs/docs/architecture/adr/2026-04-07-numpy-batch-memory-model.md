@@ -5,16 +5,17 @@ sidebar_position: 47
 scope: single-repo
 repos: [aerospike-py]
 tags: [adr, numpy, batch, memory-model, pyo3, aerospike-py, zero-copy]
-last_updated: 2026-04-07
+last_updated: 2026-07-17
 ---
 
 # ADR-0047: NumPy Batch 연산 인터페이스 확정 — Owned Arrays 기본 메모리 모델
 
 ## 상태
 
-**Proposed**
+**Accepted**
 
 - 제안일: 2026-04-07
+- 승인일: 2026-07-17
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#52
 - 검토 결과: POSITIVE REVIEW
 

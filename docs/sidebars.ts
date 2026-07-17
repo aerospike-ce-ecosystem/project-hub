@@ -42,7 +42,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: 'Milestones',
-          items: ['roadmap/milestones/Q1'],
+          items: ['roadmap/milestones/Q1', 'roadmap/milestones/Q2'],
         },
       ],
     },
