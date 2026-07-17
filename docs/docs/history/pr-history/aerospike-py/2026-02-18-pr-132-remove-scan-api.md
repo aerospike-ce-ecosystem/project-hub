@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-더 이상 사용되지 않는(deprecated) Scan API를 코드베이스에서 완전히 제거했다. Aerospike CE 8.x에서 scan 기능이 Query API로 통합됨에 따라, 별도의 Scan 모듈과 관련 코드를 삭제하여 API 표면을 간소화했다.
+Deprecated Scan API와 관련 module을 제거했다. Aerospike CE 8.x에서는 같은 작업을 Query API로 수행하므로 별도 Scan interface를 유지하지 않는다.
 
 ## 주요 변경 사항
 

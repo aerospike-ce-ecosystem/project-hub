@@ -24,7 +24,7 @@ aerospike-py의 batch 작업(`batch_write`, `batch_operate` 등)은 per-record �
 
 ### 현재 구현의 문제점
 
-현재 고정 exponential backoff(`10ms * 2^attempt`, 최대 500ms cap)을 사용하고 있으며, 다음과 같은 한계가 있습니다:
+현재는 `10ms * 2^attempt`로 증가하고 최대 500ms에서 멈추는 고정 exponential backoff를 사용합니다. 이 방식에는 다음과 같은 한계가 있습니다.
 
 1. **Thundering Herd**: 여러 클라이언트가 동시에 동일한 backoff 타이밍으로 retry하면 서버에 burst 부하가 발생합니다. 특히 ADR-0006의 Semaphore backpressure가 동시 요청을 제한하더라도, 동일 시점에 retry가 집중되면 burst가 발생할 수 있습니다.
 

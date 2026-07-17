@@ -24,7 +24,7 @@ Cluster Manager의 `ClientManager`는 Aerospike 연결을 관리하는 핵심 �
 
 ### 1. Double-Checked Locking Race Condition
 
-`client_manager.py:25-51`에서 `get_client()` 메서드는 global lock으로 캐시 조회 후 lock을 해제하고, lock 외부에서 `connect()`를 수행합니다. 이 패턴은 동시 요청이 동일 `conn_id`에 대해 중복 `AsyncClient`를 생성하는 race window를 만듭니다.
+`client_manager.py`의 25~51행에서 `get_client()`는 global lock 안에서 cache를 조회한 뒤 lock을 해제합니다. 이후 `connect()`를 lock 밖에서 실행하므로, 동시에 들어온 request가 같은 `conn_id`에 대해 여러 `AsyncClient`를 만들 수 있는 race window가 생깁니다.
 
 ```python
 async def get_client(self, conn_id: str) -> AsyncClient:
@@ -41,13 +41,14 @@ async def get_client(self, conn_id: str) -> AsyncClient:
         old = self._clients.get(conn_id)
 ```
 
-**영향**:
-- 동일 connection에 대해 다수의 `AsyncClient` 생성 → zombie 연결 발생
-- 고부하 시 Aerospike CE 서버의 connection limit 소진 가능 (CE 제약 위반)
+**영향**
+
+- 같은 connection에 여러 `AsyncClient`가 생성되어 zombie connection이 남습니다.
+- 부하가 높을 때는 Aerospike CE server의 connection limit을 소진할 수 있습니다.
 
 ### 2. String 기반 에러 감지 취약점
 
-`main.py:169`에서 `if "FailForbidden" in msg` 패턴으로 TTL 관련 에러를 감지합니다. aerospike-py의 메시지 포맷 변경 시 silent failure가 발생할 수 있으며, 이는 ADR-0019에서 지적된 anti-pattern과 동일합니다.
+`main.py`의 169행은 `if "FailForbidden" in msg` pattern으로 TTL 관련 error를 감지합니다. aerospike-py의 message format이 바뀌면 error를 감지하지 못할 수 있습니다. 이는 ADR-0019에서 지적한 anti-pattern과 같습니다.
 
 ## 결정 (Decision)
 
@@ -84,8 +85,8 @@ class ClientManager:
 
 ### String 에러 감지 전환 전략
 
-1. **즉시 조치**: 대소문자 무시 매칭 + fallback logging 강화
-2. **ADR-0019 완료 후**: `exc.result_code == ResultCode.FAIL_FORBIDDEN`으로 최종 전환
+1. **즉시 조치**: 대소문자를 구분하지 않는 matching을 사용하고 fallback logging을 강화합니다.
+2. **ADR-0019 완료 후**: `exc.result_code == ResultCode.FAIL_FORBIDDEN` 방식으로 전환합니다.
 
 ## 대안 (Alternatives Considered)
 

@@ -19,13 +19,13 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-aerospike-py의 batch 연산(`batch_read`, `batch_operate`, `batch_remove`)들이 서로 다른 반환 타입을 사용하고 있어 사용자 혼란과 per-record 에러 추적의 어려움이 있었습니다.
+aerospike-py의 batch operation인 `batch_read`, `batch_operate`, `batch_remove`는 서로 다른 type을 반환했습니다. 사용자가 operation마다 다른 형식을 처리해야 했고 record별 error를 추적하기도 어려웠습니다.
 
 ### 문제 상황
 
-1. `batch_read`는 `list[BatchRecord]`, `batch_operate`는 `list[tuple]` 등 비일관적 반환 타입
-2. batch 연산에서 일부 레코드만 실패할 때 per-record result code를 확인하기 어려움
-3. NumPy key digest 생성에서 bytes 키 처리 불일치
+1. `batch_read`는 `list[BatchRecord]`를, `batch_operate`는 `list[tuple]`을 반환해 type이 일관되지 않았습니다.
+2. Batch 안에서 일부 record만 실패하면 record별 result code를 확인하기 어려웠습니다.
+3. NumPy key digest를 생성할 때 bytes key를 처리하는 방식이 일관되지 않았습니다.
 
 ## 결정 (Decision)
 
@@ -52,7 +52,7 @@ class BatchRecords(NamedTuple):
 - `batch_read()` → `BatchRecords` 반환
 - `batch_operate()` → `BatchRecords` 반환
 - `batch_remove()` → `BatchRecords` 반환
-- per-record `result_code` 필드로 개별 레코드 성공/실패 추적 가능
+- Record별 `result_code` field로 각 record의 성공과 실패를 추적할 수 있습니다.
 
 ## 대안 검토 (Alternatives Considered)
 

@@ -16,6 +16,8 @@ last_updated: 2026-03-29
 
 # ACKO Changelog
 
+ACKO release별 주요 기능, 수정 사항, documentation과 CI/CD 변경을 정리합니다.
+
 ## Unreleased (after v0.1.7)
 
 ### Features
@@ -36,10 +38,6 @@ last_updated: 2026-03-29
 ### CI/CD
 - **Agentic workflows**: Added claude-code-action for issue planning, implementation, and PR review
 - **gh-aw integration**: IssueOps + CommentOps based CI automation
-
----
-
-Aerospike CE Kubernetes Operator (ACKO) 릴리스별 변경 사항을 기록합니다.
 
 ---
 

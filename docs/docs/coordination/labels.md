@@ -18,11 +18,11 @@ last_updated: 2026-03-29
 
 # 공유 라벨 정의
 
-생태계 전체에서 일관된 라벨 체계를 사용합니다. 라벨은 두 가지 그룹으로 나뉩니다: 4개 핵심 레포에서 공통으로 사용하는 **Agentic Workflow 라벨**과 project-hub 전용 **Hub 라벨**입니다.
+모든 repository에서 같은 의미로 label을 해석할 수 있도록 공통 체계를 사용합니다. label은 네 개 핵심 repository가 공유하는 **Agentic Workflow label**과 project-hub에서만 사용하는 **Hub label**로 나뉩니다.
 
 ## Agentic Workflow 라벨
 
-4개 핵심 레포(aerospike-py, ACKO, cluster-manager, plugins)에서 공통으로 사용하는 라벨입니다. GitHub Agentic Workflow 파이프라인의 상태 전이를 제어합니다.
+네 개 핵심 repository(aerospike-py, ACKO, cluster-manager, plugins)가 공통으로 사용합니다. 각 label은 GitHub Agentic Workflow의 현재 상태와 다음 작업을 나타냅니다.
 
 | Label | Color | Description |
 |-------|-------|-------------|
@@ -43,7 +43,7 @@ agent → plan-complete → in-progress → needs-review → review-complete
 
 ## Hub 라벨
 
-project-hub 레포 전용 라벨입니다. 크로스-레포 이슈 관리와 프로젝트 조율에 사용합니다.
+project-hub 전용 label입니다. cross-repo issue를 추적하고 여러 프로젝트의 작업을 조율할 때 사용합니다.
 
 | Label | Color | Description |
 |-------|-------|-------------|
@@ -55,7 +55,7 @@ project-hub 레포 전용 라벨입니다. 크로스-레포 이슈 관리와 프
 
 ## Hub Orchestration 라벨
 
-project-hub의 Issue Planner/Dispatcher 파이프라인에서 사용하는 라벨입니다.
+project-hub의 Issue Planner와 Dispatcher가 사용하는 label입니다. 자동화가 issue를 어떤 단계까지 처리했는지 보여 줍니다.
 
 | Label | Color | Description |
 |-------|-------|-------------|
@@ -91,7 +91,7 @@ core repo main 머지 (path-filtered) → skill-impact-review + cross-repo (자�
 
 ## Core Repo PR 라벨
 
-core repo PR에서 사용되는 추가 트래킹 라벨입니다.
+핵심 repository의 PR에는 Skill 영향 여부를 추적하는 label을 추가로 사용합니다.
 
 | Label | Color | Description |
 |-------|-------|-------------|
@@ -99,8 +99,8 @@ core repo PR에서 사용되는 추가 트래킹 라벨입니다.
 
 ## 라벨 적용 규칙
 
-1. **단일 레포 이슈**: 해당 레포에서 Agentic Workflow 라벨만 사용
-2. **크로스-레포 이슈**: project-hub에서 Hub 라벨 + 서브-레포 이슈 링크
-3. **Epic**: `epic` 라벨과 함께 하위 이슈를 `org/repo#number` 형식으로 링크
-4. **ADR**: `adr` + `discussion` 라벨을 함께 사용하여 논의 유도
-5. **Skill Impact**: core repo PR에 `skill-impact` 라벨은 자동 부착 (pr-reviewer의 advisory job)
+1. **단일 repository issue**에는 해당 repository의 Agentic Workflow label만 사용합니다.
+2. **cross-repo issue**는 project-hub에서 Hub label을 붙이고 각 하위 issue를 연결합니다.
+3. **Epic**에는 `epic` label을 붙이고 하위 issue를 `org/repo#number` 형식으로 연결합니다.
+4. **ADR**에는 `adr`와 `discussion` label을 함께 붙여 검토가 필요한 결정임을 표시합니다.
+5. **Skill Impact**는 `pr-reviewer`의 advisory job이 핵심 repository PR에 `skill-impact` label을 자동으로 붙입니다.

@@ -30,4 +30,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-Claude Code에서 Aerospike CE 에코시스템 관련 작업을 수행하는 모든 사용자에게 영향. 스킬이 최신 API와 운영 절차를 반영하므로, 더 정확한 코드 생성과 가이드를 받을 수 있다. 모든 에코시스템 리포지토리의 최근 변경을 반영한 크로스레포 동기화이다.
+Claude Code에서 Aerospike CE Ecosystem 작업을 수행하는 모든 사용자가 영향을 받는다. Skill의 API reference와 운영 절차가 각 repository의 당시 최신 상태에 맞춰졌으며, 이 변경으로 서로 다른 repository의 안내가 같은 contract를 사용한다.

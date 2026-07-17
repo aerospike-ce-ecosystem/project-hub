@@ -30,4 +30,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-aerospike-py 클라이언트의 전체 에러 처리 및 부하 관리 체계에 영향. 프로덕션 환경에서 서버 과부하나 일시적 장애 상황의 처리가 크게 개선된다. 기존 예외 처리 코드가 있는 애플리케이션은 새로운 글로벌 핸들러와의 호환성을 확인해야 한다.
+aerospike-py의 error handling과 load control이 영향을 받는다. Server overload와 일시적인 failure를 공통 handler와 retry policy로 처리하며, 기존 custom exception handler가 있는 application은 새 global handler와의 interaction을 확인해야 한다.

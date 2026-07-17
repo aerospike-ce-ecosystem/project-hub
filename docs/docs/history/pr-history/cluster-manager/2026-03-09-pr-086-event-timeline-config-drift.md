@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-Cluster Manager의 모니터링 및 운영 기능 전반에 영향. 이벤트 타임라인은 장애 분석(RCA)에 핵심적이며, config drift 감지는 프로덕션 환경의 안정성을 보장한다. ACKO PR #163의 cluster-scoped 템플릿 전환에 대응하는 UI 변경을 포함한다.
+Cluster Manager의 monitoring과 운영 flow가 영향을 받는다. Event timeline은 root cause analysis에 필요한 이력을 제공하고, config drift detection은 원하는 설정과 실제 상태의 차이를 보여 준다. ACKO PR #163의 cluster-scoped template 변경에 맞춘 UI도 포함한다.

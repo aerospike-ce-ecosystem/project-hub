@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 ## 변경 사항
 
 - `aero_info.go`의 패키지 내부 전용 함수 5개를 unexport 처리
-- `truncateUTF8()` 함수 추가 -- 멀티바이트 문자를 깨뜨리지 않고 에러 메시지를 안전하게 truncation (한국어 텍스트 손상 방지)
+- `truncateUTF8()` 함수 추가 -- 멀티바이트 문자를 깨뜨리지 않고 에러 메시지를 지정된 바이트 길이로 자름
 - `enrichStatusWithAerospikeInfo`에서 3개의 별도 Aerospike 클라이언트 연결을 1개로 통합 (성능 개선)
 - 미사용 코드 제거: `TransientError` 타입, `NewValidation()`, deprecated `DeleteOrphanedPVCs`, `ParseImageVersion`/`CompareVersions`
 - `TestTruncateUTF8` 테스트 추가 (한국어 문자 경계 테스트 포함)
@@ -28,11 +28,11 @@ last_updated: 2026-03-29
 
 ### UTF-8 안전 truncation
 
-Kubernetes status 메시지의 길이 제한으로 인해 에러 메시지를 truncation해야 하는 경우가 있다. 기존에는 바이트 단위로 단순 자르기를 수행하여 멀티바이트 문자(한국어 등)의 중간에서 잘리는 문제가 발생했다. `truncateUTF8()` 함수는 UTF-8 문자 경계를 존중하여 안전하게 truncation한다.
+Kubernetes status 메시지의 길이 제한을 맞추려면 긴 에러 메시지를 잘라야 한다. 기존의 바이트 단위 처리는 한국어 같은 멀티바이트 문자 중간을 잘라 유효하지 않은 UTF-8 문자열을 만들 수 있었다. `truncateUTF8()`는 UTF-8 문자 경계에서만 메시지를 잘라 이 문제를 피한다.
 
 ### 클라이언트 연결 통합
 
-`enrichStatusWithAerospikeInfo` 함수에서 node info, namespace info, set info를 각각 별도 연결로 조회하던 것을 단일 연결로 통합하여 네트워크 오버헤드를 줄였다.
+`enrichStatusWithAerospikeInfo`가 node, namespace, set info를 조회할 때 각각 새로 만들던 Aerospike 클라이언트 연결을 하나로 통합했다. 세 조회가 같은 연결을 공유하므로 불필요한 연결 생성이 줄어든다.
 
 ### 코드 정리
 
@@ -40,7 +40,7 @@ Kubernetes status 메시지의 길이 제한으로 인해 에러 메시지를 tr
 
 ## 영향
 
-- 한국어 등 멀티바이트 문자가 포함된 상태 메시지가 안전하게 처리됨
-- Aerospike 클라이언트 연결 수가 1/3로 감소하여 reconcile 성능 개선
+- 한국어 등 멀티바이트 문자가 포함된 status 메시지도 유효한 UTF-8로 유지됨
+- `enrichStatusWithAerospikeInfo`의 Aerospike 클라이언트 연결 수가 3개에서 1개로 줄어듦
 - 내부 API 표면이 축소되어 유지보수성 향상
 - 10개 Go 패키지 테스트 전체 통과

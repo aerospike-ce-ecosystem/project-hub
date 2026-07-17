@@ -24,7 +24,7 @@ aerospike-py의 예외 계층은 `AerospikeError` → 15개+ 구체적 예외 �
 
 ### 현재 문제
 
-현재 에러 분류는 예외 메시지 문자열 매칭에 의존하고 있어, 상위 프로젝트에서 취약한 패턴이 발생합니다:
+현재 상위 프로젝트는 예외 message의 문자열을 비교해 오류를 분류합니다. 이 방식은 다음과 같은 취약한 pattern을 만듭니다.
 
 ```python
 # Cluster Manager (main.py:159-167)

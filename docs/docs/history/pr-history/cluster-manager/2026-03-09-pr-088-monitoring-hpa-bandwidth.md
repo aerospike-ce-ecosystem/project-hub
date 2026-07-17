@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Kubernetes 환경에서의 운영 기능을 대폭 확장했다. HPA(Horizontal Pod Autoscaler) 전체 CRUD, Prometheus exporter 설정 UI, 대역폭 모니터링, 그리고 노드 블록 리스트 관리 기능을 추가했다.
+Kubernetes 운영에 필요한 HPA CRUD, Prometheus exporter configuration, bandwidth monitoring, node blocklist 관리 기능을 추가했다.
 
 ## 주요 변경 사항
 
@@ -30,4 +30,4 @@ Kubernetes 환경에서의 운영 기능을 대폭 확장했다. HPA(Horizontal 
 
 ## 영향 범위
 
-Cluster Manager의 Kubernetes 운영 기능을 프로덕션 수준으로 끌어올린 PR. HPA를 통한 자동 확장, exporter 설정을 통한 메트릭 수집, 블록 리스트를 통한 노드 관리까지 포괄적인 운영 도구를 제공한다.
+Kubernetes 운영자는 HPA로 workload를 자동 scale하고, exporter metric과 bandwidth를 확인하며, blocklist로 특정 node를 관리할 수 있다.

@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-클러스터 설정을 자주 변경하는 운영 환경에 영향. PR #086의 config drift 감지 기능과 함께 사용하면 설정 변경의 전체 라이프사이클을 관리할 수 있다. 이벤트 내보내기를 통해 외부 감사(audit) 시스템과 통합 가능.
+클러스터 configuration을 자주 변경하는 운영 환경이 영향을 받는다. PR #086의 config drift detection과 함께 사용하면 변경 전후와 실제 상태의 차이를 추적할 수 있다. Event export 결과는 외부 audit system과 연동할 수 있다.

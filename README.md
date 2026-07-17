@@ -1,8 +1,8 @@
 # Aerospike CE Ecosystem — Project Hub
 
-Aerospike Community Edition 에코시스템의 중앙 프로젝트 관리 허브입니다.
+Aerospike Community Edition(CE) 에코시스템의 프로젝트 문서를 한곳에 모은 허브입니다.
 
-크로스-레포 이슈 추적, 아키텍처 의사결정 기록(ADR), 릴리스 이력, 로드맵을 관리합니다.
+여러 레포에 걸친 이슈와 아키텍처 결정 기록(ADR), 릴리스 이력, 로드맵을 관리합니다.
 
 **Docs**: [aerospike-ce-ecosystem.github.io/project-hub](https://aerospike-ce-ecosystem.github.io/project-hub/)
 
@@ -10,9 +10,9 @@ Aerospike Community Edition 에코시스템의 중앙 프로젝트 관리 허브
 
 | Project | Description | Docs |
 |---------|-------------|------|
-| [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py) | Rust(PyO3) 기반 고성능 Python 클라이언트 | [Docs](https://aerospike-ce-ecosystem.github.io/aerospike-py/) |
+| [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py) | Rust/PyO3로 구현한 고성능 Python 클라이언트 | [Docs](https://aerospike-ce-ecosystem.github.io/aerospike-py/) |
 | [ACKO](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator) | Aerospike CE Kubernetes Operator | [Docs](https://aerospike-ce-ecosystem.github.io/aerospike-ce-kubernetes-operator/) |
-| [Cluster Manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager) | 웹 기반 클러스터 관리 UI (FastAPI + Next.js) | — |
+| [Cluster Manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager) | FastAPI와 Next.js로 구현한 웹 기반 클러스터 관리 UI | — |
 | [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl) | Aerospike Cluster Manager CLI | — |
 | [Plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins) | Claude Code 플러그인 | — |
 

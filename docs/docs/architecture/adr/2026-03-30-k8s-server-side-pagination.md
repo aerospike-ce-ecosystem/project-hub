@@ -20,13 +20,13 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager는 `/api/k8s/clusters` 엔드포인트를 통해 K8s 클러스터 목록을 제공한다. 현재 구현은 모든 AerospikeCluster CR을 한 번에 조회하여 전체 목록을 프론트엔드에 전달하고, 클라이언트 사이드에서 필터링하는 구조이다.
+Cluster Manager는 `/api/k8s/clusters` endpoint에서 Kubernetes cluster 목록을 제공합니다. 현재는 모든 `AerospikeCluster` CR을 한 번에 조회해 frontend로 보낸 뒤 client-side에서 filtering합니다.
 
 ### 현재 문제점
 
-1. **확장성 한계**: 대규모 환경(100+ AerospikeCluster CR)에서 매 조회마다 전체 목록을 K8s API 서버에서 가져오며, JSON 직렬화 및 네트워크 전송 비용이 선형적으로 증가한다.
-2. **필터링 비효율**: 특정 namespace의 클러스터만 필요한 경우에도 전체 조회가 필수이며, K8s RBAC 제한으로 특정 namespace만 접근 가능한 경우 에러 가능성이 있다.
-3. **프론트엔드 병목 유지**: ADR-0017(가상 스크롤)이 프론트엔드 렌더링을 최적화하지만, 백엔드에서 전체 데이터를 전송하는 네트워크/메모리 병목은 그대로 남아있다.
+1. **확장성 한계**: `AerospikeCluster` CR이 100개를 넘는 환경에서도 request마다 전체 목록을 Kubernetes API server에서 가져옵니다. JSON serialization과 network transfer 비용이 resource 수에 비례해 늘어납니다.
+2. **비효율적인 filtering**: 특정 namespace의 cluster만 필요해도 전체 목록을 조회합니다. Kubernetes RBAC이 일부 namespace만 허용하면 권한 error가 발생할 수도 있습니다.
+3. **Frontend 밖의 병목**: ADR-0017의 virtual scroll은 frontend rendering을 줄이지만 backend가 전체 데이터를 전송하는 network와 memory 병목은 해결하지 못합니다.
 
 이 문제는 프로젝트 목표 2-2(Backend read/write timeout·limit 관리), 2-6(ACKO 클러스터 관리 편의성·성능), 2-8(대용량 데이터 성능)과 직결된다.
 
@@ -36,7 +36,7 @@ Cluster Manager는 `/api/k8s/clusters` 엔드포인트를 통해 K8s 클러스�
 
 ### API 변경
 
-`GET /api/k8s/clusters` 엔드포인트에 다음 query parameter를 추가한다:
+`GET /api/k8s/clusters` endpoint에 다음 query parameter를 추가합니다.
 
 - `namespace` (optional): 특정 namespace로 필터링. K8s API 레벨에서 `list_namespaced_custom_object()` 호출
 - `limit` (optional, default=20, max=100): 페이지당 반환할 CR 수. K8s List API의 `limit` 파라미터에 직접 매핑
@@ -54,7 +54,7 @@ Cluster Manager는 `/api/k8s/clusters` 엔드포인트를 통해 K8s 클러스�
 }
 ```
 
-query parameter를 생략하면 기존 동작(전체 목록 반환)을 유지하여 하위 호환성을 확보한다.
+Query parameter를 생략하면 이전처럼 전체 목록을 반환해 하위 호환성을 유지합니다.
 
 ## 대안 (Alternatives Considered)
 

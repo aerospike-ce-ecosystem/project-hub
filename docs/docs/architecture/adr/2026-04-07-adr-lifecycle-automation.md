@@ -21,19 +21,19 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-Project-hub에는 ADR lifecycle을 자동화하는 3개의 GitHub Actions 워크플로우가 운영 중입니다:
+Project-hub에서는 세 개의 GitHub Actions workflow가 ADR lifecycle을 자동화합니다.
 
-1. **hub-issue-planner.yml**: ADR proposal issue가 생성되면 Claude Code 에이전트가 자동으로 AI 리뷰를 수행하고, 3단 verdict(REJECT/DEFER/POSITIVE)를 판정
-2. **hub-issue-dispatcher.yml**: POSITIVE verdict 이후 관련 sub-repo에 구현 issue를 자동 디스패치
-3. **hub-adr-status-override.yml**: human override로 이미 머지된 ADR 문서의 status를 업데이트
+1. **hub-issue-planner.yml**: ADR proposal issue가 생성되면 Claude Code agent가 review하고 REJECT, DEFER, POSITIVE 중 하나의 verdict를 정합니다.
+2. **hub-issue-dispatcher.yml**: POSITIVE verdict 뒤 관련 sub-repo에 구현 issue를 자동으로 dispatch합니다.
+3. **hub-adr-status-override.yml**: Human override를 통해 이미 merge된 ADR 문서의 status를 갱신합니다.
 
-이 파이프라인은 다음과 같은 특징을 가집니다:
+Pipeline은 다음 규칙을 따릅니다.
 
-- `<!-- repo-plan:... -->`, `<!-- repo-list:... -->` 마크업을 machine-parseable API로 사용하여 워크플로우 간 데이터를 전달
-- 모든 verdict(REJECT 포함)에 대해 ADR 문서를 자동 생성 및 머지하여 의사결정 이력을 보존
-- cross-repo, epic, skill-impact-review 3가지 planning 모드를 지원
+- `<!-- repo-plan:... -->`과 `<!-- repo-list:... -->` markup을 machine-readable API로 사용해 workflow 사이에 data를 전달합니다.
+- REJECT를 포함한 모든 verdict에 ADR 문서를 생성하고 merge해 의사결정 이력을 남깁니다.
+- Cross-repo, epic, skill-impact-review의 세 가지 planning mode를 지원합니다.
 
-ADR-0008(IssueOps 기반 CI 워크플로우)은 기본 IssueOps 패턴(Issue → Plan → Implement → PR)만 다루고 있으며, project-hub 전용 ADR lifecycle 자동화는 별도로 문서화되어 있지 않았습니다. 이 시스템은 이미 다수의 ADR을 성공적으로 처리한 검증된 인프라이므로, 이를 ADR로 명문화하여 프로토콜 스펙과 운영 기준을 표준화할 필요가 있습니다.
+ADR-0008(IssueOps 기반 CI 워크플로우)은 Issue → Plan → Implement → PR이라는 기본 pattern만 다룹니다. Project-hub 전용 ADR lifecycle 자동화는 따로 문서화하지 않았습니다. 현재 workflow가 여러 ADR을 처리하고 있으므로 protocol spec과 운영 기준을 ADR로 고정할 필요가 있습니다.
 
 ## 결정 (Decision)
 

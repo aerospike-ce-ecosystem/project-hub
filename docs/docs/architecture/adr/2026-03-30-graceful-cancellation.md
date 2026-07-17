@@ -20,21 +20,21 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager Backend는 FastAPI 기반으로, 레코드 브라우저 scan, 대규모 batch 조회, K8s 클러스터 상태 조회 등 장시간 실행되는 비동기 연산을 처리합니다.
+FastAPI 기반 Cluster Manager Backend는 record browser scan, 대규모 batch read, Kubernetes cluster 상태 조회처럼 오래 실행되는 async operation을 처리합니다.
 
 ### 현재 문제점
 
-1. **연결 끊김 시 리소스 누수**: 프론트엔드 사용자가 브라우저 탭을 닫거나 페이지를 이동하면 HTTP 연결이 끊어지지만, 백엔드의 scan/query 작업은 완료될 때까지 계속 실행됩니다.
-   - 대규모 namespace scan: 수백만 레코드 scan이 불필요하게 계속 진행
-   - K8s API 호출: kubectl watch가 해제되지 않아 API 서버 부하
-2. **에러 전파 부재**: `client_manager.py`의 `contextlib.suppress(Exception)`이 모든 close 에러를 삼키고 있어, 연결 풀 고갈 시에도 에러 로그가 없고 디버깅이 어렵습니다.
-3. **타임아웃 전파 미비**: FastAPI의 request timeout과 aerospike-py의 operation timeout이 독립적으로 동작하여, FastAPI 60초 timeout 후에도 Aerospike 작업이 계속 실행될 수 있습니다.
+1. **연결이 끊긴 뒤에도 resource 사용**: 사용자가 browser tab을 닫거나 다른 page로 이동하면 HTTP connection은 끊기지만 backend의 scan과 query는 끝날 때까지 계속 실행됩니다.
+   - 대규모 namespace에서는 수백만 record를 읽는 scan이 불필요하게 이어집니다.
+   - Kubernetes API에서는 watch가 해제되지 않아 API server에 부하를 줍니다.
+2. **Error 전파 부재**: `client_manager.py`의 `contextlib.suppress(Exception)`이 모든 close error를 숨깁니다. Connection pool이 고갈되어도 log가 남지 않아 원인을 찾기 어렵습니다.
+3. **Timeout 전파 미비**: FastAPI request timeout과 aerospike-py operation timeout이 따로 동작합니다. FastAPI가 60초 뒤 request를 끝내도 Aerospike operation은 계속 실행될 수 있습니다.
 
 ### 기술적 배경
 
-- ADR-0016에서 SSE 기반 `StreamingResponse` 패턴이 이미 도입 제안되어, scan/query 결과 스트리밍과 자연스럽게 통합 가능
-- ADR-0006의 Semaphore 기반 backpressure가 요청 수 제한을 담당하지만, 이미 실행 중인 연산의 조기 종료 메커니즘은 부재
-- ADR-0014에서 asyncpg 기반 비동기 백엔드가 구축되어 있어 비동기 cancellation 패턴 적용 기반 확보
+- ADR-0016은 SSE 기반 `StreamingResponse` pattern을 제안했으므로 scan과 query 결과 streaming에도 같은 구조를 사용할 수 있습니다.
+- ADR-0006의 Semaphore 기반 backpressure는 request 수를 제한하지만 이미 실행 중인 operation을 중단하지는 않습니다.
+- ADR-0014에서 asyncpg 기반 async backend를 구축했으므로 cancellation pattern을 적용할 기반은 마련되어 있습니다.
 
 ## 결정 (Decision)
 

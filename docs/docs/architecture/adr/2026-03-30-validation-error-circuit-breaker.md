@@ -20,19 +20,19 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-ADR-0013에서 도입된 Reconciliation Circuit Breaker는 `maxFailedReconciles = 10`회 연속 실패 시 활성화되어 exponential backoff을 적용한다. 이 메커니즘은 무한 reconciliation 루프를 효과적으로 방지하지만, **영구적 오류(Permanent Error)**와 **일시적 오류(Transient Error)**를 구분하지 않는 한계가 있다.
+ADR-0013의 Reconciliation Circuit Breaker는 `maxFailedReconciles = 10`회 연속으로 실패하면 활성화되고 exponential backoff을 적용합니다. 무한 reconciliation loop는 막지만 **영구적 오류(Permanent Error)**와 **일시적 오류(Transient Error)**를 구분하지 않습니다.
 
 ### 현재 상태
 
-- `internal/errors/errors.go`에 `ValidationError` 타입이 정의되어 있으나, controller 코드에서 거의 활용되지 않음
-- `reconciler.go:390-403`의 `calculateBackoff()`에서 모든 오류를 동일하게 취급
-- Webhook 유효성 검사를 통과한 후에도 런타임에서 발견되는 설정 오류가 존재 (예: Aerospike CE가 지원하지 않는 XDR 설정, 잘못된 namespace 설정)
+- `internal/errors/errors.go`에 `ValidationError` type이 있지만 controller code에서는 거의 사용하지 않습니다.
+- `reconciler.go`의 390~403행에 있는 `calculateBackoff()`은 모든 error를 같은 방식으로 처리합니다.
+- Webhook validation을 통과한 뒤 runtime에서 발견되는 설정 error도 있습니다. Aerospike CE가 지원하지 않는 XDR 설정이나 잘못된 namespace 설정이 예입니다.
 
 ### 문제점
 
-1. **불필요한 재시도 비용**: 영구 오류에 대해 10회 × 5분 backoff = 최대 50분의 무의미한 대기
-2. **오퍼레이터 리소스 낭비**: 실패할 reconcile 루프가 API server, Aerospike 클라이언트 커넥션을 불필요하게 소비
-3. **운영자 혼란**: Circuit Breaker 활성화까지 의미 없는 재시도 이벤트가 K8s Event에 누적되어 실제 문제 진단을 방해
+1. **불필요한 재시도 비용**: 영구 error에도 10회 × 5분 backoff를 적용해 최대 50분을 기다립니다.
+2. **Operator resource 낭비**: 성공할 수 없는 reconcile loop가 API server와 Aerospike client connection을 계속 사용합니다.
+3. **운영자 혼란**: Circuit Breaker가 열릴 때까지 의미 없는 retry event가 Kubernetes Event에 쌓여 실제 원인을 찾기 어렵게 합니다.
 
 ### ADR-0017과의 관계
 

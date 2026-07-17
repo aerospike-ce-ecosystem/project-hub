@@ -1,6 +1,6 @@
 ---
 title: "ADR-0041: MCP federation gateway — single registration for many cluster-manager instances"
-description: 다수의 Aerospike Cluster Manager (ACM) 인스턴스가 노출하는 /mcp 엔드포인트를 단일 진입점으로 묶어 LLM 에이전트에게 한 번의 등록으로 노출하는 federation gateway 설계 결정.
+description: 여러 Cluster Manager 인스턴스의 MCP endpoint를 하나의 진입점으로 통합하는 federation gateway 설계
 sidebar_position: 41
 scope: ecosystem
 repos: [cluster-manager]
@@ -16,11 +16,11 @@ last_updated: 2026-05-07
 
 - 제안일: 2026-05-07
 - 관련 이슈: [aerospike-ce-ecosystem/aerospike-cluster-manager#306](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/issues/306)
-- 검토 결과: 본 ADR이 머지된 뒤 prototype을 통해 open question을 해소한 다음 Accepted로 승격한다.
+- 검토 결과: 이 ADR을 merge한 뒤 prototype으로 남은 질문을 검증하고, 결과가 확인되면 상태를 Accepted로 변경합니다.
 
 ## 맥락 (Context)
 
-PR #302 (`feb3b95`)로 ACM에 단일 인스턴스 `/mcp` mount가 도입되었다. ADR-0040에서 채택한 multi-cluster topology(common cluster + per-environment operator cluster)에서는 환경마다 ACM API 인스턴스가 따로 떠 있고, 각 인스턴스가 자기만의 `/mcp` 엔드포인트를 노출한다. 결과적으로 LLM 에이전트가 dev/staging/prod를 동시에 다루려면 다음과 같이 N번의 등록을 해야 한다.
+PR #302(`feb3b95`)는 Cluster Manager의 각 instance에 `/mcp` endpoint를 추가했습니다. ADR-0040의 multi-cluster topology는 common cluster와 environment별 operator cluster로 구성되므로, dev, staging, production에 각각 별도의 Cluster Manager API instance가 실행됩니다. LLM agent가 이 환경을 모두 사용하려면 현재는 다음과 같이 instance마다 MCP server를 등록해야 합니다.
 
 ```
 claude mcp add acm-dev   https://acm-dev.example.com/mcp
@@ -28,65 +28,65 @@ claude mcp add acm-stage https://acm-stage.example.com/mcp
 claude mcp add acm-prod  https://acm-prod.example.com/mcp
 ```
 
-이 모델은 환경이 늘어날수록 운영 부담이 선형 증가하고, 같은 의미의 도구(`connect`, `list_namespaces`)가 환경마다 중복 등록되어 에이전트의 tool catalog가 산만해진다. 단일 등록(`claude mcp add gateway` 한 번)으로 다수 backend의 tool을 통합 노출하는 **federation gateway**가 필요하다.
+환경이 늘어날 때마다 등록과 설정도 함께 늘어납니다. 또한 `connect`, `list_namespaces`처럼 같은 역할의 tool이 환경별로 반복되어 agent의 tool catalog를 이해하기 어려워집니다. 이를 해결하기 위해 여러 backend의 tool을 하나의 등록으로 제공하는 federation gateway가 필요합니다.
 
-이 ADR은 issue #306의 open question (인증 bridging, OTel 전파, mTLS, 실패 의미, streaming proxy)에 대한 default direction을 결정한다. 구현은 별도 PR 시리즈로 진행한다.
+이 ADR은 issue #306에서 제기한 auth bridging, OTel propagation, mTLS, failure semantics, streaming proxy의 기본 방향을 정합니다. 실제 구현은 별도의 PR series로 진행합니다.
 
 ### Phase 0 contract와의 관계
 
-Phase 0a (mcp/registry decorator Context contract) 와 Phase 0b (Workspace.ownerId schema) 는 **인스턴스 내부**의 session/workspace 권한 체계를 결정한다. Federation gateway는 그 위에 얹히는 외부 계층이며, 인스턴스 내부 권한 모델은 그대로 유지한다. 따라서 gateway는 caller identity를 backend가 받을 수 있는 형태로 forward해야 하고, backend가 의존하는 OIDC `sub` claim이나 bearer 센티넬을 손상시키지 않아야 한다.
+Phase 0a의 MCP registry decorator Context contract와 Phase 0b의 `Workspace.ownerId` schema는 **각 instance 안에서** session과 workspace 권한을 처리하는 방법을 정의합니다. Federation gateway는 이 모델을 바꾸지 않는 외부 계층입니다. 따라서 caller identity를 backend가 이해하는 형태로 전달하고, backend가 사용하는 OIDC `sub` claim과 bearer sentinel을 보존해야 합니다.
 
 ## 결정 (Decision)
 
 > **Federation gateway는 다수 backend ACM의 `/mcp`를 묶어 단일 `/mcp`로 노출하는 aggregating reverse-proxy로 구현한다. `tools/list`는 backend별 prefix를 붙여 합치고, `tools/call`은 prefix 또는 `Mcp-Session-Id`로 backend를 결정해 forward한다.**
 
-핵심 결정은 다음 9가지로 구성된다.
+결정은 다음 아홉 가지 원칙으로 구성됩니다.
 
 ### 1. Aggregating reverse-proxy 형태
 
-- 단일 `/mcp` 엔드포인트를 노출한다.
-- `tools/list`는 모든 healthy backend의 도구를 prefix 붙여 합쳐 응답한다.
-- `tools/call`은 도구 이름의 prefix(또는 session affinity)로 정확히 1개 backend로 forward한다.
-- gateway 자체는 stateless이며, backend 목록은 정적 config로부터 읽는다.
+- 하나의 `/mcp` endpoint를 제공합니다.
+- `tools/list`는 연결할 수 있는 모든 backend의 tool에 prefix를 붙여 하나의 목록으로 반환합니다.
+- `tools/call`은 tool name prefix 또는 session affinity를 사용해 정확히 한 backend로 전달합니다.
+- gateway는 stateless로 운영하며 backend 목록은 static config에서 읽습니다.
 
-대안인 "per-instance OIDC delegation without aggregation" (인증만 통합, 등록은 그대로 N개)은 사용자가 보는 등록 sprawl을 해결하지 못하므로 기각.
+인증만 통합하고 instance별 등록을 유지하는 “per-instance OIDC delegation without aggregation”은 등록 수를 줄이지 못하므로 선택하지 않습니다.
 
 ### 2. Tool naming under federation: backend prefix + `__` separator
 
-`tools/list` aggregation 시 도구 이름을 `<backend>__<tool>` 으로 prefix한다. 예: `dev__connect`, `prod__list_namespaces`.
+`tools/list` 결과의 tool name은 `<backend>__<tool>` 형식으로 만듭니다. 예를 들어 `dev__connect`, `prod__list_namespaces`처럼 표시합니다.
 
-- separator로 `__`(double underscore)를 **잠정 채택**한다. `/`는 일부 MCP client/agent가 도구 이름을 path-segment로 sanitize하면서 깨질 수 있고, FastMCP의 `add_tool(name=...)`은 별도 정규식 검사를 강제하지 않지만 보수적으로 영문/숫자/`_`만 허용하는 client(Claude Desktop, Inspector)와 호환되리라 예상한다. 다만 실제 client 호환성은 prototype에서 검증해야 하며, 그 결과가 부정적이면 후속 작업 #2의 fallback(`:` 또는 `.`)으로 교체한다 — 이 단계에서는 단일 separator 정책을 유지한다는 것이 결정의 핵심이며, 기호 자체는 prototype-gated이다.
-- backend 이름은 gateway config의 `backends[].name` 키에서 가져오며, kebab-case가 아닌 snake-case를 강제한다. 이름이 하나뿐일 때 prefix 생략 옵션은 두지 않는다 (단일 backend일 때조차 prefix를 유지해야 backend를 늘렸을 때 client tool catalog가 바뀌지 않는다).
-- `tools/call`이 prefix 없는 이름을 받으면 4xx로 명시적으로 실패한다 — 자동 추정은 하지 않는다.
+- separator는 우선 `__`(double underscore)를 사용합니다. `/`는 일부 MCP client나 agent가 tool name을 path segment로 sanitize할 때 문제가 될 수 있습니다. FastMCP의 `add_tool(name=...)`은 별도의 regular expression을 강제하지 않지만, 영문자·숫자·underscore만 허용하는 보수적인 client와의 호환성도 고려했습니다. Prototype에서 Claude Desktop과 Inspector를 포함한 실제 client 호환성을 검증합니다. 문제가 있으면 `:` 또는 `.`으로 변경하되, federation 전체가 하나의 separator만 사용한다는 원칙은 유지합니다.
+- backend name은 gateway config의 `backends[].name`에서 읽고 snake_case만 허용합니다. Backend가 하나뿐이어도 prefix를 생략하지 않습니다. 그래야 backend를 추가해도 client의 tool catalog가 바뀌지 않습니다.
+- `tools/call`이 prefix 없는 name을 받으면 4xx error를 반환합니다. Gateway가 backend를 추측하지는 않습니다.
 
 ### 3. Session affinity (선택적 라우팅 키)
 
-prefix routing이 1차 라우팅 키이지만, MCP의 `Mcp-Session-Id` 헤더가 존재하는 경우 동일 session의 후속 요청은 같은 backend로 고정한다. 이는 backend가 session 내부에서 client cache(Phase 0a #303의 session-scoped client)를 유지하기 때문이며, session이 backend 사이를 옮겨다니면 cache가 무용지물이 된다.
+기본 routing key는 tool prefix입니다. `Mcp-Session-Id` header가 있으면 같은 session의 후속 요청을 처음 선택한 backend로 고정합니다. Phase 0a #303에서 정의한 session-scoped client cache가 backend 내부에 있기 때문에, session이 backend 사이를 이동하면 cache를 재사용할 수 없습니다.
 
 ### 4. Auth bridging: OIDC token exchange (RFC 8693), bearer는 pass-through
 
-gateway는 caller를 인증한 뒤 backend로 forward할 때 다음 두 모드 중 하나를 사용한다.
+Gateway는 caller를 인증한 뒤 다음 두 방식 중 하나로 backend credential을 전달합니다.
 
 | Mode | 설명 | 트레이드오프 |
 |---|---|---|
 | **OIDC token exchange (RFC 8693)** | gateway가 자기 audience(`acm-gateway`)로 검증 후, IdP의 token-exchange endpoint에 가서 backend audience(`acm-api`) 토큰을 새로 받아 backend로 forward | per-user audit trail 보존, IdP가 RFC 8693을 지원해야 함 (Keycloak은 지원) |
 | **Bearer pass-through (per-backend service account)** | gateway가 자체 보유한 backend별 static bearer를 forward. backend는 ACM_MCP_TOKEN으로 받아 인증 | 단순함. per-user 추적 불가 — backend audit log엔 service account 1개로만 보임 |
 
-Phase F1은 bearer pass-through로 시작하고, F2에서 OIDC token exchange를 추가한다 (§ 10 참조). bearer 모드에서는 backend의 Phase 0a `_mcp_bearer=True` 센티넬이 활성화되어 workspace gate를 bypass하므로, **prod에서 bearer 모드는 신중하게 사용해야 한다** — 사실상 gateway 너머는 single-tenant가 된다.
+Phase F1은 bearer pass-through로 시작하고, F2에서 OIDC token exchange를 추가합니다. Bearer mode에서는 backend의 Phase 0a `_mcp_bearer=True` sentinel이 활성화되어 workspace gate를 우회합니다. 따라서 production에서 이 mode를 사용하면 gateway 뒤의 환경을 사실상 single-tenant로 취급해야 합니다.
 
 ### 5. OTel propagation: `traceparent` injection + 모든 trace context header preserve
 
-- gateway는 inbound 요청의 `traceparent` / `tracestate` 헤더를 그대로 backend로 forward한다.
-- gateway 자신은 `mcp.gateway.forward` span을 생성해 incoming agent call ↔ backend ACM span을 연결한다.
-- ADR-0046 (OTel Tracing 통합)에서 정한 W3C trace context 표준을 그대로 따른다. gateway가 OTel SDK를 직접 import하지 않더라도 header pass-through만 보장하면 ADR-0046 trace는 절단되지 않는다.
-- Phase 0a (registry decorator Context contract)가 session/workspace 정보를 ctxvar에 stash하는 흐름은 backend 내부에서만 일어나며, gateway는 그에 영향을 주지 않는다. 단, gateway는 `Mcp-Session-Id` 와 `Authorization` 외의 application header를 임의로 strip하지 않는다.
+- Gateway는 inbound request의 `traceparent`와 `tracestate` header를 그대로 backend에 전달합니다.
+- Gateway는 `mcp.gateway.forward` span을 만들어 agent call과 backend Cluster Manager span을 연결합니다.
+- ADR-0046에서 채택한 W3C Trace Context를 따릅니다. Gateway가 OTel SDK를 직접 사용하지 않더라도 trace context header를 보존하면 trace가 끊기지 않습니다.
+- Session과 workspace 정보를 context variable에 저장하는 Phase 0a의 처리는 backend 내부에만 머뭅니다. Gateway는 `Mcp-Session-Id`, `Authorization`, 그 밖의 application header를 임의로 제거하지 않습니다.
 
 ### 6. mTLS: production 필수, cert-manager 발급 인증서
 
-- gateway는 caller의 TLS를 종단(termination)하고, backend로의 connection은 mTLS로 별도 수립한다.
-- 인증서는 ADR-0040에서 정한 cert-manager 운영 패턴을 따른다 (jetstack/cert-manager). gateway pod는 client cert을 mount하고, backend의 ingress(또는 Service)는 client CA를 trust anchor로 등록한다.
-- local/e2e에서는 self-signed CA + 짧은 TTL 인증서로 동일 흐름을 검증한다.
-- mTLS 적용은 Phase F3로 분리한다 — F1/F2는 cluster-internal HTTPS만 가정한다.
+- Gateway에서 caller-facing TLS를 terminate하고 backend connection은 별도의 mTLS session으로 만듭니다.
+- Certificate는 ADR-0040의 cert-manager 운영 pattern을 따릅니다. Gateway Pod는 client certificate를 mount하고 backend Ingress 또는 Service는 client CA를 trust anchor로 등록합니다.
+- Local/E2E 환경에서는 self-signed CA와 TTL이 짧은 certificate로 같은 흐름을 검증합니다.
+- mTLS는 Phase F3에서 적용합니다. F1과 F2는 cluster-internal HTTPS를 전제로 합니다.
 
 ### 7. Failure semantics: `tools/list` partial success, `tools/call` 단일 backend 실패
 
@@ -95,32 +95,32 @@ Phase F1은 bearer pass-through로 시작하고, F2에서 OIDC token exchange를
 | `tools/list` | 모든 backend의 union을 응답 | 도달 가능한 backend만 union, 응답 metadata에 `degraded_backends: [...]` 포함, HTTP 200 | 빈 tool list + warning, HTTP 200 (gateway 자체는 살아 있음) |
 | `tools/call` | 정확히 한 backend로 forward | prefix가 가리키는 backend가 down이면 504-class JSON-RPC error를 그대로 반환 | 동일 |
 
-핵심 규칙: **`tools/list`는 절대 5xx를 반환하지 않는다**. 한 backend의 일시 장애가 전체 federation의 등록을 끊으면 안 되기 때문이다. agent는 degraded marker를 보고 retry하거나 무시할 수 있다.
+핵심 규칙은 **`tools/list`가 5xx를 반환하지 않는 것**입니다. Backend 하나의 일시적인 장애 때문에 전체 federation의 tool discovery가 중단되어서는 안 됩니다. Agent는 degraded marker를 보고 재시도하거나 해당 backend를 건너뛸 수 있습니다.
 
 ### 8. Streaming proxy: frame-by-frame, 버퍼링 금지
 
-ACM의 MCP는 Streamable-HTTP(SSE-style) transport를 사용한다. `tools/call` 응답이 stream인 경우 gateway는 backend 응답을 frame 단위로 즉시 forward해야 하며, 응답 전체를 버퍼링하면 SSE 의미가 깨진다(에이전트가 partial result를 못 받음).
+Cluster Manager MCP는 Streamable HTTP(SSE-style) transport를 사용합니다. `tools/call`이 stream을 반환할 때 gateway는 backend frame을 받는 즉시 전달해야 합니다. 전체 response를 먼저 buffer하면 agent가 partial result를 받을 수 없어 streaming의 의미가 사라집니다.
 
-이는 naive HTTP/1.1 reverse-proxy로는 충족하기 어렵고, 다음 두 옵션 중 하나를 택해야 한다.
+단순한 HTTP/1.1 reverse proxy로는 이 요구사항을 충족하기 어려우므로 다음 두 option을 검토합니다.
 
-- **option A**: Starlette 기반의 transport-aware custom proxy. `httpx.AsyncClient.stream()` + Starlette `StreamingResponse`로 frame을 즉시 yield한다. ACM 코드베이스와 같은 Python/asyncio 스택이라 운영 일체화 측면에서 유리.
-- **option B**: Envoy/HAProxy 같은 generic L7 proxy를 streaming filter와 함께 사용. 성숙도/성능은 우수하지만 federation 전용 routing(prefix → backend) logic을 sidecar/Lua/WASM filter로 구현해야 함.
+- **Option A**: Starlette 기반 transport-aware custom proxy를 사용합니다. `httpx.AsyncClient.stream()`과 Starlette `StreamingResponse`로 frame을 바로 전달합니다. Cluster Manager와 같은 Python/asyncio stack을 사용하므로 함께 운영하기 쉽습니다.
+- **Option B**: Envoy나 HAProxy 같은 general-purpose L7 proxy에 streaming filter를 결합합니다. 성숙도와 성능은 높지만 prefix에서 backend로 연결하는 federation routing logic을 sidecar, Lua 또는 WASM filter로 구현해야 합니다.
 
-선택은 prototype 결과에 따라 정한다. Phase F1은 option A 가정으로 시작하고, 성능 부족 시 F3 단계에서 option B로 마이그레이션을 검토한다. **이 결정은 prototype에서 닫아야 할 open question으로 § 12에 명시한다.**
+최종 선택은 prototype 결과에 따릅니다. Phase F1은 option A로 시작하고, 성능이 충분하지 않으면 F3에서 option B로 이동하는 방안을 검토합니다. 이 항목은 아래 open question에 포함합니다.
 
 ### 9. Workspace boundary: gateway는 cross-instance workspace를 도입하지 않는다
 
-Phase 0b의 결정에 따라 workspace ownership은 ACM 인스턴스 단위(`Workspace.ownerId`)로 닫혀 있다. federation gateway는 다음을 **하지 않는다**.
+Phase 0b에 따라 workspace ownership은 Cluster Manager instance의 `Workspace.ownerId` 범위 안에서만 유효합니다. Federation gateway는 다음 기능을 추가하지 않습니다.
 
 - backend N개의 workspace 목록을 cross-instance global namespace로 합치지 않는다.
 - "어느 workspace든 어느 backend든 접근 가능"이라는 모델을 도입하지 않는다.
 - workspace 단위의 routing 키를 새로 정의하지 않는다 — 라우팅은 §2 prefix와 §3 session affinity만으로 구성한다.
 
-cross-instance workspace 개념(예: dev workspace를 prod backend에서 사용)은 명시적으로 out of scope이며, 미래에 도입하려면 별도 ADR이 필요하다. 이는 인스턴스 내부 권한 모델(Phase 0b)과 federation 외부 모델 사이의 단일 책임 경계를 보존한다.
+dev workspace를 production backend에서 사용하는 것과 같은 cross-instance workspace는 명시적으로 범위에서 제외합니다. 이후 이 기능이 필요해지면 별도의 ADR로 권한 model과 routing을 정의해야 합니다. 이 경계는 instance 내부 권한과 federation routing의 책임을 분리합니다.
 
 ## 구현 단계 (Phasing)
 
-각 phase는 독립적으로 ship 가능하며, 이전 phase의 production 적용을 막지 않는다.
+각 phase는 독립적으로 배포할 수 있습니다. 다음 phase가 끝날 때까지 앞선 phase의 사용을 기다릴 필요는 없습니다.
 
 | Phase | 범위 | 의존 |
 |---|---|---|
@@ -128,70 +128,70 @@ cross-instance workspace 개념(예: dev workspace를 prod backend에서 사용)
 | **F2 — OIDC token exchange** | gateway가 audience `acm-gateway`로 검증 후 RFC 8693으로 backend audience 토큰 재발급. Keycloak realm에 token-exchange permission 추가 | F1 + ADR-0040(Keycloak realm) |
 | **F3 — production hardening** | mTLS (cert-manager), streaming proxy 검증 + 성능 측정, dynamic backend registry (선택) | F2 |
 
-F1은 single-tenant에 가까운 운영(internal lab, demo)에 충분하다. F2부터 multi-tenant prod에 안전해진다. F3는 정식 SLA를 약속하는 단계.
+F1은 internal lab이나 demo처럼 single-tenant에 가까운 환경을 대상으로 합니다. Multi-tenant production에는 F2의 identity propagation이 필요하며, F3에서 정식 SLA에 필요한 보안과 성능을 갖춥니다.
 
 ## 대안 (Alternatives Considered)
 
 ### 대안 A: Per-instance MCP registration (status quo)
 
-- **설명**: gateway 없이 client가 backend별로 `claude mcp add` 를 N번 실행
-- **장점**: 코드/인프라 변경 0. 인증/OTel/mTLS 등 모든 레이어가 backend의 기존 stack 그대로
-- **단점**: 등록 sprawl이 환경 수에 비례. 같은 도구가 N번 중복 등록되어 agent tool catalog가 혼탁. multi-cluster topology(ADR-0040) 사용자 경험과 일관되지 않음
-- **미선택 사유**: 본 ADR이 해결하려는 문제 자체
+- **설명**: Gateway를 추가하지 않고 client가 backend마다 `claude mcp add`를 실행합니다.
+- **장점**: code와 infrastructure를 변경할 필요가 없으며 auth, OTel, mTLS도 각 backend의 기존 stack을 그대로 사용합니다.
+- **단점**: 환경 수만큼 등록이 늘어나고 같은 tool이 반복되어 agent tool catalog가 복잡해집니다. ADR-0040의 multi-cluster topology와도 일관된 사용 경험을 제공하지 못합니다.
+- **미선택 사유**: 이 ADR이 해결하려는 등록과 tool 중복 문제를 그대로 남깁니다.
 
 ### 대안 B: DNS-based routing (host header multiplexing)
 
-- **설명**: 단일 도메인(`mcp.example.com`) 뒤에서 host header / SNI로 backend를 선택. client는 DNS 별칭으로 인스턴스를 가리킴
-- **장점**: 표준 ingress 패턴 활용 가능
-- **단점**: MCP client가 host header 다중화에 적극 대응하지 않음. Inspector는 구성 host를 그대로 따라가며, 동일 origin 내 multi-cluster fan-out을 expose할 수 없음. 결국 등록 sprawl(대안 A)과 같은 문제로 회귀
-- **미선택 사유**: MCP 표준의 routing model이 host 기반이 아닌 tool-name 기반이라 본질적으로 fit하지 않음
+- **설명**: 하나의 domain(`mcp.example.com`) 뒤에서 host header나 SNI로 backend를 선택하고, client는 DNS alias로 instance를 가리킵니다.
+- **장점**: 표준 Ingress pattern을 사용할 수 있습니다.
+- **단점**: MCP client는 host header multiplexing을 위한 별도 기능을 제공하지 않습니다. Inspector도 설정된 host를 그대로 사용하므로 같은 origin에서 여러 cluster를 동시에 노출할 수 없습니다. 결국 backend별 등록이 다시 필요합니다.
+- **미선택 사유**: MCP routing은 host가 아니라 tool name을 중심으로 동작하므로 요구사항에 맞지 않습니다.
 
 ### 대안 C: Aggregating gateway WITHOUT prefix renaming
 
-- **설명**: gateway는 두지만 도구 이름을 그대로 합침
-- **장점**: 사용자에게 노출되는 도구 이름이 짧음
-- **단점**: 두 backend가 같은 도구(`connect`)를 갖는 즉시 이름 충돌 — `tools/call` 라우팅이 모호해짐. 강제 collision-free를 위해 backend별 도구 분리를 강요하면 backend 진화의 자유가 줄어듦
-- **미선택 사유**: collision의 결정이 deploy time → runtime으로 미뤄지는 fragility를 허용하지 않음
+- **설명**: Gateway가 여러 backend의 tool을 합치되 name은 변경하지 않습니다.
+- **장점**: 사용자에게 보이는 tool name이 짧습니다.
+- **단점**: 두 backend가 `connect`처럼 같은 name을 제공하는 순간 충돌하고 `tools/call`의 목적지가 모호해집니다. 충돌을 피하려고 backend마다 서로 다른 name을 강제하면 backend가 독립적으로 발전하기 어렵습니다.
+- **미선택 사유**: name collision이 deployment가 아니라 runtime에서 드러나는 불안정한 구조를 허용하지 않습니다.
 
 ### 대안 D: Per-instance OIDC delegation without aggregation
 
-- **설명**: 인증만 단일 IdP로 통일, 등록은 그대로 N번
-- **장점**: 인증 표준화는 달성 (이미 ADR-0040으로 달성된 영역)
-- **단점**: 등록 sprawl 미해결 — 본 ADR의 1차 목적과 무관
-- **미선택 사유**: ADR-0040의 결정으로 이미 자동 달성된 부분이라, 본 ADR이 추가할 가치가 없음
+- **설명**: 인증만 하나의 IdP로 통일하고 MCP server는 instance마다 등록합니다.
+- **장점**: 인증 방식을 표준화할 수 있습니다. 이 부분은 이미 ADR-0040에 포함돼 있습니다.
+- **단점**: 등록 수와 중복 tool 문제를 해결하지 못합니다.
+- **미선택 사유**: ADR-0040이 이미 인증 표준화를 다루고 있어 이 ADR의 목적에 새로운 가치를 더하지 않습니다.
 
 ## 결과 (Consequences)
 
 ### 긍정적
 
-- Agent 등록이 `claude mcp add gateway` 한 줄로 끝남 — multi-environment 사용자 경험이 ADR-0040 multi-cluster topology와 정렬됨
-- Backend는 federation을 모르고 진화한다 — gateway는 도구 이름에 agnostic해서 backend가 새 도구를 추가해도 gateway 코드 변경이 필요 없음
-- 정적 YAML config + prefix routing으로 F1을 빠르게 ship 가능 — IssueOps 기반 CI(ADR-0008)에 잘 맞는 단순한 component
+- Agent는 `claude mcp add gateway` 한 번으로 여러 환경의 tool을 사용할 수 있습니다. 이 방식은 ADR-0040의 multi-cluster topology와 일관됩니다.
+- Backend는 federation을 알 필요 없이 독립적으로 발전할 수 있습니다. 새 tool을 추가해도 gateway code를 바꾸지 않습니다.
+- Static YAML config와 prefix routing만으로 F1을 작게 구현할 수 있습니다. 단순한 component이므로 ADR-0008의 IssueOps 기반 CI에도 적용하기 쉽습니다.
 
 ### 부정적
 
-- 운영해야 하는 새 인프라 component가 추가됨 (gateway pod, config, 인증서 lifecycle)
-- 도구 이름에 `<backend>__` prefix가 user-visible noise로 노출됨 — agent prompt 길이 + 가독성에 미세한 영향
-- OTel correlation은 gateway가 header pass-through를 안 망가뜨려야만 보존됨 — 잘못된 미들웨어 추가 시 trace가 끊길 수 있어 정기 검증이 필요
-- bearer pass-through 모드에서는 backend의 workspace gate가 무력화되므로, prod에서 단순 bearer를 쓰는 운영자는 사실상 single-tenant 가정을 받아들여야 함
+- Gateway Pod, config, certificate lifecycle이라는 새 infrastructure component를 운영해야 합니다.
+- `<backend>__` prefix가 사용자에게 보이므로 tool name이 길어지고 agent prompt의 가독성이 조금 낮아집니다.
+- OTel trace correlation은 gateway가 trace context header를 보존할 때만 유지됩니다. Middleware 변경 후에도 trace가 연결되는지 정기적으로 검증해야 합니다.
+- Bearer pass-through mode는 backend workspace gate를 우회합니다. Production에서 이 mode를 사용한다면 사실상 single-tenant라는 가정을 받아들여야 합니다.
 
 ### 중립
 
-- backend 진화는 gateway 변경을 요구하지 않으나, backend의 transport 변경(예: streamable-HTTP → bidirectional WebSocket)은 gateway에도 동일한 transport 지원을 강제함
-- prefix 정책(`__` separator)은 한번 정하면 client에 깊이 박혀 변경 비용이 크다 — F1에서 신중히 고정하고, 이후 변경 금지
+- Backend가 tool을 추가하는 일은 gateway 변경을 요구하지 않습니다. 다만 transport를 Streamable HTTP에서 bidirectional WebSocket 등으로 바꾸면 gateway도 같은 transport를 지원해야 합니다.
+- `__` separator는 client config와 prompt에 널리 사용되므로 나중에 바꾸기 어렵습니다. F1 prototype에서 충분히 검증한 뒤 고정합니다.
 
 ## 후속 작업 / Open Questions (prototype이 닫아야 할 항목)
 
-이 ADR을 Accepted로 승격하려면 아래 question에 prototype 결과로 답해야 한다.
+이 ADR을 Accepted로 변경하기 전에 prototype으로 다음 질문에 답해야 합니다.
 
-1. **Streaming proxy 선택**: option A (Starlette/httpx custom) vs option B (Envoy/HAProxy + filter). p99 latency overhead와 frame buffering 동작을 측정.
-2. **prefix separator 호환성**: `__` 가 Claude Desktop, Inspector, claude-code mcp client 모두에서 무탈한지 검증. 실패 시 `:` 또는 `.` 후보.
-3. **OIDC token exchange overhead**: Keycloak token-exchange endpoint의 round-trip이 `tools/call` 1회당 추가하는 latency. 캐시 가능한가? token reuse 윈도우?
-4. **Backend health check**: gateway가 `tools/list`에서 backend가 down임을 판단하는 기준 (timeout 값, fail-fast vs hedged).
-5. **Dynamic backend registry**: 정적 YAML(F1) → runtime registry (DB/CRD) 로의 마이그레이션이 필요한가? 어떤 시점에?
-6. **Streaming + token expiration**: 장시간 stream 도중 OIDC token이 만료되면 backend 인증이 끊긴다. token refresh 의무는 gateway인가, agent인가?
-7. **Backend prefix와 workspace 명세의 직관성**: 사용자에게 `dev__connect`가 ADR-0040의 cluster registry(`dev`/`prod`) 와 자연스럽게 mapping되는지 UX 검증.
-8. **Failure 응답 schema 표준화**: degraded `tools/list` 응답에 어떤 필드(`degraded_backends`, `errors[]`)를 넣을지 — MCP 스펙이 직접 규정하지 않으므로 우리가 정해야 함.
+1. **Streaming proxy**: option A(Starlette/httpx)와 option B(Envoy/HAProxy + filter)의 p99 latency overhead와 frame buffering 동작을 비교합니다.
+2. **prefix separator 호환성**: `__`가 Claude Desktop, Inspector, Claude Code MCP client에서 모두 동작하는지 확인합니다. 실패하면 `:` 또는 `.`을 검토합니다.
+3. **OIDC token exchange overhead**: Keycloak token-exchange round trip이 `tools/call`마다 추가하는 latency를 측정하고 token cache와 reuse window를 정합니다.
+4. **Backend health check**: `tools/list`에서 backend 장애를 판단할 timeout과 fail-fast 또는 hedged request 정책을 정합니다.
+5. **Dynamic backend registry**: F1의 static YAML을 runtime registry(DB 또는 CRD)로 바꿔야 하는지, 필요하다면 언제 바꿀지 결정합니다.
+6. **Streaming 중 token expiration**: 장시간 stream에서 OIDC token이 만료될 때 gateway와 agent 중 어느 쪽이 refresh를 책임질지 정합니다.
+7. **Backend prefix와 workspace의 이해도**: 사용자가 `dev__connect`를 ADR-0040의 `dev`/`prod` cluster registry와 자연스럽게 연결해 이해하는지 확인합니다.
+8. **Failure response schema**: MCP specification이 직접 정하지 않은 degraded `tools/list` metadata(`degraded_backends`, `errors[]`)의 schema를 확정합니다.
 
 ## 관련 ADR
 

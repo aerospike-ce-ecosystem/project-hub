@@ -29,4 +29,4 @@ Tokio Semaphore 기반의 operation-level backpressure를 도입하여 동시 �
 
 ## 영향 범위
 
-aerospike-py의 모든 비동기 작업에 영향. 높은 동시성 워크로드에서 서버 보호 효과가 크다. 기존에 동시 요청 수 제한 없이 사용하던 코드는 BackpressureError를 처리하는 로직을 추가해야 할 수 있다.
+모든 async operation이 영향을 받는다. 높은 concurrency에서 client가 in-flight request 수를 제한하며, 기존에 제한 없이 요청하던 application은 `BackpressureError`를 처리해야 할 수 있다.

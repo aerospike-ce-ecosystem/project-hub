@@ -1,6 +1,6 @@
 ---
 title: "PR #155: Update README Screenshots"
-description: DaisyUI 제거 및 UI 전면 개편 후 현재 UI를 반영하도록 README 스크린샷 업데이트
+description: DaisyUI 제거 이후의 현재 UI에 맞춰 README screenshot을 갱신한 변경
 scope: single-repo
 repos: [aerospike-cluster-manager]
 tags: [docs, readme, screenshots]
@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-DaisyUI 제거 및 UI 전면 개편(PR #153) 이후 변경된 현재 UI를 정확히 반영하도록 README의 스크린샷을 업데이트했다.
+PR #153에서 DaisyUI를 제거하고 UI를 다시 설계한 뒤, README screenshot을 현재 화면에 맞게 갱신했다.
 
 ## 주요 변경 사항
 

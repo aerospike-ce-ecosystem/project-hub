@@ -18,15 +18,15 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-BatchRecord와 BatchRecords의 반환 타입을 NamedTuple 패턴으로 일관되게 재구성했다. PR #127에서 도입된 NamedTuple 타입 시스템이 batch 작업 결과에도 완전히 적용되도록 하여, 모든 API 반환값이 동일한 패턴을 따르게 만들었다. 관련 문서와 테스트도 전면 개편했다.
+`BatchRecord`와 `BatchRecords`의 반환 type을 NamedTuple pattern으로 통일했다. PR #127에서 일반 record에 적용한 type system을 batch result에도 확장하고 관련 documentation과 test를 갱신했다.
 
 ## 주요 변경 사항
 
 - BatchRecord를 NamedTuple로 변환 (key, bins, meta, result_code 필드)
 - BatchRecords 컨테이너 타입의 일관된 NamedTuple 접근
 - 기존 튜플 언패킹 패턴에서 속성 접근 패턴으로 전환
-- 문서 전면 업데이트 및 테스트 스위트 재작성
+- 관련 documentation update와 test suite 재작성
 
 ## 영향 범위
 
-batch 작업을 사용하는 모든 aerospike-py 사용자에게 영향. 기존의 `result[0]`, `result[1]` 같은 인덱스 기반 접근을 `result.key`, `result.bins` 같은 속성 접근으로 변경해야 한다. PR #127의 NamedTuple 타입 시스템 완성을 위한 중요한 후속 작업이다.
+Batch operation을 사용하는 모든 aerospike-py 사용자가 영향을 받는다. 기존의 `result[0]`, `result[1]` 같은 index access를 `result.key`, `result.bins` 같은 attribute access로 변경해야 한다. 이 변경은 PR #127의 NamedTuple pattern을 batch API까지 확장한다.

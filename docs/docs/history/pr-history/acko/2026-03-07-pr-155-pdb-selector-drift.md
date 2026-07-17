@@ -28,4 +28,4 @@ PodDisruptionBudget(PDB)의 셀렉터와 레이블이 reconciliation 과정에�
 
 ## 영향 범위
 
-ACKO로 관리되는 모든 Aerospike 클러스터의 가용성에 영향. PDB가 올바르게 동작해야 Kubernetes 노드 유지보수 시 Aerospike Pod가 동시에 중단되지 않는다. 이 수정이 없으면 롤링 업데이트나 노드 드레인 시 데이터 가용성 문제가 발생할 수 있었다.
+ACKO로 관리되는 Aerospike 클러스터에서 reconciliation 후에도 PDB selector가 Pod label과 일치한다. 따라서 Kubernetes 노드 유지보수, 롤링 업데이트, 노드 drain 중에도 PDB 정책이 적용되어 여러 Pod가 동시에 중단될 위험을 낮춘다.

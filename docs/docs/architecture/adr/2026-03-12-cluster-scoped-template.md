@@ -23,12 +23,12 @@ Aerospike CE Kubernetes Operator(ACKO)는 `AerospikeCluster` Custom Resource(CR)
 
 ### 기존 구조의 문제
 
-ACKO에는 `AerospikeClusterTemplate` CRD가 존재하여 클러스터 구성의 재사용 가능한 템플릿을 정의할 수 있었습니다. 이 CRD는 namespace-scoped로 설계되어 있었으며, 다음과 같은 문제가 발생했습니다:
+ACKO의 `AerospikeClusterTemplate` CRD는 재사용할 cluster 구성을 정의합니다. 그러나 이 CRD가 namespace-scoped여서 다음 문제가 발생했습니다.
 
-- **템플릿 복제 필요**: `production`, `staging`, `dev` 등 여러 namespace에서 동일한 템플릿을 사용하려면 각 namespace에 동일한 `AerospikeClusterTemplate`을 복제해야 함
-- **동기화 어려움**: 템플릿을 수정할 때 모든 namespace의 복사본을 개별적으로 업데이트해야 하며, 누락 시 namespace 간 구성 불일치(drift) 발생
-- **GitOps 복잡성**: ArgoCD, Flux 등 GitOps 도구에서 동일 템플릿을 여러 namespace에 배포하려면 Kustomize overlay 또는 Helm values 파일의 중복 관리 필요
-- **관리 오버헤드**: 대규모 환경 (10+ namespace)에서 템플릿 변경의 롤아웃이 수동적이고 에러 발생 가능성 높음
+- **템플릿 복제 필요**: `production`, `staging`, `dev` 등 여러 namespace에서 같은 template을 사용하려면 각 namespace에 `AerospikeClusterTemplate`을 복사해야 합니다.
+- **동기화 어려움**: Template을 바꿀 때 모든 복사본을 따로 수정해야 하며, 하나라도 빠지면 namespace 사이에 configuration drift가 생깁니다.
+- **GitOps 복잡성**: ArgoCD나 Flux로 같은 template을 여러 namespace에 배포하려면 중복된 Kustomize overlay 또는 Helm values를 관리해야 합니다.
+- **관리 overhead**: Namespace가 10개 이상인 환경에서는 template 변경을 수동으로 rollout하기 어렵고 오류가 발생하기 쉽습니다.
 
 ### 운영 시나리오
 
@@ -48,10 +48,10 @@ spec: { ... }  # 동일한 spec
 
 ### 요구사항
 
-1. 단일 템플릿을 여러 namespace의 `AerospikeCluster` CR에서 참조 가능
-2. 템플릿 수정 시 모든 참조 클러스터에 자동 반영
-3. RBAC으로 템플릿 수정 권한을 세밀하게 제어 가능
-4. 기존 namespace-scoped 템플릿에서의 마이그레이션 경로 제공
+1. 여러 namespace의 `AerospikeCluster` CR이 하나의 template을 참조할 수 있어야 합니다.
+2. Template 변경이 이를 참조하는 모든 cluster에 자동으로 반영되어야 합니다.
+3. RBAC으로 template 수정 권한을 세밀하게 제어할 수 있어야 합니다.
+4. 기존 namespace-scoped template을 이전할 수 있는 migration path를 제공해야 합니다.
 
 ## 결정 (Decision)
 

@@ -36,7 +36,7 @@ CRD/Operator/Backend는 이미 `nodeName`, `nodeSelector`를 완전히 지원하
 
 ## 영향
 
-- 운영 환경에서 rack 단위의 노드 배치 전략을 UI에서 직관적으로 설정 가능
-- hard-rack 모드는 중복 노드 할당을 UI 레벨에서 차단하여 배포 실패 방지
+- UI에서 rack별 노드를 목록에서 선택하거나 직접 입력해 배치 전략을 설정할 수 있음
+- hard-rack 모드에서 같은 노드를 중복 선택하면 다음 단계로 진행할 수 없음
 - 513개 테스트 통과 및 빌드 성공 확인
-- CRD/Operator 변경 없이 순수 UI 기능 확장으로 하위 호환성 유지
+- CRD와 Operator를 변경하지 않고 기존 `nodeName` 등의 필드를 UI에서 활용함

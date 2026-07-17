@@ -18,31 +18,31 @@ last_updated: 2026-03-29
 
 # 크로스-레포 리뷰 프로세스
 
-레포 간 변경이 발생할 때 일관성과 호환성을 보장하기 위한 리뷰 프로세스입니다.
+여러 repository에 영향을 주는 변경은 구현 순서와 호환성을 함께 확인해야 합니다. 이 문서는 단일 repository 변경과 cross-repo 변경을 구분하고, 각 경우에 필요한 리뷰 절차를 설명합니다.
 
 ## 단일 레포 변경
 
-단일 레포에 국한된 변경은 해당 레포에서 표준 PR 리뷰를 진행합니다.
+영향 범위가 하나의 repository에만 머무르면 해당 repository의 일반 PR 절차를 따릅니다.
 
-1. 해당 레포에서 PR 생성
-2. Agentic Workflow 또는 수동 리뷰 진행
-3. 리뷰 완료 후 머지
+1. 해당 repository에서 PR을 생성합니다.
+2. Agentic Workflow 또는 수동 리뷰로 변경 사항을 검증합니다.
+3. 필요한 수정과 최종 승인이 끝나면 PR을 merge합니다.
 
 ## 크로스-레포 변경
 
-여러 레포에 걸친 변경은 project-hub에서 조율합니다.
+여러 repository에 걸친 변경은 project-hub에서 전체 작업을 조율합니다. 각 repository의 작업은 독립된 issue와 PR로 추적하되, project-hub의 Epic에서 진행 상황과 의존성을 한눈에 확인할 수 있어야 합니다.
 
 ### 프로세스
 
-1. **project-hub에 Epic 이슈 생성** -- `epic` + `cross-repo` 라벨 추가
-2. **서브-레포 이슈 생성** -- 각 레포에 구체적인 이슈를 생성하고 Epic에 링크
-3. **서브-레포 PR 생성** -- 각 레포에서 독립적으로 PR 진행
-4. **크로스-레포 리뷰** -- 아래 체크리스트에 따라 호환성 검증
-5. **조율된 머지** -- 의존성 순서에 따라 PR을 순차적으로 머지
+1. **project-hub에 Epic issue를 생성합니다.** `epic`과 `cross-repo` label을 추가합니다.
+2. **각 repository에 하위 issue를 생성합니다.** 구현 범위를 구체적으로 적고 project-hub의 Epic에 연결합니다.
+3. **각 repository에서 PR을 생성합니다.** 구현과 리뷰는 repository별로 독립적으로 진행합니다.
+4. **cross-repo 영향을 검토합니다.** 아래 checklist에 따라 API, CRD, Skill, release compatibility를 확인합니다.
+5. **의존성 순서대로 merge합니다.** 앞 단계의 변경이 안정적으로 반영된 뒤 다음 PR을 merge합니다.
 
 ### 머지 순서 가이드
 
-일반적인 머지 순서는 의존성 방향을 따릅니다:
+특별한 이유가 없다면 아래 의존성 방향에 따라 merge합니다.
 
 ```
 aerospike-py (하위 레이어)
@@ -53,31 +53,31 @@ aerospike-py (하위 레이어)
 
 ## 크로스-레포 리뷰 체크리스트
 
-크로스-레포 변경 시 반드시 확인해야 할 항목입니다:
+cross-repo 변경을 리뷰할 때는 다음 항목을 확인합니다.
 
 ### API 호환성
 
-- [ ] **aerospike-py API 변경** -- cluster-manager 백엔드 업데이트 필요 여부 확인
-- [ ] aerospike-py의 공개 API 시그니처 변경 시 cluster-manager에서 사용하는 메서드가 영향받는지 확인
-- [ ] 새로운 API 추가 시 cluster-manager에서 활용 가능한지 검토
+- [ ] aerospike-py API 변경이 cluster-manager backend에 영향을 주는지 확인합니다.
+- [ ] 공개 API signature를 변경했다면 cluster-manager가 호출하는 method와 호환되는지 확인합니다.
+- [ ] 새 API를 추가했다면 cluster-manager에서 활용하거나 문서화해야 하는지 검토합니다.
 
 ### CRD 호환성
 
-- [ ] **ACKO CRD 변경** -- cluster-manager K8s 관리 기능 업데이트 필요 여부 확인
-- [ ] CRD 필드 추가/변경/삭제 시 cluster-manager의 K8s 관련 UI/로직 검토
-- [ ] CRD 버전 변경 시 하위 호환성 확인
+- [ ] ACKO CRD 변경이 cluster-manager의 K8s 관리 기능에 영향을 주는지 확인합니다.
+- [ ] CRD field를 추가·변경·삭제했다면 관련 UI와 backend logic을 함께 검토합니다.
+- [ ] CRD version을 변경했다면 backward compatibility와 migration 경로를 확인합니다.
 
 ### Plugin Skills 업데이트
 
-- [ ] **API/CRD 변경** -- plugins의 skills 업데이트 필요 여부 확인
-- [ ] 새로운 API 패턴이 추가되면 관련 skill 문서 반영
-- [ ] CRD 변경이 acko-deploy 또는 acko-config-reference skill에 영향을 주는지 확인
+- [ ] API 또는 CRD 변경을 plugins의 관련 Skill에 반영해야 하는지 확인합니다.
+- [ ] 새 API pattern을 추가했다면 해당 Skill의 예제와 reference를 갱신합니다.
+- [ ] CRD 변경이 `acko-deploy` 또는 `acko-config-reference` Skill에 영향을 주는지 확인합니다.
 
 ### Release Matrix 업데이트
 
-- [ ] **버전 변경** -- release-matrix.md 업데이트 필요 여부 확인
-- [ ] 레포 간 버전 호환성 매트릭스 갱신
-- [ ] 의존성 버전 범위 검토
+- [ ] version 변경을 `release-matrix.md`에 반영해야 하는지 확인합니다.
+- [ ] 함께 검증한 repository version 조합을 compatibility matrix에 기록합니다.
+- [ ] 각 repository가 허용하는 dependency version 범위를 검토합니다.
 
 ## 리뷰 책임
 
@@ -89,5 +89,5 @@ aerospike-py (하위 레이어)
 | Release matrix 변경 | 모든 레포 메인테이너 확인 |
 
 :::tip 크로스-레포 변경 제안
-크로스-레포 변경이 필요한 경우, 먼저 project-hub에 ADR Proposal 이슈를 생성하여 아키텍처 영향을 논의한 후 Epic으로 전환하는 것을 권장합니다.
+아키텍처에 영향을 주는 cross-repo 변경이라면 먼저 project-hub에 ADR Proposal issue를 생성하세요. 결정과 영향 범위를 합의한 뒤 Epic으로 전환하면 구현 단계의 재작업을 줄일 수 있습니다.
 :::

@@ -20,13 +20,13 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager의 모든 API 엔드포인트에 인증/인가가 없어 네트워크 접근 가능한 모든 클라이언트가 클러스터 연결 생성/삭제, 레코드 수정, K8s 클러스터 관리 등 모든 작업을 무제한으로 수행할 수 있는 상태입니다. 이는 프로덕션 환경 배포의 가장 큰 차단 요인입니다.
+Cluster Manager의 API endpoint에는 인증과 인가가 없습니다. 네트워크에 접근할 수 있는 client라면 cluster connection 생성·삭제, record 수정, Kubernetes cluster 관리 작업을 제한 없이 실행할 수 있습니다. 이 문제 때문에 production 환경에 배포할 수 없습니다.
 
-구체적으로 세 가지 문제가 식별되었습니다:
+구체적으로 다음 세 가지 문제가 있습니다.
 
-1. **인증 없는 API 엔드포인트**: `connections.py`, `records.py`, `query.py`, `k8s_clusters.py` 등 모든 라우터에 인증 미들웨어가 없어 무단 접근, 감사 로그 부재, 멀티 사용자 접근 분리 불가 상태
-2. **보안 헤더 불완전**: `X-Content-Type-Options`, `X-Frame-Options`은 설정했지만 HSTS 헤더 누락(HTTPS 다운그레이드 공격 취약), CORS wildcard + credentials 동시 설정 시 사양 위반 미검증
-3. **Rate Limiting 프록시 호환성**: `rate_limit.py`의 `get_remote_address`가 리버스 프록시 뒤에서 프록시 IP로 식별하여 rate limiting 무효화
+1. **인증 없는 API endpoint**: `connections.py`, `records.py`, `query.py`, `k8s_clusters.py`를 포함한 모든 router에 authentication middleware가 없습니다. 무단 접근을 막거나 사용자별 권한을 분리할 수 없고 audit log도 남지 않습니다.
+2. **불완전한 보안 header**: `X-Content-Type-Options`와 `X-Frame-Options`는 설정했지만 HSTS header가 없어 HTTPS downgrade 공격에 취약합니다. CORS wildcard와 credentials를 함께 설정하는 잘못된 조합도 검증하지 않습니다.
+3. **Rate limiting의 proxy 호환성**: `rate_limit.py`의 `get_remote_address`는 reverse proxy 뒤에서 실제 client가 아니라 proxy IP를 식별하므로 rate limiting이 제대로 동작하지 않습니다.
 
 ADR-0014 (PostgreSQL 마이그레이션)에서 이미 프로덕션 환경을 고려한 인프라 변경을 진행했으며, 인증/인가는 그 연장선에서 반드시 필요한 보안 레이어입니다.
 
@@ -36,9 +36,9 @@ ADR-0014 (PostgreSQL 마이그레이션)에서 이미 프로덕션 환경을 고
 
 ### Phase 1: 보안 헤더 즉시 강화
 
-- **HSTS 헤더 추가**: 프로덕션 환경(HTTPS)에서 `Strict-Transport-Security` 헤더 조건부 추가
-- **CORS 설정 검증**: 애플리케이션 startup 시 `CORS_ORIGINS=*`와 `allow_credentials=True` 동시 설정 감지 및 경고/차단
-- **Rate limiter 개선**: `X-Forwarded-For` 헤더를 지원하여 리버스 프록시 환경에서 실제 클라이언트 IP 기반 rate limiting 적용
+- **HSTS header 추가**: HTTPS를 사용하는 production 환경에서 `Strict-Transport-Security` header를 조건부로 추가합니다.
+- **CORS 설정 검증**: 애플리케이션 startup 시 `CORS_ORIGINS=*`와 `allow_credentials=True`가 함께 설정되어 있으면 경고하거나 시작을 차단합니다.
+- **Rate limiter 개선**: `X-Forwarded-For` header를 지원해 reverse proxy 환경에서도 실제 client IP를 기준으로 rate limiting을 적용합니다.
 
 ### Phase 2: JWT 기반 인증 및 RBAC 도입
 

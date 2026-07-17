@@ -29,4 +29,4 @@ CI 파이프라인 강화, NumPy 연동의 안전성 개선, async_client 팩토
 
 ## 영향 범위
 
-CI/CD 파이프라인과 NumPy 기반 작업에 영향. `async_client()` 팩토리를 사용하면 비동기 클라이언트 생성이 더 간편해진다. NumPy 대용량 데이터 처리의 안정성이 향상된다.
+CI/CD pipeline과 NumPy operation이 영향을 받는다. `async_client()` factory로 async client lifecycle을 관리할 수 있으며, NumPy conversion path의 memory-safety check도 강화됐다.

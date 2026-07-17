@@ -29,4 +29,4 @@ Operator 연동을 강화하여 revision 관리, 컨테이너 securityContext, a
 
 ## 영향 범위
 
-ACKO를 통해 Aerospike 클러스터를 운영하는 모든 사용자에게 영향. Revision 관리로 배포 변경 이력을 추적하고 롤백할 수 있다. 컨테이너 securityContext로 세밀한 보안 정책을 적용할 수 있으며, affinity 설정으로 Pod 스케줄링 전략을 최적화할 수 있다.
+ACKO로 Aerospike 클러스터를 운영하는 사용자가 영향을 받는다. Revision 관리로 배포 이력을 추적하고 롤백할 수 있으며, container `securityContext`와 affinity 설정으로 보안 정책과 Pod scheduling 방식을 세밀하게 조정할 수 있다.

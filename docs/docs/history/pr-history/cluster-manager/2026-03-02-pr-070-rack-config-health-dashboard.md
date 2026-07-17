@@ -30,4 +30,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-PR #069의 CRD 지원과 함께 Kubernetes 클러스터 관리 기능을 완성하는 핵심 UI 추가. 랙 구성의 복잡성을 마법사로 추상화하고, 운영 중 클러스터 상태를 한눈에 파악할 수 있게 되었다.
+PR #069의 CRD 지원에 rack configuration wizard와 health dashboard를 연결했다. 사용자는 rack mapping을 단계별로 설정하고 운영 중인 cluster의 node 상태를 한 화면에서 확인할 수 있다.

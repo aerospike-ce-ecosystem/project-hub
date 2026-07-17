@@ -1,6 +1,6 @@
 ---
 title: "ACKO"
-description: ACKO 아키텍처. AerospikeCluster CRD → Reconciler → Aerospike Pod(Rack) + metrics exporter 관리 흐름.
+description: AerospikeCluster CRD를 실제 Aerospike Pod와 관련 리소스로 조정하는 ACKO 아키텍처
 sidebar_position: 2
 scope: single-repo
 repos: [acko]
@@ -12,7 +12,7 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # ACKO Component Diagram
 
-Kubernetes 위에서 Aerospike CE 클러스터를 선언적으로 관리하는 Operator. User가 `kubectl apply`로 CR을 적용하면, ACKO가 Rack-aware Pod 배포와 metrics exporter를 자동 관리합니다.
+ACKO는 Kubernetes에서 Aerospike CE 클러스터를 선언적으로 관리하는 Operator입니다. 사용자가 `kubectl apply`로 `AerospikeCluster` custom resource를 적용하면, ACKO가 원하는 상태에 맞춰 rack-aware Pod와 관련 리소스, metrics exporter를 관리합니다.
 
 <FlowDiagram
   height={700}

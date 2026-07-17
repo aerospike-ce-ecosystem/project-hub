@@ -19,12 +19,12 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-ACKO가 관리하는 Aerospike Pod에는 기존에 TCP socket probe를 사용한 liveness/readiness check가 설정되어 있었습니다. 이 방식에는 근본적인 한계가 있었습니다:
+ACKO가 관리하는 Aerospike Pod는 TCP socket probe로 liveness와 readiness를 확인했습니다. 이 방식은 port 연결 여부만 확인하므로 다음 상태를 구분할 수 없었습니다.
 
-- **포트 오픈 != 서비스 정상**: Aerospike 프로세스가 포트를 열고 있지만 내부적으로 비정상 상태(예: 스토리지 장애, 메모리 부족)일 수 있음
-- **클러스터 상태 미반영**: TCP probe는 개별 노드의 포트 응답만 확인하고, 클러스터 멤버십 이탈 여부를 감지하지 못함
-- **부정확한 재시작 판단**: 실제로는 서비스 불가능한 노드가 "healthy"로 표시되어 트래픽을 수신
-- **장애 감지 지연**: 스토리지 디바이스 오류 등 Aerospike 고유 장애를 감지할 수 없음
+- **Port open과 service health의 차이**: Aerospike process가 port를 열었더라도 storage 장애나 memory 부족으로 정상 동작하지 않을 수 있습니다.
+- **Cluster 상태 미반영**: TCP probe는 개별 node의 port만 확인하므로 cluster membership에서 이탈했는지 알 수 없습니다.
+- **부정확한 재시작 판단**: 실제로 요청을 처리할 수 없는 node도 `healthy`로 표시되어 traffic을 받을 수 있습니다.
+- **장애 감지 지연**: Storage device 오류 같은 Aerospike 고유 장애를 감지할 수 없습니다.
 
 이로 인해 장애 상황에서 클라이언트가 비정상 노드로 요청을 보내 타임아웃이 발생하는 문제가 있었습니다.
 
@@ -40,8 +40,8 @@ ACKO가 관리하는 Aerospike Pod에는 기존에 TCP socket probe를 사용한
 - **Readiness probe**: `exec` probe로 `asinfo -v 'cluster-size'` 실행
   - 반환된 cluster_size가 기대값과 일치하는지 확인하는 wrapper 스크립트 사용
   - 클러스터에서 이탈한 노드는 자동으로 Service endpoint에서 제외
-- **컨테이너 이미지 요구사항**: Aerospike 컨테이너 이미지에 `asinfo` 바이너리 포함 필수
-- **Probe 설정**: initialDelaySeconds=10, periodSeconds=10, failureThreshold=3
+- **컨테이너 이미지 요구사항**: Aerospike container image에 `asinfo` binary가 포함되어 있어야 합니다.
+- **Probe 설정**: `initialDelaySeconds=10`, `periodSeconds=10`, `failureThreshold=3`을 사용합니다.
 
 ## 대안 검토 (Alternatives Considered)
 

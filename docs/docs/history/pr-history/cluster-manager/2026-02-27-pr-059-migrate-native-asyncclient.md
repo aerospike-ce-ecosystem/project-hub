@@ -18,12 +18,12 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-기존에 동기 클라이언트를 `asyncio.to_thread`로 감싸서 사용하던 방식을 네이티브 AsyncClient로 전면 교체했다. 스레드 전환 오버헤드가 제거되면서 처리량이 2.2-2.4배 향상되었다.
+동기 client를 `asyncio.to_thread`로 감싸던 구현을 native `AsyncClient`로 교체했다. 측정 결과 thread 전환 overhead가 줄면서 throughput이 2.2~2.4배 높아졌다.
 
 ## 주요 변경 사항
 
 - 동기 Client를 네이티브 AsyncClient로 교체
-- asyncio.to_thread 래핑 코드 전면 제거
+- `asyncio.to_thread` wrapper 제거
 - 비동기 연결 수명 주기 관리 개선
 - 모든 Aerospike 호출 경로를 await 기반으로 변환
 - 벤치마크 결과: 요청 처리량 2.2-2.4배 개선

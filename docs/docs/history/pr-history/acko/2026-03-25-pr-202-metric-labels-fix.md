@@ -29,4 +29,4 @@ Prometheus exporter가 CrashLoopBackOff에 빠지던 문제를 수정했다. 원
 
 ## 영향 범위
 
-ACKO로 배포된 Aerospike 클러스터에서 Prometheus 모니터링을 사용하는 모든 환경에 영향. 특히 커스텀 METRIC_LABELS를 설정한 경우 exporter가 정상적으로 시작되지 않던 문제가 해결된다.
+Prometheus 모니터링을 활성화하고 커스텀 `METRIC_LABELS`를 사용하는 ACKO 클러스터에 적용된다. Exporter가 label 값을 유효한 TOML로 파싱할 수 있어 CrashLoopBackOff 없이 시작하며, 모니터링 샘플도 같은 형식을 사용한다.

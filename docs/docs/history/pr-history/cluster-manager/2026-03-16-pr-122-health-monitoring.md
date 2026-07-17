@@ -29,4 +29,4 @@ Reconciliation 헬스 모니터링, 설정 드리프트(config drift) 감지, �
 
 ## 영향 범위
 
-ACKO로 관리되는 클러스터의 운영 가시성에 직접적 영향. ACKO PR #160의 서킷 브레이커 기능과 연동되며, PR #086의 이벤트 타임라인과 통합되어 포괄적인 운영 모니터링을 제공한다.
+ACKO가 관리하는 클러스터의 운영 가시성이 달라진다. ACKO PR #160의 circuit breaker와 연동하고 PR #086의 event timeline에 상태를 표시해, 장애와 configuration drift를 같은 UI에서 확인할 수 있다.

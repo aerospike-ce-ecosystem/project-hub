@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-ACKO 기반 클러스터를 관리하는 환경에서 운영 편의성 향상. 스테이징/테스트 환경 구축 시간을 단축하고, 동일 설정의 멀티 클러스터 배포를 간소화한다.
+ACKO cluster를 관리하는 환경이 영향을 받는다. 기존 spec을 복사해 staging이나 test cluster를 만들 수 있어 같은 configuration을 다시 입력할 필요가 없다.

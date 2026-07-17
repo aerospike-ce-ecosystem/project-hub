@@ -46,7 +46,7 @@ last_updated: 2026-07-17
 
 ### 필수 워크플로우 세트
 
-각 repo의 특성에 따라 적용해야 할 필수 워크플로우를 정의합니다:
+각 repository의 특성에 맞는 필수 workflow를 다음과 같이 정의합니다.
 
 - **코드 repo** (aerospike-py, ACKO, cluster-manager): agent-implement, pr-reviewer, issue-planner, daily-release, skill-impact-notify (해당 시)
 - **플러그인 repo** (plugins): agent-implement, pr-reviewer, issue-planner, daily-release 검토

@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-DaisyUI 의존성을 제거하고 순수 Tailwind CSS 4 기반의 커스텀 디자인 시스템으로 전면 교체했다. UI 전체를 재설계하여 일관된 시각적 스타일과 더 나은 사용자 경험을 제공한다.
+DaisyUI dependency를 제거하고 Tailwind CSS 4 기반 custom design system으로 바꿨다. 전체 UI에 같은 design token과 component pattern을 적용했다.
 
 ## 주요 변경 사항
 
@@ -30,4 +30,4 @@ DaisyUI 의존성을 제거하고 순수 Tailwind CSS 4 기반의 커스텀 디�
 
 ## 영향 범위
 
-Cluster Manager의 모든 UI에 영향을 미치는 전면적 변경. 시각적으로 완전히 새로운 인터페이스를 제공하며, DaisyUI에 의존하던 커스텀 스타일링은 새로운 디자인 시스템으로 마이그레이션되었다. PR #152의 하이콘트라스트 컬러 시스템과 함께 적용된다.
+Cluster Manager의 모든 UI가 영향을 받는다. DaisyUI class에 의존하던 custom style은 새 design system으로 migration해야 하며, PR #152의 high-contrast color system도 함께 적용된다.

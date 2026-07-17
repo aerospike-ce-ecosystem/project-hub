@@ -30,4 +30,4 @@ OpenTelemetry 분산 추적(distributed tracing)을 aerospike-py에 통합하여
 
 ## 영향 범위
 
-Observability 스택을 운영하는 모든 환경에 영향. Jaeger, Zipkin, Grafana Tempo 등의 분산 추적 시스템과 통합 가능. PR #104 (Prometheus 메트릭), PR #103 (구조화 로깅)과 함께 observability 3대 요소(traces, metrics, logs)를 완성한다.
+Observability stack을 운영하는 환경이 영향을 받는다. Jaeger, Zipkin, Grafana Tempo 같은 distributed tracing backend에 span을 보낼 수 있으며, PR #104의 metric과 PR #103의 structured log를 함께 사용할 수 있다.

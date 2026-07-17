@@ -32,7 +32,7 @@ ADR-0013에서 도입된 reconciliation circuit breaker는 `maxFailedReconciles 
 
 ### 단일 backoff 공식의 한계
 
-모든 에러 유형에 동일한 `2^n` 백오프가 적용되어, 에러 특성에 맞지 않는 재시도 간격이 사용됩니다:
+모든 오류에 같은 `2^n` backoff를 적용하면 오류 특성에 맞지 않는 간격으로 재시도할 수 있습니다.
 
 - **DNS resolution 실패**: 매우 짧은 retry가 유리하나 지수 백오프로 불필요하게 대기
 - **Storage full**: 긴 backoff이 적절하나 초기 retry가 빠르게 소진
@@ -46,7 +46,7 @@ ADR-0013에서 도입된 reconciliation circuit breaker는 `maxFailedReconciles 
 
 > **보류됨 — 운영 메트릭 데이터 확보 후 재검토**
 
-에러 유형별 차등 임계값(Option A)은 기술적으로 타당하나, 현재 ACKO v0.1.7 안정화 단계에서 다음 이유로 보류합니다:
+오류 유형별 임계값을 두는 Option A는 기술적으로 타당합니다. 다만 ACKO v0.1.7 안정화 단계에서는 다음 이유로 도입을 보류합니다.
 
 1. **운영 데이터 부재**: 현재 고정 임계값 10회가 실제 운영 환경에서 어떤 빈도로 circuit breaker를 트리거하는지 데이터가 없음
 2. **에러 분류 기준 미검증**: Transient/Infrastructure/Configuration 분류가 실제 환경에서 명확히 구분 가능한지 확인되지 않음

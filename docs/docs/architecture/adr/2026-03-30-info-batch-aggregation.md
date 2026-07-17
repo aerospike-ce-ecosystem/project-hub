@@ -33,7 +33,7 @@ Cluster Manager의 클러스터 Overview 페이지는 클러스터 상태를 조
 
 ### Aerospike Info 프로토콜의 배치 지원
 
-Aerospike `info` 프로토콜은 세미콜론 구분자로 여러 명령을 한 요청에 포함할 수 있습니다:
+Aerospike `info` protocol은 세미콜론으로 구분한 여러 명령을 한 요청에 담을 수 있습니다.
 
 ```
 "statistics;build;edition;service"  → 1회 왕복으로 4개 결과 수신

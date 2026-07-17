@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Helm chart의 UI 관련 설정을 대폭 개선하여 DB connection pool, timeout, logging, metrics 등 세부 항목을 values.yaml에서 직접 구성할 수 있게 했다. 운영 환경에서 UI 컴포넌트의 튜닝이 용이해진다.
+Helm chart에 UI의 DB connection pool, timeout, logging, metrics 설정을 추가했다. 배포 매니페스트를 직접 수정하지 않고 `values.yaml`에서 각 항목을 조정할 수 있다.
 
 ## 주요 변경 사항
 
@@ -30,4 +30,4 @@ Helm chart의 UI 관련 설정을 대폭 개선하여 DB connection pool, timeou
 
 ## 영향 범위
 
-Helm chart로 ACKO를 배포하는 환경에서 UI 컴포넌트의 세부 튜닝이 가능해진다. 특히 프로덕션 환경에서 DB pool 크기 조정, timeout 최적화, 로그 레벨 변경을 Helm values만으로 처리할 수 있다.
+Helm chart로 ACKO를 배포하는 환경에 적용된다. 운영자는 Helm values만으로 DB pool 크기와 timeout, 로그 레벨과 형식, Prometheus scrape 설정을 환경별로 구성할 수 있다.

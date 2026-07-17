@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Kubernetes 클러스터 관리 기능을 확장하여 AerospikeCluster CRD(Custom Resource Definition)를 완전히 지원하도록 했다. 클러스터의 배포 상태를 10단계로 세분화하여 추적하고, CRD 스펙의 생성/수정/삭제를 UI에서 직접 수행할 수 있게 되었다.
+Cluster Manager에 `AerospikeCluster` CRD(Custom Resource Definition) 관리 기능을 추가했다. UI에서 CR을 생성·수정·삭제하고 deployment 상태를 10개 phase로 나눠 확인할 수 있다.
 
 ## 주요 변경 사항
 
@@ -30,4 +30,4 @@ Kubernetes 클러스터 관리 기능을 확장하여 AerospikeCluster CRD(Custo
 
 ## 영향 범위
 
-Kubernetes 관리 기능의 핵심 확장으로, Cluster Manager가 ACKO 오퍼레이터와 완전히 통합되는 기반을 마련했다. CRD 기반 워크플로우를 통해 선언적 클러스터 관리가 가능해졌다.
+이 변경은 Cluster Manager가 ACKO CR을 직접 관리하는 기반을 마련한다. 사용자는 UI에서 원하는 cluster spec을 선언하고 Operator가 실제 상태를 조정하는 과정을 확인할 수 있다.

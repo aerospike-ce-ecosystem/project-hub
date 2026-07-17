@@ -1,6 +1,6 @@
 ---
 title: Interactive Architecture Diagrams
-description: ReactFlow 기반 인터랙티브 아키텍처 다이어그램. 시스템 전체 구조와 각 레포 내부 모듈 구성을 시각적으로 탐색.
+description: ReactFlow diagram으로 살펴보는 에코시스템 전체 구조와 각 repository의 내부 구성
 sidebar_position: 4
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
@@ -12,18 +12,20 @@ import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
 
 # Interactive Architecture Diagrams
 
+이 페이지에서는 에코시스템 전체 흐름과 각 component의 내부 구조를 ReactFlow diagram으로 살펴볼 수 있습니다. Diagram을 직접 이동하거나 확대해 관계를 확인하고, GitHub link가 있는 node에서 해당 repository로 이동할 수 있습니다.
+
 :::tip 조작 방법
-- **드래그**: 노드를 클릭하고 끌어서 위치 조정
-- **줌**: 마우스 휠 또는 컨트롤 버튼 사용
-- **노드 클릭**: GitHub 링크가 있는 노드는 클릭하면 해당 레포로 이동
-- **확대**: 우측 상단 확대 버튼으로 전체 화면 보기
+- **드래그**: node를 끌어 원하는 위치로 옮깁니다.
+- **줌**: mouse wheel이나 control button으로 확대·축소합니다.
+- **node 클릭**: GitHub link가 있는 node를 클릭하면 해당 repository로 이동합니다.
+- **전체 화면**: 오른쪽 위의 확대 button으로 diagram을 전체 화면에서 봅니다.
 :::
 
 ---
 
 ## 1. System Architecture
 
-User → Agent → Plugin 계층과 Kubernetes / Bare Metal 이중 배포 구조를 보여줍니다.
+사용자가 Agent, Plugin, Web UI, Python API를 통해 Kubernetes 또는 Bare Metal의 Aerospike CE에 접근하는 흐름을 보여 줍니다.
 
 <FlowDiagram
   height={1250}
@@ -78,7 +80,7 @@ User → Agent → Plugin 계층과 Kubernetes / Bare Metal 이중 배포 구조
 
 ## 2. aerospike-py Internal Structure
 
-Python API → PyO3 Bridge → Rust Core → aerospike-client-rust 계층 구조입니다.
+Python API 호출이 PyO3 bridge와 Rust Core를 거쳐 Aerospike protocol로 전달되는 구조입니다.
 
 <FlowDiagram
   height={1000}
@@ -111,7 +113,7 @@ Python API → PyO3 Bridge → Rust Core → aerospike-client-rust 계층 구조
 
 ## 3. ACKO Internal Structure
 
-AerospikeCluster CRD → Controller → Managed K8s Resources 흐름입니다.
+`AerospikeCluster` CRD를 Controller가 감시하고 실제 Kubernetes resource를 관리하는 흐름입니다.
 
 <FlowDiagram
   height={620}
@@ -147,7 +149,7 @@ AerospikeCluster CRD → Controller → Managed K8s Resources 흐름입니다.
 
 ## 4. Cluster Manager Internal Structure
 
-K8s 환경 안에서 동작하는 웹 관리 UI입니다. Backend에 aerospike-py를 내장합니다.
+Cluster Manager는 Web UI와 FastAPI backend로 구성됩니다. Backend는 aerospike-py로 Aerospike에 연결하고 K8s Client로 ACKO resource를 관리합니다.
 
 <FlowDiagram
   height={500}
@@ -177,7 +179,7 @@ K8s 환경 안에서 동작하는 웹 관리 UI입니다. Backend에 aerospike-p
 
 ## 5. Plugin Structure
 
-Claude Code Plugin의 9개 Skill 구성과 대상 프로젝트 관계입니다.
+CE Ecosystem Plugin에 포함된 9개 Skill과 각 Skill이 지원하는 프로젝트의 관계를 보여 줍니다.
 
 <FlowDiagram
   height={450}

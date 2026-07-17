@@ -19,13 +19,13 @@ last_updated: 2026-03-29
 
 ## 맥락 (Context)
 
-aerospike-py는 Rust로 작성된 네이티브 라이브러리로, Python 애플리케이션에서 내부 동작을 관측하기 어려운 구조였습니다. 특히 프로덕션 환경에서 성능 문제나 에러 원인을 진단하기 위한 표준적인 관측성 도구가 필요했습니다.
+aerospike-py의 핵심 로직은 Rust 네이티브 라이브러리에서 실행됩니다. 이 구조에서는 Python 애플리케이션이 내부 동작을 직접 관찰하기 어렵습니다. Production 환경에서 성능 문제와 오류 원인을 진단하려면 표준 observability 도구가 필요했습니다.
 
 ### 문제 상황
 
-1. Rust 내부의 연산 지연, 에러, 재시도 등을 Python 쪽에서 관찰할 수 없음
-2. FastAPI 같은 프레임워크의 기존 관측성 스택과 통합 불가
-3. 프로덕션 환경에서 성능 병목 지점 식별 불가
+1. Python에서는 Rust 내부의 operation latency, error, retry를 확인할 수 없었습니다.
+2. FastAPI 같은 framework의 기존 observability stack과 연결할 수 없었습니다.
+3. Production 환경에서 성능 병목이 발생한 단계를 구분할 수 없었습니다.
 
 ## 결정 (Decision)
 
@@ -51,8 +51,8 @@ Layer 3: Tracing (OpenTelemetry OTLP export)
 
 ### Metrics Toggle
 
-- 성능 오버헤드 최소화를 위해 metrics 수집을 런타임에 on/off 가능
-- `enable_metrics()` / `disable_metrics()` API 제공
+- 성능 overhead를 줄일 수 있도록 runtime에서 metrics 수집을 켜거나 끌 수 있습니다.
+- 이를 위해 `enable_metrics()`와 `disable_metrics()` API를 제공합니다.
 
 ## 대안 검토 (Alternatives Considered)
 
@@ -65,9 +65,9 @@ Layer 3: Tracing (OpenTelemetry OTLP export)
 
 ### 긍정적 결과
 
-- FastAPI/Django 등 기존 Python 관측성 스택과 자연스러운 통합
-- Grafana 대시보드로 Aerospike 클라이언트 성능 모니터링 가능
-- Jaeger/Tempo 등으로 분산 추적 가능
+- FastAPI와 Django 등 기존 Python observability stack에 연결할 수 있습니다.
+- Grafana dashboard에서 Aerospike client 성능을 모니터링할 수 있습니다.
+- Jaeger나 Tempo에서 distributed trace를 확인할 수 있습니다.
 
 ### 부정적 결과
 

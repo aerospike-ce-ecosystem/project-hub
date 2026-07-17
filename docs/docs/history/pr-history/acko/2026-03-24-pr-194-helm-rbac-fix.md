@@ -18,7 +18,7 @@ last_updated: 2026-03-29
 
 ## 변경 요약
 
-Helm chart의 UI 컴포넌트에 대한 RBAC 권한을 개선하고, deployment strategy, liveness/readiness probes, metrics 경로를 수정했다. 보안과 운영 안정성을 동시에 강화하는 변경이다.
+Helm chart의 UI 컴포넌트에 대한 RBAC 권한을 조정했다. Deployment strategy와 liveness/readiness probe 설정을 수정하고 metrics 경로를 `/metrics`로 통일했다.
 
 ## 주요 변경 사항
 
@@ -29,4 +29,4 @@ Helm chart의 UI 컴포넌트에 대한 RBAC 권한을 개선하고, deployment 
 
 ## 영향 범위
 
-Helm chart로 배포된 ACKO UI 컴포넌트에 영향. RBAC 권한이 축소되므로 기존에 과도한 권한에 의존하던 환경에서는 업그레이드 시 확인이 필요하다. Probe 및 metrics 경로 변경으로 모니터링 설정 업데이트가 필요할 수 있다.
+Helm chart로 ACKO UI를 배포한 환경에 적용된다. 기존 구성이 축소 전 RBAC 권한이나 기존 probe·metrics 경로에 의존한다면 업그레이드 전에 권한과 모니터링 설정을 확인해야 한다.

@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-성능 테스트 및 보고 워크플로우에 영향. 프로젝트 문서 사이트에서 벤치마크 결과를 인터랙티브하게 확인할 수 있게 되었다. PR 리뷰 시 성능 회귀를 시각적으로 확인하는 데 활용 가능.
+성능 test와 report workflow가 영향을 받는다. Documentation site에서 benchmark 결과를 interactive report로 비교할 수 있으며, PR review에서 performance regression을 확인하는 데 활용할 수 있다.

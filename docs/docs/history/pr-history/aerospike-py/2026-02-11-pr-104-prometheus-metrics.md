@@ -30,4 +30,4 @@ OpenTelemetry 호환 Prometheus 메트릭 수집 기능을 추가했다. `get_me
 
 ## 영향 범위
 
-Prometheus/Grafana 기반 모니터링 환경에 직접적 영향. FastAPI 등의 웹 프레임워크에서 `/metrics` 엔드포인트를 통해 노출 가능. ACKO의 Prometheus exporter와 함께 사용하면 클라이언트-서버 양쪽의 통합 모니터링이 가능하다.
+Prometheus와 Grafana를 사용하는 monitoring 환경이 직접 영향을 받는다. FastAPI 같은 Web framework의 `/metrics` endpoint로 client metric을 노출하고, ACKO Prometheus exporter의 server metric과 함께 볼 수 있다.

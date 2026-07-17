@@ -24,7 +24,7 @@ aerospike-py는 Rust/PyO3 기반으로 내부적으로 Tokio async runtime을 �
 
 ### 현재 문제점
 
-1. **Worker Thread 기본값의 범용성 부족**: 2개 worker thread는 단일 클라이언트/소규모 동시성에 최적이지만, 다양한 배포 환경에서는 부족할 수 있습니다:
+1. **Worker Thread 기본값의 범용성 부족**: worker thread 2개는 단일 client나 동시성이 낮은 환경에는 적합하지만, 규모가 큰 배포에서는 부족할 수 있습니다.
    - **Gunicorn + FastAPI 멀티워커 환경**: 각 워커가 독립 Tokio runtime을 생성하여 프로세스당 2 thread만 사용
    - **대규모 batch 작업**: `batch_write` 수천 건 동시 실행 시 worker thread 경합 발생 가능
    - **Free-threaded Python (3.14t)**: GIL 해제 환경에서 Python thread와 Tokio thread 간 경합 패턴 변경 예상
@@ -43,7 +43,7 @@ aerospike-py는 Rust/PyO3 기반으로 내부적으로 Tokio async runtime을 �
 
 ### Worker Thread 자동 결정
 
-CPU 코어 수 기반 heuristic으로 기본 worker thread 수를 자동 결정합니다:
+CPU core 수를 기준으로 기본 worker thread 수를 자동으로 결정합니다.
 
 ```rust
 fn default_workers() -> usize {
@@ -65,7 +65,7 @@ fn default_workers() -> usize {
 
 ### RuntimeMetrics 노출
 
-Tokio의 `RuntimeMetrics` API를 통해 runtime 상태를 Prometheus 메트릭으로 노출합니다:
+Tokio의 `RuntimeMetrics` API로 runtime 상태를 Prometheus metric으로 노출합니다.
 
 - `aerospike_py_runtime_workers` (gauge): 현재 worker thread 수
 - `aerospike_py_runtime_active_tasks` (gauge): 활성 task 수

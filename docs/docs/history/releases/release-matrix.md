@@ -19,7 +19,7 @@ last_updated: 2026-05-29
 
 # Release Compatibility Matrix
 
-Aerospike CE Ecosystem 각 프로젝트 간 릴리스 호환성 매트릭스입니다. 동일 행에 있는 버전들은 함께 테스트되었으며 호환성이 검증되었습니다.
+이 문서는 Aerospike CE Ecosystem 프로젝트의 release history와 함께 검증된 version 조합을 정리합니다. Cross-Project Compatibility Matrix의 같은 행에 있는 version은 함께 통합 테스트한 조합입니다.
 
 ---
 
@@ -110,7 +110,7 @@ Detailed release history will be backfilled into this matrix in a follow-up. The
 
 ## Cross-Project Compatibility Matrix
 
-동일 행의 버전 조합은 통합 테스트가 완료된 호환 버전입니다.
+아래 표에서 같은 행에 있는 version 조합은 함께 통합 테스트했습니다.
 
 | aerospike-py | ACKO | Cluster Manager | Plugins | Aerospike CE | Period | Notes |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---|
@@ -142,7 +142,7 @@ Detailed release history will be backfilled into this matrix in a follow-up. The
 
 ## 호환성 보장 범위
 
-- 동일 행의 버전 조합은 통합 테스트 완료
-- 다른 행 간 교차 사용은 보장하지 않음
-- Aerospike CE 서버 버전은 최소 요구 버전을 의미
-- `-` 표시는 해당 시점에 프로젝트가 아직 존재하지 않았음을 의미
+- 같은 행의 version 조합은 통합 테스트를 완료했습니다.
+- 서로 다른 행의 version을 조합했을 때의 호환성은 보장하지 않습니다.
+- Aerospike CE version은 각 조합이 요구하는 최소 server version입니다.
+- `-`는 해당 시점에 프로젝트가 아직 존재하지 않았음을 뜻합니다.

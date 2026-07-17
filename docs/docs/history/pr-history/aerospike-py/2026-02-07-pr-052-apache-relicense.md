@@ -29,4 +29,4 @@ last_updated: 2026-03-29
 
 ## 영향 범위
 
-프로젝트의 법적/라이선스 측면에 영향. Apache-2.0은 특허 부여 조항을 포함하여 상용 환경에서 더 안전하게 사용할 수 있다. FastAPI 예제는 aerospike-py를 웹 서비스에서 사용하는 표준 패턴을 제시한다.
+프로젝트의 license 조건이 영향을 받는다. Apache-2.0은 명시적인 patent grant를 포함하며, 함께 추가한 FastAPI example은 Web service에서 aerospike-py를 사용하는 기본 pattern을 보여 준다.

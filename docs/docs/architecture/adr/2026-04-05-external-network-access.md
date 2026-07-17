@@ -19,15 +19,15 @@ last_updated: 2026-04-05
 
 ## 맥락 (Context)
 
-ACKO로 배포된 Aerospike 클러스터는 기본적으로 Pod IP만 사용하여 Kubernetes 클러스터 내부에서만 접근 가능했다. 외부 클라이언트(다른 VPC, 온프레미스 애플리케이션)가 Aerospike에 접근하려면 수동으로 Service를 생성하고 `aerospike.conf`를 편집해야 했다.
+ACKO로 배포한 Aerospike cluster는 기본적으로 Pod IP만 사용하므로 Kubernetes cluster 안에서만 접근할 수 있었습니다. 다른 VPC나 on-premise 애플리케이션에서 접속하려면 운영자가 Service를 직접 만들고 `aerospike.conf`를 수정해야 했습니다.
 
 ### 핵심 제약: Aerospike Smart Client 프로토콜
 
-Aerospike 클라이언트는 seed 노드 하나에 접속한 뒤, 서버로부터 **전체 클러스터 토폴로지**(모든 노드의 `access-address` + `alternate-access-address`)를 받아 각 노드에 **직접 연결**한다. 따라서:
+Aerospike client는 seed node 하나에 접속한 뒤 server에서 **전체 cluster topology**, 즉 모든 node의 `access-address`와 `alternate-access-address`를 받습니다. 이후 각 node에 **직접 연결**하므로 다음 조건을 충족해야 합니다.
 
-- 단일 LoadBalancer 뒤에 클러스터를 숨기는 것으로는 불충분
-- **모든 노드**가 외부에서 도달 가능한 주소를 개별적으로 광고해야 함
-- 노드별 다른 외부 IP/포트가 `aerospike.conf`에 주입되어야 함
+- LoadBalancer 하나만 cluster 앞에 두는 방식으로는 충분하지 않습니다.
+- **모든 node**가 외부에서 접근할 수 있는 주소를 각각 advertise해야 합니다.
+- Node마다 다른 외부 IP와 port를 `aerospike.conf`에 넣어야 합니다.
 
 ### 기존 상태의 한계
 
@@ -46,8 +46,7 @@ Aerospike 클라이언트는 seed 노드 하나에 접속한 뒤, 서버로부�
 
 #### 1. Per-pod Service 타입 확장
 
-`AerospikeServiceSpec`에 `serviceType` 필드 추가 (ClusterIP/NodePort/LoadBalancer).
-LoadBalancer/NodePort 시 service, fabric, heartbeat 포트 모두 노출.
+`AerospikeServiceSpec`에 `serviceType` field를 추가해 ClusterIP, NodePort, LoadBalancer를 선택할 수 있게 합니다. LoadBalancer나 NodePort를 사용하면 service, fabric, heartbeat port를 모두 노출합니다.
 
 ```yaml
 spec:

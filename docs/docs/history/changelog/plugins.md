@@ -16,7 +16,7 @@ last_updated: 2026-05-29
 
 # Plugins Changelog
 
-aerospike-ce-ecosystem-plugins 릴리스별 변경 사항을 기록합니다.
+CE Ecosystem Plugin release별 Skill 구성과 주요 변경 사항을 정리합니다.
 
 ---
 
@@ -29,7 +29,7 @@ aerospike-ce-ecosystem-plugins 릴리스별 변경 사항을 기록합니다.
 - **acko-deploy**: ACKO 기반 Aerospike 클러스터 배포 가이드
 - **acko-operations**: ACKO 클러스터 운영/관리 가이드
 - **acko-config-reference**: Aerospike CE 설정 파라미터 레퍼런스
-- **acko-debugging**: ACKO 클러스터 트러블슈팅 6단계 진단 절차 (기존 `acko-cluster-debugger` Agent를 Skill로 강등)
+- **acko-debugging**: ACKO 클러스터를 위한 6단계 troubleshooting 절차(기존 `acko-cluster-debugger` Agent 기능 통합)
 - **acko-e2e-test**: ACKO end-to-end 테스트 플레이북 및 릴리스 검증 체크리스트
 - **ackoctl**: cluster-manager CLI 사용 가이드 (connections, records, queries, K8s CR, admin, UDF)
 - **aerospike-py-api**: aerospike-py API 사용 가이드

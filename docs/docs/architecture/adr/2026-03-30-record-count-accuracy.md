@@ -20,7 +20,7 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager의 레코드 브라우저에서 `get_set_object_count()` 함수가 Aerospike info 명령 실패 시 `0`을 반환하고 있다. 이 동작은 다음과 같은 문제를 야기한다:
+Cluster Manager record browser의 `get_set_object_count()`는 Aerospike info command가 실패하면 `0`을 반환합니다. 그러나 `0`은 record가 없다는 뜻이므로 조회 실패를 정확히 표현하지 못합니다.
 
 ### 현재 동작 (버그)
 
@@ -31,10 +31,11 @@ except Exception:
     return 0  # ← 실패 시 0 반환 (실제로는 "알 수 없음")
 ```
 
-프론트엔드는 `total: 0`을 수신하면:
-- `hasMore = false`로 설정 → "더 이상 레코드 없음" 표시
-- Pagination 컨트롤 비활성화
-- 사용자는 실제 데이터가 존재함에도 "레코드 없음"으로 오인
+Frontend는 `total: 0`을 받으면 다음과 같이 처리합니다.
+
+- `hasMore = false`로 설정하고 `더 이상 레코드 없음`을 표시합니다.
+- Pagination control을 비활성화합니다.
+- 실제 data가 있어도 사용자는 record가 없다고 판단할 수 있습니다.
 
 ### 발생 조건
 
@@ -90,7 +91,7 @@ async def get_set_object_count(...) -> int | None:
 }
 ```
 
-`total`이 `null`인 경우 클라이언트는 정확한 레코드 수를 알 수 없으며, 현재 로드된 데이터 기준으로 UI를 표시해야 한다.
+`total`이 `null`이면 client는 정확한 record 수를 알 수 없습니다. UI는 현재 불러온 data를 기준으로 상태를 표시해야 합니다.
 
 ## 대안 (Alternatives Considered)
 

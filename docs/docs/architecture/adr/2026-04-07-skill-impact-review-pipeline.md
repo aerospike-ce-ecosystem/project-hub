@@ -21,13 +21,13 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-Aerospike CE Ecosystem은 4개의 독립 레포지토리로 구성되어 있으며, core repo(aerospike-py, ACKO, cluster-manager)의 API 변경이 plugins repo의 Claude Code skill에 영향을 줄 수 있습니다. 프로젝트 목표 4-1은 "각 프로젝트의 API/기능 변경 사항을 Skills에 빠르게 반영할 것"을 명시하고 있습니다.
+Aerospike CE Ecosystem은 네 개의 독립 repository로 구성됩니다. Aerospike-py, ACKO, cluster-manager의 API가 바뀌면 plugins repository의 Claude Code skill도 함께 수정해야 할 수 있습니다. 프로젝트 목표 4-1은 각 프로젝트의 API와 기능 변경을 skill에 빠르게 반영하도록 요구합니다.
 
 ### 문제 상황
 
-1. **수동 동기화의 한계**: core repo에서 API가 변경될 때, 해당 변경이 어떤 plugin skill에 영향을 주는지 개발자가 수동으로 판단해야 했음. Q1에 수동으로 놓친 사례가 발생
-2. **Cross-repo 가시성 부족**: repo 간 영향 관계가 명시적으로 추적되지 않아, 변경의 파급 효과를 사후에 발견
-3. **에코시스템 확장에 따른 복잡도**: 4개 repo 간의 의존 관계가 점점 복잡해지면서 수동 관리의 한계에 도달
+1. **수동 동기화의 한계**: Core repository의 API가 바뀔 때 개발자가 영향을 받는 plugin skill을 직접 판단해야 했습니다. Q1에는 이 과정에서 누락된 사례가 있었습니다.
+2. **Cross-repo 가시성 부족**: Repository 사이의 영향 관계를 추적하지 않아 변경의 파급 효과를 뒤늦게 발견했습니다.
+3. **Ecosystem 확장에 따른 복잡도**: 네 repository 사이의 dependency가 늘어나면서 수동으로 관리하기 어려워졌습니다.
 
 ### 현재 적용 현황
 
@@ -52,7 +52,7 @@ Core repo PR merge
 
 > **파일 경로 기반 자동 감지(Option A)를 공식 패턴으로 채택하고, project-hub를 중앙 오케스트레이터로 사용하는 Skill Impact Review 파이프라인을 에코시스템 표준으로 확립한다.**
 
-각 core repo의 `skill-impact-notify.yml` 워크플로우에 file-to-skill 매핑 테이블을 정의하고, 해당 파일이 변경될 때 자동으로 project-hub에 영향 분석 이슈를 생성합니다. project-hub의 워크플로우가 Claude Code로 diff를 분석하여 skill 영향을 평가하고, 필요 시 plugins repo에 구현 이슈를 디스패치합니다.
+각 core repository의 `skill-impact-notify.yml` workflow에 file-to-skill mapping table을 둡니다. Mapping에 포함된 file이 바뀌면 project-hub에 영향 분석 issue를 자동으로 생성합니다. Project-hub workflow는 Claude Code로 diff를 분석해 skill 영향 여부를 판단하고, 필요한 경우 plugins repository에 구현 issue를 dispatch합니다.
 
 ### 추가 결정 사항
 

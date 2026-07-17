@@ -20,13 +20,13 @@ last_updated: 2026-03-30
 
 ## 맥락 (Context)
 
-Cluster Manager의 레코드 브라우저는 scan/query 결과를 테이블로 표시하며, OOM 방지를 위해 `MAX_QUERY_RECORDS = 10,000` 하드 리밋이 적용되어 있다. 그러나 프론트엔드에서 전체 결과를 DOM에 한 번에 렌더링하고 있어 다음과 같은 성능 문제가 발생한다:
+Cluster Manager record browser는 scan과 query 결과를 table로 표시합니다. OOM을 막기 위해 `MAX_QUERY_RECORDS = 10,000` hard limit을 두었지만 frontend가 전체 결과를 DOM에 한 번에 render해 다음 문제가 발생합니다.
 
-1. **DOM 노드 폭증**: 10,000 레코드 × 다수 bin 데이터(JSON, bytes, nested map 등)로 인해 DOM 노드가 100,000개 이상으로 증가하여 메인 스레드 블로킹 발생
-2. **초기 렌더링 지연**: First Contentful Paint 2-5초 지연으로 사용자 체감 성능 저하
-3. **스크롤 성능 저하**: 대량 행 스크롤 시 리페인트 비용으로 10-20fps까지 하락
-4. **검색/필터 반응성 저하**: 10K 행 필터링 시 1-3초간 UI 프리징
-5. **메모리 사용량 급증**: 브라우저 탭 메모리 ~500MB+ 사용으로 OOM 크래시 위험 재현
+1. **DOM node 증가**: 10,000개 record에 JSON, bytes, nested map 같은 여러 bin을 표시하면 DOM node가 100,000개를 넘어 main thread를 block합니다.
+2. **초기 rendering 지연**: First Contentful Paint가 2~5초 늦어집니다.
+3. **Scroll 성능 저하**: 많은 row를 scroll할 때 repaint 비용 때문에 10~20fps까지 떨어집니다.
+4. **검색과 filter 반응 저하**: 10,000개 row를 filtering하면 UI가 1~3초 동안 멈춥니다.
+5. **메모리 사용량 증가**: Browser tab이 약 500MB 이상을 사용해 OOM crash가 재현됩니다.
 
 백엔드에서 하드 리밋을 적용했음에도 프론트엔드의 비효율적 렌더링이 성능 병목으로 남아 있어, 프로젝트 목표 2-8("Record 브라우저 대용량 데이터 성능")을 충족하기 위한 프론트엔드 최적화가 필요하다.
 
@@ -34,7 +34,7 @@ Cluster Manager의 레코드 브라우저는 scan/query 결과를 테이블로 �
 
 > **TanStack Virtual(`@tanstack/react-virtual` v3)을 사용하여 레코드 브라우저 테이블에 가상 스크롤을 도입한다.**
 
-가시 영역과 overscan 범위의 행만 DOM에 렌더링하는 가상화(virtualization) 방식을 적용하여, 대량 레코드 조회 시에도 일정한 DOM 노드 수를 유지한다.
+화면에 보이는 범위와 overscan 범위의 row만 DOM에 render합니다. 따라서 record 수가 늘어도 DOM node 수를 일정하게 유지할 수 있습니다.
 
 ### 선택 근거
 

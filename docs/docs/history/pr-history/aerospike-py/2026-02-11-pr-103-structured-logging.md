@@ -29,4 +29,4 @@ Rust 내부의 구조화된 로그를 Python의 logging 모듈로 브릿지하�
 
 ## 영향 범위
 
-aerospike-py를 사용하는 모든 Python 애플리케이션의 로깅에 영향. 기존 Python logging 설정을 그대로 활용할 수 있어 추가 설정 부담 없음. PR #105 (트레이싱), PR #104 (메트릭)과 함께 observability 3대 요소를 구성한다.
+aerospike-py를 사용하는 Python application의 logging이 영향을 받는다. 기존 Python `logging` configuration을 그대로 사용할 수 있으며, PR #105의 tracing과 PR #104의 metric을 함께 적용하면 logs, traces, metrics를 모두 수집할 수 있다.

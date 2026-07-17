@@ -21,20 +21,20 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-Q2 2026 로드맵에 "NumPy batch 연산 안정화"가 명시되어 있으며, 프로젝트 목표 1-3에서도 `batch_read_numpy`, `batch_write_numpy` 스펙의 개선과 유지보수를 명확히 요구하고 있습니다.
+Q2 2026 roadmap에는 `NumPy batch 연산 안정화`가 포함되어 있습니다. 프로젝트 목표 1-3도 `batch_read_numpy`와 `batch_write_numpy` spec을 정리하고 유지하도록 요구합니다.
 
-현재 aerospike-py는 NumPy 통합을 상당 수준 구현했으나, 핵심 API가 확정되지 않은 상태입니다:
+aerospike-py에는 NumPy integration이 대부분 구현되어 있지만 핵심 API와 memory model은 아직 확정되지 않았습니다.
 
 ### 현재 구현 현황
-- **Rust 측**: `numpy_support.rs` (1,646줄) — PyO3/numpy 크레이트 기반 변환 로직
-- **Python 측**: `numpy_batch.py` — `NumpyBatchRecords` 클래스, structured array 변환
-- **API**: `batch_read_numpy()`, `batch_write_numpy()` — 표준 batch API의 NumPy 변환 버전
+- **Rust 측**: `numpy_support.rs` 1,646행에 PyO3/numpy crate 기반 conversion logic이 있습니다.
+- **Python 측**: `numpy_batch.py`에 `NumpyBatchRecords` class와 structured array conversion이 있습니다.
+- **API**: `batch_read_numpy()`와 `batch_write_numpy()`는 표준 batch API의 NumPy version입니다.
 
 ### 확정이 필요한 핵심 기술 과제
-1. **메모리 모델**: Rust → Python 데이터 전달 시 zero-copy vs copy 선택
-2. **dtype 추론**: Aerospike bin 타입 → NumPy dtype 자동 매핑 (int, float, str, bytes, list, map)
-3. **부분 실패 처리**: batch 연산에서 일부 레코드 실패 시 structured array 표현 방법
-4. **Mixed-type bins**: 같은 bin에 int/str 혼재 시 dtype 결정 전략
+1. **메모리 모델**: Rust에서 Python으로 data를 전달할 때 zero-copy와 copy 중 하나를 선택해야 합니다.
+2. **dtype 추론**: Aerospike bin type인 int, float, str, bytes, list, map을 NumPy dtype에 매핑하는 규칙이 필요합니다.
+3. **부분 실패 처리**: Batch에서 일부 record만 실패했을 때 structured array로 표현하는 방법을 정해야 합니다.
+4. **Mixed-type bins**: 같은 bin에 int와 str이 함께 있으면 dtype을 결정할 규칙이 필요합니다.
 
 이 결정은 aerospike-py의 data science 워크플로우 지원에 직접적인 영향을 미치며, API가 확정되면 이후 breaking change 없이 장기 유지보수가 가능해야 합니다.
 

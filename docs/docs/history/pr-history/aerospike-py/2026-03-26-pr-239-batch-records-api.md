@@ -29,4 +29,4 @@ Batch result code propagation이 올바르게 동작하지 않던 문제와 NumP
 
 ## 영향 범위
 
-aerospike-py의 모든 batch 관련 API 사용자에게 영향. BatchRecords 타입을 사용하는 코드는 새로운 통합 API에 맞게 업데이트가 필요할 수 있다. NumPy 기반 batch 작업의 key digest 정확성이 향상되어 데이터 무결성이 개선된다.
+모든 batch API 사용자가 영향을 받는다. `BatchRecords`를 다루는 code는 통합된 반환 type에 맞춰 update해야 할 수 있다. NumPy batch path의 key digest도 다른 API와 같은 방식으로 계산된다.

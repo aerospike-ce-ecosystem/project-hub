@@ -21,18 +21,18 @@ last_updated: 2026-07-17
 
 ## 맥락 (Context)
 
-에코시스템에는 다음과 같은 암묵적 의존성 체인이 존재합니다:
+에코시스템에는 다음과 같은 의존성 체인이 있습니다.
 
 ```
 aerospike-py (base) → ACKO (operator) → cluster-manager (UI) → plugins (tools)
 ```
 
-이 순서는 현재 여러 곳에 분산되어 기술되어 있습니다:
+현재 이 순서는 여러 문서에 나뉘어 설명되어 있습니다.
 - `hub-issue-planner.yml`의 cross-repo planner 프롬프트에 하드코딩
 - `hub-issue-dispatcher.yml`의 epic planner 프롬프트에 하드코딩
 - `CLAUDE.md`의 "Dependency & Merge Order" 섹션
 
-그러나 이 원칙이 **ADR로 공식 문서화되어 있지 않아** 다음 문제가 발생합니다:
+하지만 이 원칙을 하나의 ADR로 정리하지 않아 다음 문제가 발생합니다.
 
 1. **Breaking change 전파 프로세스 미정의**: aerospike-py breaking change 발생 시 cluster-manager/plugins까지의 cascade 업데이트 프로세스가 명확하지 않음
 2. **버전 pinning 정책 미정의**: cluster-manager가 aerospike-py 특정 버전을 pin하는지, latest를 사용하는지 불명확
@@ -43,7 +43,7 @@ project-design.md §4-3 "Cross-repo Review Process"와 §4-4 "Release Compatibil
 
 ### 의존성 유형 구분
 
-의존성 체인 내에서 두 가지 유형의 의존성을 구분해야 합니다:
+의존성 체인에서는 다음 두 유형을 구분해야 합니다.
 
 - **Runtime 의존**: cluster-manager → aerospike-py (Python 패키지로서 직접 import)
 - **API-level 의존**: cluster-manager → ACKO (K8s CRD/API를 통한 간접 의존)
@@ -66,7 +66,7 @@ aerospike-py (base)
 
 ### Merge 순서 원칙
 
-Cross-repo breaking change가 포함된 변경은 다음 순서로 merge합니다:
+Cross-repo breaking change가 있으면 다음 순서로 merge합니다.
 
 1. **aerospike-py** — 기반 라이브러리 변경 우선
 2. **ACKO** — operator CRD/API 변경
