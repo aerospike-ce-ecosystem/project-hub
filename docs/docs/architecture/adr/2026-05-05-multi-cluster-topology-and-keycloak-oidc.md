@@ -5,7 +5,7 @@ sidebar_position: 40
 scope: ecosystem
 repos: [acko, cluster-manager, plugins]
 tags: [adr, acko, cluster-manager, kubernetes, helm, oidc, keycloak, multi-cluster, security]
-last_updated: 2026-05-05
+last_updated: 2026-07-17
 ---
 
 # ADR-0040: Multi-Cluster Topology and Keycloak OIDC for ACKO + Cluster-Manager
@@ -136,6 +136,17 @@ ACKO chart의 `multiCluster.enabled`, `multiCluster.clusters[]` values 키로 �
 - **멀티 kind e2e (stage-2)** — 현재는 single kind에 namespace로 common/operator를 흉내내지만, 진정한 multi-cluster e2e는 별도 stage.
 - **PostgreSQL connection-profile cross-cluster aggregation** — 현재는 cluster마다 DB가 silo. 통합 view 필요시 별도 결정.
 - **Audience 분리 (`acko-api-dev`, `acko-api-prod`)** — replay 차단을 강화하려면 cluster별 audience.
+
+## 보완 (Amendments)
+
+### 2026-07-17 — SSE 스트림 인증: JWT query parameter → 단일 사용 stream ticket
+
+본 ADR 구현 당시 native `EventSource`가 `Authorization` 헤더를 설정할 수 없다는 제약 때문에, SSE 스트림 경로에 한해 JWT를 URL query(`?access_token=<jwt>`)로 전달하는 임시 방편이 남아 있었다. 이는 장수 토큰이 ingress access log·브라우저 히스토리·Referer 헤더로 유출되는 P0 보안 이슈로 추적되었고(cluster-manager [#345](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/issues/345)), cluster-manager [#454](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/454)에서 다음과 같이 대체되었다.
+
+- **발급**: `POST /api/events/ticket` — `Authorization` 헤더 인증 필수(query 자격증명 불허). 검증된 claims에 바인딩된 256-bit opaque ticket을 발급한다. TTL 30초(`SSE_TICKET_TTL_SECONDS`), 동시 pending 상한 1024(`SSE_TICKET_MAX_PENDING`, 초과 시 429).
+- **소비**: `GET /events/stream?ticket=...` — 최초 사용 시 즉시 소모(burn)되어 재사용은 401. redemption 시점에 `OIDC_REQUIRED_ROLES`를 ticket의 claims로 재검증한다.
+- **제거**: `?access_token=` 경로는 완전히 제거되어 401(마이그레이션 힌트 포함)을 반환하며 JWKS 검증도 수행하지 않는다. 헤더 기반 스트리밍(curl/ackoctl)은 그대로 동작한다. 요청 로그는 `?ticket=` 값도 마스킹한다.
+- **제약**: ticket store는 프로세스 로컬이다. API를 multi-replica로 배포하는 경우 `/api/*`에 대한 session affinity 또는 공유 스토어가 필요하다. 본 ADR의 operator-cluster당 API 1 replica 토폴로지에서는 영향이 없다.
 
 ## 관련 ADR
 
