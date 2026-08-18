@@ -16,7 +16,8 @@ last_updated: 2026-08-18
 
 - 제안일: 2026-08-18
 - 승인일: 2026-08-18
-- 관련 이슈: [aerospike-ce-ecosystem/project-hub#158](https://github.com/aerospike-ce-ecosystem/project-hub/issues/158)
+- 보완일: 2026-08-18 — 필수 후속 조치(PAT 로테이션)와 잔여 위험(`daily-release.yml`) 추가
+- 관련 이슈: [aerospike-ce-ecosystem/project-hub#158](https://github.com/aerospike-ce-ecosystem/project-hub/issues/158), [#169](https://github.com/aerospike-ce-ecosystem/project-hub/issues/169)
 - 대체 대상: ADR-0008, ADR-0049, ADR-0043(일부), ADR-0039(일부)
 
 ## 맥락 (Context)
@@ -37,8 +38,19 @@ last_updated: 2026-08-18
 ```
 
 - **작성자 검사 없음**: 삭제 직전 기준으로 `grep -c "author_association"`가 project-hub의 두 workflow 모두에서 `0`이었고, 네 core repo의 `agent-implement.yml`에서도 `0`이었습니다. 즉 public issue에 코멘트를 남길 수 있는 **누구나** marker가 포함된 "plan"을 심을 수 있고, 파이프라인은 그 코멘트를 마지막(`last`) 것부터 우선 채택했습니다.
-- **실행 권한**: 실행 단계는 조직 전역 PAT인 `secrets.GH_AW_GITHUB_TOKEN`을 사용합니다. Workflow의 `permissions:` 블록은 자동 발급되는 `GITHUB_TOKEN`에만 적용되므로, PAT를 쓰는 순간 선언된 `contents: write` / `pull-requests: write`는 실제 권한 범위를 나타내지 않습니다. Core repo의 구현 job은 여기에 더해 `--dangerously-skip-permissions`로 실행되어 도구 수준의 게이트도 없었습니다.
+- **실행 권한**: 실행 단계는 조직 전역 PAT인 `secrets.GH_AW_GITHUB_TOKEN`을 사용합니다. Core repo의 구현 job은 여기에 더해 `--dangerously-skip-permissions`로 실행되어 도구 수준의 게이트도 없었습니다.
 - **주입 표면**: `${{ github.event.issue.title }}`이 프롬프트 본문에 그대로 보간되는 지점이 project-hub에만 6곳(`hub-issue-planner.yml:5,53,300,417,549`, `hub-issue-dispatcher.yml:4`) 있었습니다. 공격자가 제어하는 문자열이 지시문 안에 놓입니다.
+
+:::danger PAT를 쓰는 workflow에서 `permissions:` 블록은 장식입니다
+
+이 ADR에서 일반화할 가치가 가장 큰 교훈입니다.
+
+Workflow의 `permissions:` 스탠자는 **GitHub이 실행마다 자동 발급하는 `GITHUB_TOKEN`에만** 적용됩니다. Step이 `secrets.<PAT>`를 넘기는 순간, 그 step의 권한은 PAT 소유자의 권한이며 `permissions:` 선언과 아무 관계가 없습니다.
+
+따라서 삭제된 workflow들이 선언한 `contents: write` / `pull-requests: write`는 실제 권한 범위를 **축소해서** 보여 주고 있었습니다. 리뷰어가 그 블록을 보고 "이 job은 이 repo의 contents까지만 건드릴 수 있다"고 읽었다면 틀린 것입니다.
+
+**리뷰 규칙으로 삼을 것**: workflow에 `secrets.` 로 시작하는 토큰이 step에 전달되면, 그 workflow의 `permissions:` 블록은 권한 상한의 근거가 되지 못합니다. 상한은 그 credential 자체의 scope이며, 별도로 확인해야 합니다.
+:::
 
 ### 위협 모델을 정확히
 
@@ -89,6 +101,57 @@ last_updated: 2026-08-18
 4. 공격자 제어 문자열(`issue.title`, `issue.body`, 코멘트 본문)은 `env:`로 전달해 데이터로 읽고, 프롬프트 템플릿에 직접 보간하지 않습니다. 기존 사례: `aerospike-py/.github/workflows/ace-plugins-pr-notify.yml:47-50`.
 5. 대상 브랜치에 required status check를 걸어 자동 생성 PR도 게이트를 통과하게 합니다.
 
+## 필수 후속 조치 (Required follow-up)
+
+이 ADR의 삭제만으로 끝나지 않는 항목입니다. 추적 이슈: [project-hub#169](https://github.com/aerospike-ce-ecosystem/project-hub/issues/169). **담당은 조직 소유자이며, 이 ADR을 작성한 쪽에서 실행하지 않았습니다.**
+
+### 1. `GH_AW_GITHUB_TOKEN` 로테이션
+
+**사실관계를 정확히**: 조직 전역 PAT `GH_AW_GITHUB_TOKEN`은, 외부인이 작성할 수 있는 plan 텍스트를 실행하던 job의 환경 변수로 들어가 있었습니다.
+
+- **악용된 증거는 없습니다.** 이 문서는 침해가 있었다고 주장하지 않으며, 그렇게 읽혀서도 안 됩니다.
+- 다만 **"악용 증거 없음"은 "노출되지 않았음"과 다릅니다.** 해당 credential은 신뢰 경계 밖의 입력을 처리하는 실행 경로에 놓여 있었습니다.
+- 로테이션 비용은 낮고, 위 두 문장 사이의 간극을 없애는 유일한 방법입니다. **로테이션을 권고합니다.**
+
+**로테이션은 소비처와 함께 조율해야 합니다.** 새 값을 반영하지 않고 교체하면 5개 repo의 릴리스 파이프라인이 즉시 깨집니다. 삭제 시점(2026-08-18) `main` 기준으로 이 secret을 참조하는 곳은 다음과 같습니다.
+
+| Repo | 파일:라인 | 깨지면 잃는 것 |
+|------|----------|--------------|
+| aerospike-py | `ace-plugins-pr-notify.yml:42` | plugins repo 후속 issue 생성 |
+| aerospike-py | `daily-release.yml:87` | 릴리스 태그·노트 |
+| aerospike-py | `skill-impact-notify.yml:25` | hub 알림 issue |
+| ACKO | `daily-release.yml:112` | 릴리스 태그·노트 |
+| ACKO | `skill-impact-notify.yml:24` | hub 알림 issue |
+| cluster-manager | `daily-release.yml:79` | 릴리스 태그·노트 |
+| plugins | `daily-release.yml:125` | 릴리스 태그·노트 |
+| ackoctl | `daily-release.yml:16`, `:38` | 릴리스 태그 |
+| ackoctl | `release.yml:31`, `:33` | goreleaser 바이너리 + Homebrew tap push |
+
+`cluster-manager`의 `agent-implement.yml:28` / `issue-planner.yml:26` / `pr-reviewer.yml:32`,`:47`도 아직 이 secret을 참조하지만, 해당 파일들은 이 ADR에 따라 삭제 예정이므로 위 표에서 제외했습니다.
+
+로테이션 시 조직 전역 PAT를 그대로 재발급하기보다, **repo 범위로 제한된 GitHub App installation token으로 교체**하는 편이 낫습니다. 그래야 각 workflow의 `permissions:` 선언이 실제로 구속력을 갖습니다(위 danger 박스 참조).
+
+### 2. `--dangerously-skip-permissions`가 남아 있는 곳
+
+이 정리는 `--dangerously-skip-permissions`를 조직에서 없애지 **못합니다.** 삭제 시점 `main` 기준으로 이 플래그는 `daily-release.yml`에도 있으며, 그 workflow는 유지 대상입니다.
+
+| Repo | 파일:라인 |
+|------|----------|
+| aerospike-py | `daily-release.yml:146` |
+| ACKO | `daily-release.yml:177` |
+| cluster-manager | `daily-release.yml:144` |
+| plugins | `daily-release.yml:187` |
+
+(`ackoctl`의 `daily-release.yml`에는 이 플래그가 없습니다. 순수 bash + 태그 push 방식이라 agent를 실행하지 않습니다.)
+
+**노출 정도를 과장하지 말 것.** 이 넷은 삭제된 workflow와 위험 수준이 전혀 다릅니다.
+
+- 트리거가 **스케줄**입니다. Issue label이나 코멘트로 발화하지 않습니다.
+- 입력이 **커밋 히스토리**입니다. 외부인이 임의로 써 넣을 수 있는 코멘트 본문이 아니라, 이미 머지된 커밋 메시지입니다.
+- 따라서 이 ADR이 다룬 "외부인이 심은 지시문이 실행된다"는 경로는 여기에 **없습니다.**
+
+**그래도 기록해 둡니다.** 이 ADR만 읽은 사람이 "조직 전역 PAT + 도구 게이트 없는 agent 실행"이라는 문제 유형이 완전히 사라졌다고 결론 내리면 사실과 다르기 때문입니다. 커밋 메시지도 PR을 올릴 수 있는 사람이 쓰는 텍스트이므로, 신뢰 경계가 "외부 누구나"에서 "write 권한 보유자"로 좁혀졌을 뿐입니다. 유지할지, 도구 allowlist로 바꿀지는 [#169](https://github.com/aerospike-ce-ecosystem/project-hub/issues/169)에서 판단합니다.
+
 ## 대안 (Alternatives Considered)
 
 ### Option A: 자동화 유지 + 작성자 검사 추가
@@ -121,6 +184,7 @@ last_updated: 2026-08-18
 - Cross-repo issue 전파가 수동 작업이 됩니다. ADR-0039가 방지하려던 "skill 동기화 누락"이 다시 사람의 주의력에 의존하게 됩니다. `skill-impact-notify.yml`은 남으므로 **감지와 알림은 유지되고, 이후 dispatch만 수동**입니다.
 - ADR proposal의 자동 리뷰·문서 생성이 사라져 ADR 작성이 수동 작업이 됩니다. `hub-adr-status-override.yml`은 남아 있어 status 갱신은 계속 자동입니다.
 - 이 결정에 의존하던 문서 다수를 함께 갱신해야 합니다(본 PR에서 수행).
+- **조직 전역 PAT는 여전히 살아 있고 여전히 광범위합니다.** 이 ADR은 그 PAT를 사용하던 실행 경로 중 위험한 것을 제거했을 뿐, credential 자체를 좁히지 않았습니다. "필수 후속 조치" 절 참조.
 
 ## 관련 ADR
 
