@@ -5,10 +5,12 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
+    "prebuild": "node ../scripts/check-release-matrix.mjs",
     "build": "docusaurus build",
     "serve": "docusaurus serve",
     "clear": "docusaurus clear",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "check-release-matrix": "node ../scripts/check-release-matrix.mjs"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
