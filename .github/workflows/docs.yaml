@@ -3,7 +3,7 @@ name: Check Docs Build
 
 on:
   pull_request:
-    paths: ['docs/**']
+    paths: ['docs/**', 'scripts/**']
 
 jobs:
   build:
