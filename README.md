@@ -23,13 +23,13 @@ docs/docs/
 ├── architecture/    # 시스템 아키텍처 + ADR
 ├── roadmap/         # 분기별 로드맵, 마일스톤
 ├── history/         # Changelog, 의사결정 로그, 릴리스 매트릭스
-├── coordination/    # 공유 라벨, Agentic Workflow, 리뷰 프로세스
+├── coordination/    # 공유 라벨, GitHub 워크플로우 현황, 리뷰 프로세스
 └── goals/           # 프로젝트 목표
 ```
 
 ## Latest ADR
 
-- [ADR-0052: aerospike-py batch_read 병목 프로파일링 — 3-Methodology Cross-Validation + LazyBatchRecords/to_numpy GIL-detach 검증](docs/docs/architecture/adr/2026-05-23-aerospike-py-batch-read-profiling.md)
+- [ADR-0053: 라벨 트리거 에이전트 자동화 제거](docs/docs/architecture/adr/2026-08-18-remove-label-triggered-agent-automation.md)
 
 ## Development
 

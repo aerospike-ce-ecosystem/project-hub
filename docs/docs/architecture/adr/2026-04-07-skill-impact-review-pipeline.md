@@ -4,20 +4,39 @@ description: Core repo(aerospike-py, ACKO, cluster-manager)의 API/파일 변경
 sidebar_position: 39
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
-tags: [adr, automation, cross-repo, skill-sync, pipeline, claude-code-action]
-last_updated: 2026-07-17
+tags: [adr, automation, cross-repo, skill-sync, pipeline, claude-code-action, superseded]
+last_updated: 2026-08-18
 ---
 
 # ADR-0039: Skill Impact Review 파이프라인 — Core Repo → Plugin Skill 변경 감지 및 자동 디스패치
 
 ## 상태
 
-**Accepted**
+**Accepted** (부분 대체) — 파이프라인 후반부가 [ADR-0053: 라벨 트리거 에이전트 자동화 제거](./2026-08-18-remove-label-triggered-agent-automation.md)로 대체됨 (2026-08-18)
 
 - 제안일: 2026-04-07
 - 승인일: 2026-07-17
+- 부분 대체일: 2026-08-18
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#47
 - 검토 결과: POSITIVE REVIEW
+
+:::warning 감지·알림은 유지, 자동 디스패치는 제거되었습니다
+
+2026-08-18에 `hub-issue-planner.yml`과 `hub-issue-dispatcher.yml`이 project-hub에서 삭제되면서, 아래 "파이프라인 구조"의 후반 두 단계가 사라졌습니다. 아래 본문은 당시의 결정 근거를 남기기 위해 원문 그대로 보존합니다.
+
+| 단계 | 현재 상태 |
+|------|----------|
+| Core repo main 머지 → `skill-impact-notify.yml`이 파일 변경 감지 | **유지** (aerospike-py, ACKO) |
+| project-hub에 issue 자동 생성 | **유지** |
+| `hub-issue-planner.yml`이 diff를 AI로 분석해 skill 영향 판단 | **삭제됨** — 사람이 판단 |
+| `hub-issue-dispatcher.yml`이 plugins repo에 구현 issue 디스패치 | **삭제됨** — 사람이 생성 |
+
+즉 **"놓치지 않고 감지해서 알린다"는 이 ADR의 핵심 가치는 유지**되고, 그 이후의 분석·전파만 수동이 되었습니다. 이 ADR의 "부정적 결과"에 적힌 Claude Code Action 비용과 오탐 필터링 항목은 더 이상 해당하지 않습니다.
+
+**제거 사유**: 삭제된 두 hub workflow가 plan을 issue 코멘트에서 작성자 검사 없이 읽어 조직 전역 PAT로 실행했습니다. 자세한 위협 모델과 재도입 조건은 ADR-0053에 있습니다.
+
+관련 이슈: [project-hub#158](https://github.com/aerospike-ce-ecosystem/project-hub/issues/158)
+:::
 
 ## 맥락 (Context)
 
@@ -104,6 +123,7 @@ core repo에서 plugins repo로 직접 `workflow_dispatch`. 중간 허브 없이
 
 ## 관련 ADR
 
-- [ADR-0008: IssueOps 기반 CI 워크플로우](./2026-03-10-issueops-ci-workflow.md) — 이 파이프라인의 기반 패턴. Issue → Plan → Implement 흐름을 cross-repo 감지까지 확장
+- [ADR-0008: IssueOps 기반 CI 워크플로우](./2026-03-10-issueops-ci-workflow.md) — 이 파이프라인의 기반 패턴. Issue → Plan → Implement 흐름을 cross-repo 감지까지 확장 (ADR-0008은 2026-08-18 Superseded)
+- [ADR-0053: 라벨 트리거 에이전트 자동화 제거](./2026-08-18-remove-label-triggered-agent-automation.md) — 이 파이프라인의 hub planner/dispatcher 단계를 제거한 결정. 감지·알림 단계는 유지
 - [ADR-0017: Cluster Manager Backend↔Frontend 타입 동기화 자동화](./2026-03-30-codegen-type-sync.md) — repo 내부 타입 동기화의 선례. 이 ADR은 repo 간 API↔Skill 동기화를 다루어 보완적
 - [ADR-0038: ACKO 외부 네트워크 접근](./2026-04-05-external-network-access.md) — CRD 변경이 plugins skill에 영향을 주는 사례. 이 파이프라인이 감지해야 할 대표적 시나리오
