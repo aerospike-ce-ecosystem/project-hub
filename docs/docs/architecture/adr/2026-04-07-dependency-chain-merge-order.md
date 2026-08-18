@@ -5,19 +5,31 @@ sidebar_position: 50
 scope: ecosystem
 repos: [aerospike-py, aerospike-ce-kubernetes-operator, aerospike-cluster-manager, aerospike-ce-ecosystem-plugins]
 tags: [adr, dependency-chain, merge-order, cross-repo, ci, release]
-last_updated: 2026-07-17
+last_updated: 2026-08-18
 ---
 
 # ADR-0050: 에코시스템 의존성 체인 및 Merge 순서 원칙
 
 ## 상태
 
-**Accepted**
+**Accepted** (2026-08-18 보완)
 
 - 제안일: 2026-04-07
 - 승인일: 2026-07-17
+- 보완일: 2026-08-18
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#56
 - 검토 결과: POSITIVE REVIEW
+
+:::warning 순서 원칙은 유효하고, 집행 수단이 바뀌었습니다
+
+이 ADR이 정의한 의존성 체인과 merge 순서(`aerospike-py → ACKO → cluster-manager → plugins`)는 **그대로 유효**합니다. 다만 그 순서를 담고 있던 위치와 집행 수단이 2026-08-18에 바뀌었습니다.
+
+- 아래 맥락에 "순서가 하드코딩되어 있다"고 적힌 `hub-issue-planner.yml`과 `hub-issue-dispatcher.yml`은 **삭제**되었습니다([ADR-0053](./2026-08-18-remove-label-triggered-agent-automation.md)). 따라서 순서 정의가 남아 있는 곳은 이 ADR과 각 repo의 `CLAUDE.md`뿐이며, 이 ADR이 사실상 유일한 단일 출처가 되었습니다.
+- "CI 검증 (점진적 도입)"의 **Phase 1(문서화·기여자 가이드)이 현재 상태**입니다. Phase 2는 `skill-impact-notify.yml`이 남아 있으므로 여전히 가능하고, Phase 3(downstream CI 자동 실행)은 미구현입니다.
+- 긍정적 결과에 적힌 "ADR-0008 IssueOps 인프라와 결합하여 자동화된 cross-repo 변경 관리"는 해당 인프라가 사라졌으므로 더 이상 성립하지 않습니다. cross-repo 전파는 수동입니다.
+
+아래 본문은 원문 그대로 보존합니다.
+:::
 
 ## 맥락 (Context)
 
@@ -119,7 +131,8 @@ Cross-repo breaking change가 있으면 다음 순서로 merge합니다.
 
 ## 관련 ADR
 
-- **ADR-0008: IssueOps 기반 CI 워크플로우** — Cross-repo 자동화의 실행 메커니즘을 제공하며, 이 ADR의 순서 규칙이 IssueOps 실행의 가이드라인이 됨
+- **ADR-0008: IssueOps 기반 CI 워크플로우** — Cross-repo 자동화의 실행 메커니즘을 제공하며, 이 ADR의 순서 규칙이 IssueOps 실행의 가이드라인이 됨 (ADR-0008은 2026-08-18 Superseded되어 실행 메커니즘이 사라짐)
+- [**ADR-0053: 라벨 트리거 에이전트 자동화 제거**](./2026-08-18-remove-label-triggered-agent-automation.md) — 순서를 하드코딩하고 있던 hub workflow를 삭제. 이 ADR의 순서 원칙은 기여자 가이드로만 집행됨
 - **ADR-0001: CFFI 대신 Rust/PyO3 선택** — 의존성 체인 최상단인 aerospike-py의 기술 기반 정의
 - **ADR-0002: Kubebuilder v4 + controller-runtime 선택** — ACKO의 기술 기반 정의, CRD 버전 관리 방식에 영향
 - **ADR-0009: Unified BatchRecords API** — aerospike-py API 변경이 downstream에 미치는 영향의 구체적 사례

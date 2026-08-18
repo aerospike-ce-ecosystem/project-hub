@@ -1,6 +1,6 @@
 ---
-title: GitHub Agentic Workflow
-description: claude-code-action 기반 GitHub Agentic Workflow 파이프라인 — Hub 오케스트레이션, Core Repo 자동 구현, Skill Impact 감지 포함
+title: GitHub 워크플로우 현황
+description: 에코시스템 각 repo에 남아 있는 GitHub Actions workflow 목록과, 2026-08-18에 제거된 라벨 트리거 에이전트 자동화의 기록
 sidebar_position: 2
 scope: ecosystem
 repos:
@@ -13,380 +13,143 @@ tags:
   - agentic-workflow
   - automation
   - ci-cd
-  - claude-code-action
-  - skill-impact
-last_updated: 2026-04-07
+  - security
+  - removed
+last_updated: 2026-08-18
 ---
 
-import FlowDiagram from '@site/src/components/diagrams/FlowDiagram';
+# GitHub 워크플로우 현황
 
-# GitHub Agentic Workflow
+:::danger 라벨 트리거 에이전트 자동화는 2026-08-18에 제거되었습니다
 
-이 workflow는 [claude-code-action@v1](https://github.com/anthropics/claude-code-action)을 사용해 계획, 구현, 리뷰를 자동화합니다. aerospike-py, ACKO, cluster-manager, plugins, project-hub에서 label이 **Plan → Implement → Review** 단계를 전환합니다.
+이 페이지가 원래 설명하던 **Plan → Implement → Review 파이프라인은 더 이상 존재하지 않습니다.** `agent`, `plan-complete`, `start-implement` 같은 label을 붙여도 아무 workflow도 실행되지 않습니다.
 
----
+삭제된 파일:
 
-## 전체 아키텍처
+| Repo | 삭제된 workflow |
+|------|----------------|
+| project-hub | `hub-issue-planner.yml`, `hub-issue-dispatcher.yml` |
+| aerospike-py, ACKO, cluster-manager, plugins | `issue-planner.yml`, `agent-implement.yml`, `pr-reviewer.yml` |
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  project-hub (Hub Orchestration)                                │
-│                                                                 │
-│  hub-issue-planner.yml          hub-issue-dispatcher.yml        │
-│  ┌─────────────────────┐        ┌────────────────────────┐     │
-│  │ adr-review          │        │ start-implement 라벨   │     │
-│  │ cross-repo-plan     │───────→│   → 각 repo에 issue    │     │
-│  │ epic-plan           │        │     + agent 라벨       │     │
-│  │ skill-impact-plan   │        └──────────┬─────────────┘     │
-│  └─────────────────────┘                   │                    │
-│                                            │                    │
-│  hub-adr-status-override.yml               │                    │
-│  (verdict 라벨 → ADR 문서 상태 업데이트)    │                    │
-└────────────────────────────────────────────┼────────────────────┘
-                                             │ agent 라벨
-        ┌────────────────────────────────────┼────────────────┐
-        ▼                    ▼               ▼                ▼
-  aerospike-py          ACKO         cluster-manager     plugins
-  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-  │ planner  │    │ planner  │    │ planner  │    │ planner  │
-  │ implement│    │ implement│    │ implement│    │ implement│
-  │ reviewer │    │ reviewer │    │ reviewer │    │ reviewer │
-  │ notify*  │    │ notify*  │    │          │    │          │
-  └──────────┘    └──────────┘    └──────────┘    └──────────┘
-        │                │
-        └── skill-impact-notify → project-hub issue 자동 생성
-```
-
-\* `skill-impact-notify.yml` — main 머지 시 skill-impacting 파일 변경 감지
-
----
-
-## Core Repo 파이프라인
-
-### 파이프라인 개요
-
-```
-Issue + `agent` label
-    → [issue-planner.yml] → Plan comment + `plan-complete`
-        → [agent-implement.yml] → PR + `needs-review`
-            → [pr-reviewer.yml] → Review loop (max 5x) → `review-complete`
-```
-
-### 상태 머신
-
-<FlowDiagram
-  height={550}
-  layout="dagre-TB"
-  nodes={[
-    { id: 'start', label: '', group: 'state-start', width: 24, height: 24 },
-    { id: 'issue-created', label: '이슈 생성', group: 'indigo' },
-    { id: 'planning', label: 'Planning', group: 'indigo' },
-    { id: 'plan-complete', label: 'Plan Complete', group: 'indigo' },
-    { id: 'implementing', label: 'Implementing', group: 'blue' },
-    { id: 'needs-review', label: 'Needs Review', group: 'blue' },
-    { id: 'reviewing', label: 'Reviewing', group: 'teal' },
-    { id: 'review-complete', label: 'Review Complete', group: 'green' },
-    { id: 'needs-clarification', label: 'Needs Clarification', group: 'orange' },
-    { id: 'end', label: '', group: 'state-end', width: 24, height: 24 },
-  ]}
-  edges={[
-    { from: 'start', to: 'issue-created', label: '이슈 생성' },
-    { from: 'issue-created', to: 'planning', label: 'agent 라벨 추가' },
-    { from: 'planning', to: 'plan-complete', label: 'Plan 코멘트 작성' },
-    { from: 'plan-complete', to: 'implementing', label: 'plan-complete 라벨' },
-    { from: 'implementing', to: 'needs-review', label: 'PR 생성 + needs-review', animated: true },
-    { from: 'needs-review', to: 'reviewing', label: 'PR 리뷰 시작' },
-    { from: 'reviewing', to: 'needs-review', label: '수정 필요 (max 5회)', dashed: true },
-    { from: 'reviewing', to: 'review-complete', label: 'review-complete' },
-    { from: 'review-complete', to: 'end', label: '머지 가능' },
-    { from: 'planning', to: 'needs-clarification', label: '정보 부족', dashed: true },
-    { from: 'needs-clarification', to: 'planning', label: '이슈 보완 후 재시도', dashed: true },
-  ]}
-/>
-
-### 1. Issue Planner (`issue-planner.yml`)
-
-Issue에 `agent` label을 추가하면 planner가 실행됩니다.
-
-Planner는 issue를 읽고 다음 작업을 수행합니다.
-
-- 변경할 파일, 검증 방법, 영향 범위를 포함한 구현 계획을 comment로 작성합니다.
-- 정보가 부족하면 `needs-clarification` label을 붙이고 필요한 내용을 질문합니다.
-- 계획을 실행할 수 있는 상태가 되면 `plan-complete` label을 붙입니다.
-
-**Plan 코멘트 형식:**
-```html
-<!-- agent-plan-start -->
-## Agent Plan
-### Analysis / Proposed Changes / Implementation Strategy / Verification
-<!-- agent-plan-end -->
-```
-
-### 2. Agent Implement (`agent-implement.yml`)
-
-Issue에 `plan-complete` label이 붙으면 구현 workflow가 시작됩니다.
-
-구현 workflow는 marker로 구분된 plan을 읽고 다음 순서로 진행합니다.
-
-- `in-progress` label을 붙인 뒤 코드를 수정합니다.
-- build, lint, test를 실행합니다.
-- Conventional Commits 형식으로 commit하고 PR을 만듭니다.
-- Issue가 아니라 **PR에** `needs-review` label을 붙입니다.
-
-### 3. PR Reviewer (`pr-reviewer.yml`)
-
-PR에 `needs-review` label을 붙이면 reviewer의 두 job이 병렬로 실행됩니다.
-
-**Job 1: `skill-impact-advisory`** (aerospike-py와 ACKO, Bash only)
-
-- `gh pr diff --name-only`로 변경된 파일을 확인합니다.
-- Skill에 영향을 주는 파일이 있으면 안내 comment와 `skill-impact` label을 추가합니다.
-
-**Job 2: `review`** (Claude Code)
-
-- PR diff에서 발견한 문제를 HIGH, MEDIUM, LOW, INFO로 분류합니다.
-- HIGH와 MEDIUM 문제를 최대 5회까지 수정하고 다시 검토합니다.
-- 최종 결과를 comment로 정리한 뒤 `review-complete` label을 붙입니다.
-
-### 레포별 검증 명령
-
-| | aerospike-py | ACKO | cluster-manager | plugins |
-|---|---|---|---|---|
-| **Language** | Python / Rust | Go | Python / TypeScript | Markdown |
-| **Build** | `make check` | `go build ./...` | — | — |
-| **Test** | `make test-unit` | `make test-unit` | `uv run pytest` / `npm run test` | — |
-| **Lint** | `make lint` | `make lint` | `uv run ruff check` / `npm run lint` | — |
-| **Type check** | `make typecheck` | `go vet ./...` | `npm run type-check` | — |
-| **CRD codegen** | — | `make manifests generate` | — | — |
-
----
-
-## Hub Orchestration Layer
-
-project-hub는 여러 repository에 걸친 작업을 조율합니다. Issue 유형과 label에 따라 아래 네 가지 workflow를 시작합니다.
-
-### Hub 워크플로우 구성
-
-| 워크플로우 | 트리거 | 역할 |
-|-----------|--------|------|
-| `hub-issue-planner.yml` | `adr`, `cross-repo`, `epic`, `skill-impact-review` 라벨 | 이슈 유형별 AI 분석/계획 |
-| `hub-issue-dispatcher.yml` | `start-implement` 라벨 | Plan 코멘트 파싱 → 각 repo에 issue 생성 |
-| `hub-adr-status-override.yml` | `adr-rejected`, `adr-deferred`, `adr-positive` 라벨 | 머지된 ADR 문서 상태 업데이트 |
-
-### ADR Proposal 흐름
-
-```
-ADR Proposal Issue 생성 (adr + discussion 라벨 자동 부착)
-    → hub-issue-planner.yml (adr-review job) 트리거
-        → AI가 기존 ADR/프로젝트 목표와 대조하여 검토
-        → 3가지 판단 중 하나를 코멘트로 작성:
-            ❌ REJECT (기각): adr-rejected 라벨
-            ⏸️ DEFER (보류): adr-deferred 라벨
-            ✅ POSITIVE (긍정적 검토): adr-positive 라벨 + repo별 영향 분석
-        → ADR 문서 PR 생성 + 자동 머지 (모든 verdict)
-    → [사람이 최종 판단]
-    → start-implement 라벨 추가 (adr-positive 필수)
-        → hub-issue-dispatcher.yml 트리거
-            → 각 repo에 issue 자동 생성 + agent 라벨
-            → 각 repo의 Core 파이프라인 동작
-```
-
-**ADR Status Override:** 사람이 verdict label을 바꾸면 `hub-adr-status-override.yml`이 이미 merge된 ADR의 상태(`Proposed`, `Rejected`, `Deferred`)와 `검토 결과` 필드를 업데이트합니다.
-
-### Cross-Repo Issue / Epic 흐름
-
-```
-Cross-Repo Issue 또는 Epic 생성 (cross-repo / epic 라벨 자동 부착)
-    → hub-issue-planner.yml (cross-repo-plan 또는 epic-plan job) 트리거
-        → AI가 각 repo 코드베이스를 탐색하여 구현 계획 수립
-        → repo별 구현 계획을 코멘트로 작성
-        → plan-complete 라벨 추가
-    → [사람이 계획 검토]
-    → start-implement 라벨 추가
-        → hub-issue-dispatcher.yml 트리거
-            → 각 repo에 issue 자동 생성 + agent 라벨
-            → 각 repo의 Core 파이프라인 동작
-```
-
-### Skill Impact Review 흐름
-
-aerospike-py나 ACKO에서 Skill과 연결된 파일이 바뀌면 Skill Impact Review가 plugins repository의 후속 작업 필요 여부를 확인합니다.
-
-**Tier 1 — Pre-merge advisory** (API 비용 0):
-```
-Core repo PR + needs-review 라벨
-    → pr-reviewer.yml의 skill-impact-advisory job (bash only)
-        → skill-impacting 파일 감지 시 PR에 advisory 코멘트
-        → skill-impact 라벨 추가 (트래킹용)
-```
-
-**Tier 2 — Post-merge dispatch** (자동):
-```
-Core repo main 머지 (path-filtered)
-    → skill-impact-notify.yml (bash only, API 비용 0)
-        → project-hub에 issue 자동 생성 (skill-impact-review + cross-repo 라벨)
-    → hub-issue-planner.yml (skill-impact-plan job)
-        → AI가 실제 diff와 skill 콘텐츠를 대조 분석
-        → 영향 있으면: plan comment + plan-complete 라벨
-        → 영향 없으면: issue close
-    → [사람이 plan 검토]
-    → start-implement 라벨 추가
-        → hub-issue-dispatcher.yml
-            → plugins repo에 issue 생성 + agent 라벨
-            → plugins repo의 Core 파이프라인 동작
-```
-
-**모니터링 대상 파일:**
-
-| Core Repo | 파일 | 영향 Skill |
-|-----------|------|-----------|
-| aerospike-py | `__init__.pyi`, `errors.rs`, `types.py` | aerospike-py-api, aerospike-py-fastapi |
-| aerospike-py | `list_operations.py`, `map_operations.py`, `exp.py` | aerospike-py-api |
-| aerospike-py | `exception.py`, `exception.pyi`, `lib.rs` | aerospike-py-api |
-| ACKO | `aerospikecluster_types.go`, `aerospikecluster_webhook.go` | acko-deploy, acko-operations, acko-config-reference |
-| ACKO | `types_storage.go`, `types_network.go`, `types_pod.go`, `types_rack.go` | acko-deploy |
-| ACKO | `reconciler_status.go` | acko-operations, acko-debugging |
-| ACKO | `reconciler_restart.go` | acko-operations |
-
-### Hub Dispatcher 상세
-
-`start-implement` label을 붙이면 `hub-issue-dispatcher.yml`이 실행됩니다. Dispatcher는 plan comment의 HTML marker를 읽고 대상 repository마다 issue를 만듭니다.
-
-**파싱 마커:**
-```html
-<!-- agent-plan-start -->
-<!-- repo-plan:aerospike-py -->
-  ... repo별 구현 계획 ...
-<!-- /repo-plan:aerospike-py -->
-<!-- repo-list: aerospike-py, aerospike-ce-kubernetes-operator -->
-<!-- agent-plan-end -->
-```
-
-Dispatcher는 잘못된 plan을 실행하지 않도록 다음 조건을 검사합니다.
-
-- ADR issue에는 `adr-positive` label이 있어야 합니다. 없으면 dispatch를 중단하고 오류 comment를 남깁니다.
-- `<!-- agent-plan-start -->` marker가 없으면 dispatch하지 않습니다.
-- `<!-- repo-list: ... -->` marker가 없으면 dispatch하지 않습니다.
-- Dispatch를 마치면 `dispatched` label과 생성된 issue link를 추가합니다.
-
-### Hub ↔ Repo 연결
-
-```
-project-hub                          각 Core/Plugin Repo
-┌──────────────────┐                ┌──────────────────────┐
-│ Issue 생성        │                │                      │
-│   ↓               │                │ issue-planner.yml    │
-│ Hub Planner       │                │   ↓                  │
-│   ↓               │                │ agent-implement.yml  │
-│ [사람 검토]       │                │   ↓                  │
-│   ↓               │   agent 라벨   │ pr-reviewer.yml      │
-│ Hub Dispatcher  ──┼───────────────→│   ↓                  │
-│   ↓               │                │ PR merge             │
-│ dispatched 라벨   │                │                      │
-└──────────────────┘                └──────────────────────┘
-```
-
----
-
-## 부가 워크플로우
-
-Plan/Implement/Review pipeline 외에도 release와 CI/CD를 위한 workflow가 있습니다.
-
-### Daily Release (`daily-release.yml`)
-
-Daily Release는 aerospike-py, ACKO, cluster-manager에서 실행됩니다.
-
-- **스케줄**: 매일 UTC 00:00(KST 09:00)에 실행하며 `workflow_dispatch`로 수동 실행할 수도 있습니다.
-- **동작**: 마지막 tag 이후 commit이 있으면 Conventional Commits를 분석하고 version을 올립니다. 이어서 release note와 GitHub Release를 만듭니다.
-- **버전 규칙**: `BREAKING CHANGE`는 major, `feat`는 minor, `fix`는 patch version을 올립니다.
-
-### CI/CD (ACKO 전용)
-
-| 워크플로우 | 트리거 | 역할 |
-|-----------|--------|------|
-| `test.yml` | push to main (path filter) | unit + envtest 통합 테스트 |
-| `lint.yml` | push to main (path filter) | golangci-lint |
-| `docker-publish.yml` | push to main/tags | 멀티아키텍처 컨테이너 이미지 빌드 → GHCR |
-| `publish-chart.yml` | tag push | Helm chart OCI 레지스트리 배포 |
-| `test-e2e.yml` | workflow_dispatch | Kind 클러스터에서 E2E 테스트 |
-
----
-
-## 안전 장치 (Safety Guards)
-
-| Guard | 설정 | 설명 |
-|-------|------|------|
-| **최대 리뷰 반복** | 5회 (`CLAUDE_REVIEW_MAX_ITERATIONS`) | PR Reviewer가 수정을 시도하는 최대 횟수 |
-| **구현 타임아웃** | `CLAUDE_IMPLEMENT_TIMEOUT` (분) | Agent Implement 워크플로우 최대 실행 시간 |
-| **리뷰 타임아웃** | `CLAUDE_REVIEW_TIMEOUT` (분) | PR Reviewer 워크플로우 최대 실행 시간 |
-| **최대 턴** | `CLAUDE_MAX_TURNS` | Claude Code 세션 당 최대 대화 턴 수 |
-| **라벨 기반 제어** | 수동 라벨 제거로 중단 | `agent` 라벨을 제거하면 파이프라인 중단 |
-| **Concurrency** | Hub planner per-issue | 동일 이슈에 대한 중복 planner 실행 방지 |
-| **ADR dispatch 검증** | `adr-positive` 필수 | ADR은 긍정적 검토 없이 dispatch 불가 |
-| **Plan 마커 검증** | `<!-- agent-plan-start -->` 필수 | Plan 코멘트 없이 dispatch 불가 |
-| **Skill Impact path filter** | 특정 파일 경로만 트리거 | 모든 커밋이 아닌 API/CRD 변경만 감지 |
-
-:::warning 주의사항
-- `agent` label은 목표, 범위, 완료 조건이 충분히 적힌 issue에만 추가하세요.
-- 복잡한 cross-repo 변경은 project-hub의 Cross-Repo Issue 또는 Epic으로 관리하세요.
-- Review loop가 5회 안에 끝나지 않으면 사람이 원인을 확인해야 합니다.
-- ADR Proposal에는 `adr-positive` verdict가 나온 뒤에만 `start-implement` label을 추가하세요.
+결정과 근거: [ADR-0053: 라벨 트리거 에이전트 자동화 제거](../architecture/adr/2026-08-18-remove-label-triggered-agent-automation.md) · 관련 이슈: [project-hub#158](https://github.com/aerospike-ce-ecosystem/project-hub/issues/158)
 :::
 
 ---
 
-## Variables & Secrets 설정
+## 왜 제거했는가
 
-아래 GitHub Repository/Organization 설정은 모든 repository에서 공통으로 사용합니다.
+파이프라인은 **구현 계획(plan)을 issue 코멘트 본문에서 읽어 실행**했습니다. Plan을 식별하는 유일한 기준은 `<!-- agent-plan-start -->`라는 HTML marker 문자열이었고, **그 코멘트를 누가 썼는지는 전혀 검사하지 않았습니다.**
 
-### Variables (`vars.*`)
+삭제 직전 `hub-issue-dispatcher.yml:55`의 조회식:
 
-| Variable | 용도 | 예시 |
-|----------|------|------|
-| `CLAUDE_BOT_ID` | Claude Code bot GitHub ID | — |
-| `CLAUDE_BOT_NAME` | Bot 표시 이름 | — |
-| `CLAUDE_ALLOWED_BOTS` | 허용된 bot ID 목록 | — |
-| `CLAUDE_BRANCH_PREFIX` | Agent가 생성하는 브랜치 접두사 | `agent/` |
-| `CLAUDE_MAX_TURNS` | 세션 당 최대 턴 수 | `25` |
-| `CLAUDE_MODEL` | 사용할 Claude 모델 | `claude-sonnet-4-20250514` |
-| `CLAUDE_IMPLEMENT_TIMEOUT` | 구현 타임아웃 (분) | `60` |
-| `CLAUDE_REVIEW_TIMEOUT` | 리뷰 타임아웃 (분, JSON) | `30` |
-| `CLAUDE_REVIEW_MAX_ITERATIONS` | 최대 리뷰 반복 횟수 | `5` |
-| `CLAUDE_SETTINGS` | Claude Code 설정 | — |
+```jq
+[.[] | select(.body | contains("<!-- agent-plan-start -->"))] | last | .body // empty
+```
 
-### Secrets
+- **작성자 검사 없음** — project-hub의 두 workflow와 네 core repo의 `agent-implement.yml` 모두에서 `grep -c "author_association"`가 `0`이었습니다. Public issue에 코멘트를 달 수 있는 누구나 marker가 든 "plan"을 심을 수 있었고, 조회식은 그런 코멘트를 `last`로 우선 채택했습니다.
+- **실행 권한이 넓음** — 실행 단계는 조직 전역 PAT(`secrets.GH_AW_GITHUB_TOKEN`)를 씁니다. Workflow의 `permissions:` 블록은 자동 발급 `GITHUB_TOKEN`에만 적용되므로, PAT를 쓰는 순간 선언된 `contents: write`는 실제 권한 범위를 나타내지 않습니다. Core repo의 구현 job은 여기에 `--dangerously-skip-permissions`까지 더해져 도구 수준 게이트도 없었습니다.
+- **프롬프트 주입 표면** — `${{ github.event.issue.title }}`가 프롬프트 본문에 그대로 보간되는 지점이 에코시스템 전체에 10곳 있었습니다(project-hub 6곳: `hub-issue-planner.yml:5,53,300,417,549`, `hub-issue-dispatcher.yml:4`).
 
-| Secret | 용도 |
-|--------|------|
-| `ANTHROPIC_API_KEY` | Claude Code API 인증 |
-| `GH_AW_GITHUB_TOKEN` | 크로스-레포 issue 생성, PR 작성 등 GitHub 작업용 PAT |
+### 위협 모델을 정확히
+
+**트리거 자체는 인증 없이 발화하지 않습니다.** 두 hub workflow 모두 `on: issues: [labeled]`이고, GitHub에서 label을 붙이려면 해당 repository에 write 권한이 필요합니다. 외부인이 단독으로 파이프라인을 실행시킬 수는 없습니다.
+
+실제 문제는 **권한 분리의 붕괴**입니다. 외부인이 plan 본문을 심어 두고, 그 사실을 모르는 maintainer가 정상 절차대로 `plan-complete` 또는 `start-implement` label을 붙이면, 외부인이 쓴 지시문이 조직 전역 PAT 권한으로 실행됩니다. 심어 둔 plan은 정상 plan과 형식이 같아 육안 구분이 어렵고, 대상 `main` 브랜치에는 required status check가 없어 결과 PR도 자동 게이트를 통과하지 못했습니다.
+
+재도입 조건(작성자 검사, repo 범위 GitHub App token, 도구 allowlist, `env:` 경유 입력 전달, required status check)은 [ADR-0053](../architecture/adr/2026-08-18-remove-label-triggered-agent-automation.md)에 정리되어 있습니다.
 
 ---
 
-## 워크플로우 파일 레퍼런스
+## 지금 남아 있는 workflow
+
+에이전트 실행과 무관한 workflow는 그대로 동작합니다.
 
 ### project-hub
 
 | 파일 | 트리거 | 역할 |
 |------|--------|------|
-| `hub-issue-planner.yml` | issue `adr` / `cross-repo` / `epic` / `skill-impact-review` 라벨 | 이슈 유형별 AI 분석 (4개 job) |
-| `hub-issue-dispatcher.yml` | issue `start-implement` 라벨 | Plan 파싱 → repo별 issue 생성 + `agent` 라벨 |
-| `hub-adr-status-override.yml` | issue `adr-rejected` / `adr-deferred` / `adr-positive` 라벨 | 머지된 ADR 문서 상태 변경 |
+| `hub-adr-status-override.yml` | issue `adr-rejected` / `adr-deferred` / `adr-positive` 라벨 | 이미 머지된 ADR 문서의 상태 필드 갱신. Issue 코멘트를 plan으로 실행하지 않으므로 유지 |
+| `weekly-pr-stats.yml` | 매주 월요일 09:00 KST + 수동 | GitHub API로 cross-repo PR 통계 수집 → PR 생성 |
+| `docs.yaml` | `docs/**` 변경 PR | Docusaurus 빌드 검증 (배포 없음) |
+| `docs-publish.yaml` | main push | GitHub Pages 배포 |
 
-### Core Repos (aerospike-py, ACKO, cluster-manager)
+### Core Repos
 
-| 파일 | 트리거 | 역할 |
-|------|--------|------|
-| `issue-planner.yml` | issue `agent` 라벨 | 이슈 분석 → Plan 코멘트 + `plan-complete` 라벨 |
-| `agent-implement.yml` | issue `plan-complete` 라벨 | Plan 기반 구현 → PR 생성 + `needs-review` 라벨 |
-| `pr-reviewer.yml` | PR `needs-review` 라벨 | 리뷰 루프 (max 5회) + `review-complete` 라벨 |
-| `skill-impact-notify.yml` | push to main (path filter) | Hub에 skill-impact-review issue 생성 *(aerospike-py, ACKO만)* |
-| `daily-release.yml` | 매일 UTC 00:00 / 수동 | Conventional Commits 기반 자동 릴리스 |
+| 파일 | 적용 repo | 트리거 | 역할 |
+|------|----------|--------|------|
+| `daily-release.yml` | aerospike-py, ACKO, cluster-manager, plugins, ackoctl | 매일 스케줄 + 수동 | Conventional Commits 분석 → version bump → GitHub Release |
+| `skill-impact-notify.yml` | aerospike-py, ACKO | main push (path filter) | skill 영향 파일 변경 감지 → project-hub에 알림 issue 생성 |
+| `ace-plugins-pr-notify.yml` | aerospike-py | PR 이벤트 | plugins repo에 follow-up issue upsert |
+| `ci.yaml` / `test.yml` / `lint.yml` | 각 repo | push / PR | 빌드·테스트·lint |
+| `docker-publish.yml` | ACKO | main push / tag | 멀티아키텍처 이미지 → GHCR |
+| `publish-chart.yml` | ACKO | tag push | Helm chart OCI 배포 |
+| `test-e2e.yml` | ACKO | 수동 | Kind 클러스터 E2E |
+| `publish.yaml` | aerospike-py | tag / release | PyPI wheel 배포 |
+| `release.yml` | ackoctl | tag push | goreleaser 바이너리 + Homebrew tap |
+| `submodule-bump.yml` / `verify.yml` | workspace | 스케줄 / PR | submodule 포인터 갱신·검증 |
 
-### Plugins Repo (aerospike-ce-ecosystem-plugins)
+`skill-impact-notify.yml`은 **감지와 알림까지만** 수행합니다. 예전에는 그 issue를 hub planner가 분석하고 dispatcher가 plugins repo로 전파했지만, 두 단계가 사라졌으므로 이후 처리는 사람이 합니다.
 
-| 파일 | 트리거 | 역할 |
-|------|--------|------|
-| `issue-planner.yml` | issue `agent` 라벨 | Skill 변경 분석 → Plan 코멘트 + `plan-complete` 라벨 |
-| `agent-implement.yml` | issue `plan-complete` 라벨 | Source repo API 대조 → Skill 파일 수정 → PR 생성 |
-| `pr-reviewer.yml` | PR `needs-review` 라벨 | Skill 콘텐츠 정확성 검증 (source repo 대조) |
+---
+
+## 자동화가 하던 일을 지금은 어떻게 하는가
+
+| 예전 | 지금 |
+|------|------|
+| Issue에 `agent` label → planner가 계획 코멘트 작성 | 사람이 issue에 계획을 직접 작성. Label은 분류·추적용 |
+| `plan-complete` label → agent가 구현하고 PR 생성 | 로컬 개발 환경(원한다면 Claude Code CLI 포함)에서 작업하고 평소처럼 PR 생성. 실행 권한은 개발자 본인 자격 증명 |
+| `start-implement` label → dispatcher가 각 repo에 issue 생성 | 사람이 각 repo에 issue를 만들고 hub issue에 링크. 순서는 [ADR-0050](../architecture/adr/2026-04-07-dependency-chain-merge-order.md)의 의존성 체인(`aerospike-py → ACKO → cluster-manager → plugins`)을 따름 |
+| PR에 `needs-review` label → reviewer가 최대 5회 수정 루프 | 사람이 리뷰 |
+| ADR proposal issue → AI 리뷰 + ADR 문서 PR 자동 생성 | 사람이 ADR 문서를 작성해 PR. 상태 갱신은 `hub-adr-status-override.yml`이 계속 자동 처리 |
+| `skill-impact-notify` → hub 분석 → plugins에 자동 dispatch | 알림 issue까지는 자동. 이후 판단·전파는 사람 |
+
+### 새 ADR을 제안하려면
+
+1. project-hub에 `ADR Proposal` 이슈 템플릿으로 issue를 만듭니다.
+2. 관련 repo maintainer가 리뷰합니다.
+3. 합의되면 `docs/docs/architecture/adr/`에 ADR 문서를 직접 작성해 PR을 올립니다.
+4. 머지 후 verdict label을 붙이면 `hub-adr-status-override.yml`이 문서 상태를 갱신합니다.
+
+자세한 절차는 [ADR 목록 페이지](../architecture/adr-index.mdx)의 "새 ADR 제안 방법"을 참고하세요.
+
+---
+
+## 제거된 파이프라인 기록
+
+아래는 2026-08-18 이전에 동작하던 구조입니다. **현재는 어느 것도 실행되지 않습니다.** 과거 issue와 PR을 읽을 때의 참고용으로만 남깁니다.
+
+```
+project-hub
+  hub-issue-planner.yml    (adr / cross-repo / epic / skill-impact-review 라벨)
+    → AI 검토 + plan 코멘트 + verdict 라벨
+  hub-issue-dispatcher.yml (start-implement 라벨)
+    → plan 코멘트의 <!-- repo-list: ... --> 파싱 → 각 repo에 issue 생성 + agent 라벨
+
+각 Core Repo
+  issue-planner.yml   (agent 라벨)          → plan 코멘트 + plan-complete
+  agent-implement.yml (plan-complete 라벨)  → 코드 수정 + PR + needs-review
+  pr-reviewer.yml     (needs-review 라벨)   → 리뷰 루프(max 5회) + review-complete
+```
+
+워크플로우 사이의 데이터 전달에는 HTML 주석 마크업을 썼습니다. 이 마크업은 이제 아무 workflow도 파싱하지 않으므로, 과거 issue 본문에 남아 있어도 아무 동작을 일으키지 않습니다.
+
+```html
+<!-- agent-plan-start -->
+<!-- repo-plan:aerospike-py --> ... <!-- /repo-plan:aerospike-py -->
+<!-- repo-list: aerospike-py, aerospike-ce-kubernetes-operator -->
+<!-- agent-plan-end -->
+```
+
+관련 ADR: [ADR-0008](../architecture/adr/2026-03-10-issueops-ci-workflow.md) (Superseded), [ADR-0049](../architecture/adr/2026-04-07-adr-lifecycle-automation.md) (Superseded), [ADR-0043](../architecture/adr/2026-04-07-ci-workflow-suite-standardization.md) (부분 Superseded), [ADR-0039](../architecture/adr/2026-04-07-skill-impact-review-pipeline.md) (부분 Superseded).
+
+### Variables / Secrets 정리 현황
+
+일부 조직 설정은 참조하는 workflow가 완전히 사라졌고, 일부는 `daily-release.yml`이 계속 씁니다. **아래 "계속 사용" 항목은 삭제하면 릴리스 파이프라인이 깨집니다.**
+
+| 설정 | 남은 참조 |
+|------|----------|
+| `vars.CLAUDE_ALLOWED_BOTS`, `CLAUDE_BRANCH_PREFIX`, `CLAUDE_IMPLEMENT_TIMEOUT`, `CLAUDE_REVIEW_TIMEOUT`, `CLAUDE_REVIEW_MAX_ITERATIONS` | **없음** — 정리 대상 |
+| `vars.CLAUDE_BOT_ID`, `CLAUDE_BOT_NAME`, `CLAUDE_MAX_TURNS`, `CLAUDE_MODEL`, `CLAUDE_SETTINGS` | 계속 사용 — aerospike-py / ACKO / cluster-manager / plugins의 `daily-release.yml`이 릴리스 노트 생성에 사용 |
+| `secrets.ANTHROPIC_API_KEY` | 계속 사용 — 위 4개 repo의 `daily-release.yml` (`claude_code_oauth_token`) |
+| `secrets.GH_AW_GITHUB_TOKEN` | 계속 사용 — 5개 repo의 `daily-release.yml`, `skill-impact-notify.yml`(aerospike-py·ACKO), `ace-plugins-pr-notify.yml`(aerospike-py), ackoctl `release.yml`(Homebrew tap push) |
+| `secrets.ORG_READ_TOKEN` | 계속 사용 — project-hub `weekly-pr-stats.yml` (미설정 시 `GITHUB_TOKEN`으로 fallback) |

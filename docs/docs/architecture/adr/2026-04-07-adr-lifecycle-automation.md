@@ -4,20 +4,38 @@ description: Project-hub의 ADR lifecycle을 AI 리뷰, cross-repo 디스패치,
 sidebar_position: 49
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager, plugins]
-tags: [adr, automation, issueops, ai-review, workflow, dispatch]
-last_updated: 2026-07-17
+tags: [adr, automation, issueops, ai-review, workflow, dispatch, superseded]
+last_updated: 2026-08-18
 ---
 
 # ADR-0049: Project Hub ADR Lifecycle 자동화 아키텍처 — 리뷰/디스패치/상태 관리 3단계 자동화
 
 ## 상태
 
-**Accepted**
+**Superseded** — [ADR-0053: 라벨 트리거 에이전트 자동화 제거](./2026-08-18-remove-label-triggered-agent-automation.md)로 대체됨 (2026-08-18)
 
 - 제안일: 2026-04-07
 - 승인일: 2026-07-17
+- 대체일: 2026-08-18
 - 관련 이슈: aerospike-ce-ecosystem/project-hub#54
 - 검토 결과: POSITIVE REVIEW
+
+:::danger 3단계 중 Stage 1·2가 제거되었습니다
+
+2026-08-18에 `hub-issue-planner.yml`과 `hub-issue-dispatcher.yml`이 project-hub에서 **삭제**되었습니다. 아래 본문은 당시의 결정 근거를 남기기 위해 원문 그대로 보존합니다.
+
+| 단계 | Workflow | 현재 상태 |
+|------|----------|----------|
+| Stage 1 — AI 리뷰 + verdict | `hub-issue-planner.yml` | **삭제됨**. ADR 리뷰·작성은 수동 |
+| Stage 2 — cross-repo dispatch | `hub-issue-dispatcher.yml` | **삭제됨**. 하위 issue 생성은 수동 |
+| Stage 3 — 상태 관리 | `hub-adr-status-override.yml` | **유지**. verdict label → merge된 ADR 문서 status 갱신 |
+
+따라서 아래의 "마크업 프로토콜"(`<!-- agent-plan-start -->`, `<!-- repo-plan:... -->`, `<!-- repo-list: ... -->`)은 더 이상 어떤 workflow도 파싱하지 않습니다.
+
+**제거 사유**: `hub-issue-dispatcher.yml:55`가 plan 코멘트를 `<!-- agent-plan-start -->` marker만으로 찾아 실행하면서 작성자 검사가 없었고(두 workflow 모두 `grep -c "author_association"` → `0`), 실행에 조직 전역 PAT를 사용했습니다. 또한 `${{ github.event.issue.title }}`이 프롬프트에 직접 보간되는 지점이 두 파일에 6곳 있었습니다. 자세한 위협 모델과 재도입 조건은 ADR-0053에 있습니다.
+
+관련 이슈: [project-hub#158](https://github.com/aerospike-ce-ecosystem/project-hub/issues/158)
+:::
 
 ## 맥락 (Context)
 
@@ -114,4 +132,5 @@ ADR Proposal Issue 생성
 
 ## 관련 ADR
 
-- [ADR-0008: IssueOps 기반 CI 워크플로우](/docs/architecture/adr/2026-03-10-issueops-ci-workflow) — 기본 IssueOps 패턴의 기반 결정. 이 ADR은 ADR-0008을 project-hub의 ADR lifecycle 전용으로 확장
+- [ADR-0008: IssueOps 기반 CI 워크플로우](/docs/architecture/adr/2026-03-10-issueops-ci-workflow) — 기본 IssueOps 패턴의 기반 결정. 이 ADR은 ADR-0008을 project-hub의 ADR lifecycle 전용으로 확장 (ADR-0008도 2026-08-18 Superseded)
+- [ADR-0053: 라벨 트리거 에이전트 자동화 제거](./2026-08-18-remove-label-triggered-agent-automation.md) — 이 ADR을 대체. Stage 1·2 workflow를 삭제하고 Stage 3만 남긴 결정

@@ -4,18 +4,28 @@ description: GitHub Issues에서 claude-code-action을 통해 AI 에이전트가
 sidebar_position: 8
 scope: ecosystem
 repos: [aerospike-py, acko, cluster-manager]
-tags: [adr, ci, issueops, claude-code-action, automation]
-last_updated: 2026-03-29
+tags: [adr, ci, issueops, claude-code-action, automation, superseded]
+last_updated: 2026-08-18
 ---
 
 # ADR-0008: IssueOps 기반 CI 워크플로우
 
 ## 상태
 
-**Accepted**
+**Superseded** — [ADR-0053: 라벨 트리거 에이전트 자동화 제거](./2026-08-18-remove-label-triggered-agent-automation.md)로 대체됨 (2026-08-18)
 
 - 제안일: 2026-03-10
 - 승인일: 2026-03-16
+- 대체일: 2026-08-18
+
+:::danger 이 결정은 더 이상 유효하지 않습니다
+
+아래에 기술된 `issue-planner.yml` / `agent-implement.yml` / `pr-reviewer.yml` 3종 workflow는 2026-08-18에 **네 개 core repo 전부에서 삭제**되었습니다. 아래 본문은 당시의 결정 근거를 남기기 위해 원문 그대로 보존합니다.
+
+**제거 사유**: 이 파이프라인은 plan을 issue 코멘트 본문에서 `<!-- agent-plan-start -->` marker로 찾아 실행하면서 코멘트 작성자를 전혀 검사하지 않았습니다(`grep -c "author_association"` → 4개 repo 모두 `0`). 실행은 조직 전역 PAT(`GH_AW_GITHUB_TOKEN`)와 `--dangerously-skip-permissions`로 이뤄집니다. 트리거(`on: issues: [labeled]`)에는 write 권한이 필요하므로 외부인 단독 실행은 불가능하지만, 외부인이 심어 둔 plan을 maintainer가 정상 절차로 label을 붙여 실행시키면 권한 분리가 무너집니다. 자세한 위협 모델과 재도입 조건은 ADR-0053에 있습니다.
+
+관련 이슈: [project-hub#158](https://github.com/aerospike-ce-ecosystem/project-hub/issues/158)
+:::
 
 ## 맥락 (Context)
 
@@ -94,6 +104,10 @@ Issue 생성 → issue-planner (Plan 생성)
 | `aerospike-py` | PR #208, #216에서 IssueOps/CommentOps 워크플로우 도입 |
 | `acko` | 동일한 워크플로우 패턴 적용 |
 | `cluster-manager` | 동일한 워크플로우 패턴 적용 |
+
+## 관련 ADR
+
+- [ADR-0053: 라벨 트리거 에이전트 자동화 제거](./2026-08-18-remove-label-triggered-agent-automation.md) — 이 ADR을 대체. 여기서 도입한 3종 workflow를 삭제한 결정
 
 ## 참고 자료
 
