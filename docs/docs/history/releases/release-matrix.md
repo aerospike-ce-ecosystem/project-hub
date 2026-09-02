@@ -14,7 +14,7 @@ tags:
   - compatibility
   - matrix
   - versioning
-last_updated: 2026-08-17
+last_updated: 2026-08-18
 ---
 
 # Release Compatibility Matrix
@@ -33,15 +33,15 @@ last_updated: 2026-08-17
 
 ### 현재 릴리스 (자동 생성)
 
-각 repo의 `releases/latest`에서 읽은 값입니다. 마지막 생성: `2026-08-18T02:40:50.759Z`
+각 repo의 `releases/latest`에서 읽은 값입니다. 마지막 생성: `2026-09-02T00:22:01.251Z`
 
 | Product | Latest | Published | Releases |
 |:---|:---:|:---:|:---|
-| **aerospike-py** | [`v0.14.1`](https://github.com/aerospike-ce-ecosystem/aerospike-py/releases/tag/v0.14.1) | 2026-08-17 | [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py/releases) |
-| **ACKO** | [`v1.10.3`](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/releases/tag/v1.10.3) | 2026-08-17 | [aerospike-ce-kubernetes-operator](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/releases) |
-| **Cluster Manager** | [`v0.31.2`](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/releases/tag/v0.31.2) | 2026-08-17 | [aerospike-cluster-manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/releases) |
-| **Plugins** | [`v1.6.4`](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/releases/tag/v1.6.4) | 2026-08-17 | [aerospike-ce-ecosystem-plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/releases) |
-| **ackoctl** | [`v0.3.4`](https://github.com/aerospike-ce-ecosystem/ackoctl/releases/tag/v0.3.4) | 2026-08-17 | [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl/releases) |
+| **aerospike-py** | [`v0.14.2`](https://github.com/aerospike-ce-ecosystem/aerospike-py/releases/tag/v0.14.2) | 2026-08-18 | [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py/releases) |
+| **ACKO** | [`v1.11.0`](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/releases/tag/v1.11.0) | 2026-08-18 | [aerospike-ce-kubernetes-operator](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/releases) |
+| **Cluster Manager** | [`v0.32.0`](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/releases/tag/v0.32.0) | 2026-08-18 | [aerospike-cluster-manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/releases) |
+| **Plugins** | [`v1.7.0`](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/releases/tag/v1.7.0) | 2026-08-18 | [aerospike-ce-ecosystem-plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/releases) |
+| **ackoctl** | [`v0.3.5`](https://github.com/aerospike-ce-ecosystem/ackoctl/releases/tag/v0.3.5) | 2026-08-18 | [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl/releases) |
 
 :::caution 이 표는 "함께 테스트된 조합"이 아닙니다
 위 표는 각 제품의 **최신 릴리스**일 뿐이며, 같은 행에 있다는 이유로 함께 검증되었다는 뜻이 아닙니다.
@@ -56,11 +56,11 @@ last_updated: 2026-08-17
 
 | aerospike-py | ACKO | Cluster Manager | Plugins | ackoctl |
 |:---:|:---:|:---:|:---:|:---:|
-| v0.14.0 +1 commit | v1.10.2 | v0.31.1 | v1.6.3 | v0.3.3 |
+| v0.14.2 | v1.11.0 | v0.32.0 | v1.7.0 | v0.3.5 |
 
-`+N commits`로 표시된 항목은 해당 tag 이후의 커밋에 고정되어 있어 릴리스된 버전과 정확히 일치하지 않습니다.
+모든 pin이 정확히 release tag를 가리킵니다.
 
-<!-- newest-release-date: 2026-08-17 -->
+<!-- newest-release-date: 2026-08-18 -->
 
 <!-- END GENERATED: current-releases -->
 
