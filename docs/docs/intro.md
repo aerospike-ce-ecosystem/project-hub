@@ -1,6 +1,6 @@
 ---
 title: Aerospike CE Ecosystem Hub
-description: Aerospike CE 오픈소스 생태계의 중앙 프로젝트 관리 허브 소개
+description: Central hub for the Aerospike CE Ecosystem, holding the cross-repo architecture, ADRs, roadmap, release compatibility matrix, and coordination docs. Start here to see how the five repositories fit together.
 sidebar_position: 1
 scope: ecosystem
 repos:
@@ -14,49 +14,75 @@ tags:
   - introduction
   - ecosystem
   - overview
-last_updated: 2026-05-23
+last_updated: 2026-09-02
 ---
 
 # Aerospike CE Ecosystem Hub
 
-Aerospike CE Ecosystem Hub는 5개 핵심 레포지토리의 협업 문서를 한곳에 모은 프로젝트 허브입니다. 여러 레포에 걸친 이슈와 아키텍처 결정, 로드맵, 릴리스 계획을 이곳에서 함께 관리합니다.
+This site is the central hub for the Aerospike CE Ecosystem. It holds the documentation that belongs to no single repository: system architecture, Architecture Decision Records, the quarterly roadmap, the release compatibility matrix, and the conventions every project follows. Work that spans two or more repositories is proposed, planned, and tracked here.
 
-## 핵심 레포지토리
+The ecosystem exists because Aerospike Community Edition leaves several gaps for teams running it in production. There is no community-maintained Kubernetes operator, because the official AKO requires Enterprise Edition. The official Python client binds to the C library through CFFI and holds the GIL across the I/O path, which caps throughput in ML feature-store workloads. CE ships no maintained web management interface, and there is no Aerospike-specific tooling for AI-assisted development. The five repositories below close those gaps. [Project Goals](./goals/project-goals.md) explains the reasoning in full.
 
-| 레포 | 설명 | 기술 스택 |
-|------|------|-----------|
-| [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py) | Aerospike Python 클라이언트 | Rust/PyO3로 구현한 고성능 sync/async 클라이언트 |
-| [ACKO](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator) | Aerospike CE Kubernetes Operator | Aerospike CE 클러스터의 배포와 운영을 자동화하는 Go 기반 Kubernetes Operator |
-| [cluster-manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager) | Aerospike Cluster Manager | 클러스터를 모니터링하고 관리하는 Python/TypeScript 기반 웹 UI |
-| [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl) | Aerospike Cluster Manager CLI | connection, cluster, Kubernetes, record 등을 관리하는 Go/Cobra 기반 CLI |
-| [plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins) | Claude Code Plugins | 에코시스템 개발과 운영을 지원하는 9개 Skill 모음 |
+## Core repositories
 
-## 문서 구성
+| Repository | What it is | Stack |
+|------------|------------|-------|
+| [aerospike-py](https://github.com/aerospike-ce-ecosystem/aerospike-py) | High-performance sync and async Python client for Aerospike, with NumPy-aware batch APIs and complete type stubs | Rust/PyO3 + Tokio, Python 3.10+ |
+| [aerospike-ce-kubernetes-operator](https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator) (ACKO) | Kubernetes operator that manages CE clusters declaratively through the `AerospikeCluster` CRD, with CE constraints enforced by an admission webhook | Go, kubebuilder v4, controller-runtime |
+| [aerospike-cluster-manager](https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager) | Web management UI covering cluster monitoring, a record browser, a query builder, and Kubernetes management | FastAPI + Next.js |
+| [ackoctl](https://github.com/aerospike-ce-ecosystem/ackoctl) | CLI that drives Cluster Manager from a terminal: connections, clusters, Kubernetes CRs, records, sets, queries, indexes, users and roles, and UDFs | Go + cobra |
+| [aerospike-ce-ecosystem-plugins](https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins) | Claude Code plugin pack with nine skills for AI-assisted development and operations | Claude Code plugin |
 
-필요한 문서는 다음 섹션에서 찾을 수 있습니다.
+## How the pieces fit
 
-- **Architecture** — 시스템 구조, 레포 간 의존성, ADR(Architecture Decision Record)
-- **Roadmap** — 분기별 목표와 마일스톤
-- **History** — 변경 이력, 주요 결정, 릴리스 호환성
-- **Coordination** — 라벨 체계, Agentic Workflow, 리뷰 절차
-- **Goals** — 프로젝트 목표, 성공 기준, 설계 원칙
+The ecosystem is organized in three layers.
 
-## 기여 방법
+1. **Plugin skills.** Claude Code skills that guide deployment, debugging, day-2 operations, and client API usage.
+2. **Tools.** aerospike-py, ACKO, Cluster Manager, and ackoctl.
+3. **Infrastructure.** Aerospike CE running on Kubernetes through ACKO, or on bare metal.
 
-문서나 여러 레포에 걸친 작업을 제안하려면 목적에 맞는 이슈 템플릿을 선택하세요.
+Users reach the infrastructure layer either through the tools directly or through an AI assistant loaded with the plugin skills. Every project is usable on its own, so integration is opt-in rather than assumed.
+
+Changes that cross repositories follow the dependency order `aerospike-py` → `ACKO` → `cluster-manager` → `plugins`, which is also the merge order for coordinated releases. [System Architecture Overview](./architecture/overview.mdx) shows the full picture, including both the Kubernetes and bare-metal deployment paths.
+
+## What you will find here
+
+| Section | Contents |
+|---------|----------|
+| [Architecture](./architecture/overview.mdx) | System diagrams, per-component views, and deployment topology |
+| [Architecture Decision Records](./architecture/adr-index.mdx) | Every accepted, proposed, and superseded decision, with the context and trade-offs behind it |
+| [Roadmap](./roadmap/current.md) | Goals and priorities for the current quarter, plus per-quarter milestones |
+| [Release compatibility matrix](./history/releases/release-matrix.md) | Verified version combinations across all projects, updated on every release |
+| [Coordination](./coordination/labels.md) | Shared label taxonomy, [GitHub workflow status](./coordination/agentic-workflow.mdx), and the [cross-repo review process](./coordination/review-process.md) |
+| [Goals](./goals/project-goals.md) | Why the ecosystem exists, per-project goals, and the [design philosophy](./goals/project-design.md) behind the technology choices |
+
+## Quick links
+
+- [aerospike-py documentation](https://aerospike-ce-ecosystem.github.io/aerospike-py/)
+- [ACKO documentation](https://aerospike-ce-ecosystem.github.io/aerospike-ce-kubernetes-operator/)
+- Install the Claude Code plugin pack:
+
+  ```bash
+  claude plugin marketplace add aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins
+  claude plugin install aerospike-ce-ecosystem
+  ```
+
+## How to contribute
+
+To propose documentation changes or work that touches more than one repository, open an issue here using the template that matches your intent.
 
 ### Cross-Repo Issue
 
-두 개 이상의 레포가 관련된 작업에 사용합니다. 영향받는 레포를 표시하고, 각 레포의 하위 이슈를 `org/repo#number` 형식으로 연결하세요.
+Use this for work involving two or more repositories. Mark the repositories affected and link each repository's sub-issue in `org/repo#number` form.
 
 ### Epic
 
-여러 단계로 나뉘는 큰 작업에 사용합니다. 성공 기준과 하위 작업을 체크리스트로 적고, 관련 이슈와 PR을 하나의 Epic으로 묶으세요.
+Use this for larger work that splits into stages. Record the success criteria and sub-tasks as a checklist, and group the related issues and pull requests under the one Epic.
 
 ### ADR Proposal
 
-아키텍처 결정을 제안할 때 사용합니다. 배경과 대안, 권장안, trade-off를 같은 형식으로 정리해 논의할 수 있습니다.
+Use this to propose an architecture decision. Lay out the context, the options considered, the recommendation, and the trade-offs in the same shape every ADR uses, so the discussion stays comparable across decisions.
 
-:::tip 이슈 생성 위치
-한 레포에만 해당하는 이슈는 해당 레포에 직접 등록하세요. 이 허브는 여러 레포가 관련된 작업과 에코시스템 차원의 조율에 사용합니다.
+:::tip Where to open an issue
+Issues that concern a single repository belong in that repository. This hub is for work that spans repositories and for ecosystem-level coordination.
 :::
