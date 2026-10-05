@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-07T03:32:24.259Z",
+  "generatedAt": "2026-10-05T04:41:32.949Z",
   "org": "aerospike-ce-ecosystem",
   "earliest": "2026-02-05T15:28:20.000Z",
-  "latest": "2026-09-06T10:55:34.000Z",
-  "totalPrs": 1418,
+  "latest": "2026-10-05T00:21:26.000Z",
+  "totalPrs": 1524,
   "repos": [
     "aerospike-py",
     "aerospike-cluster-manager",
@@ -17,14 +17,14 @@
     ".github"
   ],
   "perRepoTotal": {
-    "aerospike-py": 350,
-    "aerospike-cluster-manager": 458,
-    "aerospike-ce-kubernetes-operator": 288,
-    "ackoctl": 86,
-    "project-hub": 86,
-    "aerospike-ce-ecosystem-plugins": 74,
-    "workspace": 56,
-    "aerospike-py-performance-report": 10,
+    "aerospike-py": 367,
+    "aerospike-cluster-manager": 492,
+    "aerospike-ce-kubernetes-operator": 313,
+    "ackoctl": 90,
+    "project-hub": 100,
+    "aerospike-ce-ecosystem-plugins": 79,
+    "workspace": 59,
+    "aerospike-py-performance-report": 14,
     "homebrew-tap": 1,
     ".github": 9
   },
@@ -59,7 +59,12 @@
     "2026-W33",
     "2026-W34",
     "2026-W35",
-    "2026-W36"
+    "2026-W36",
+    "2026-W37",
+    "2026-W38",
+    "2026-W39",
+    "2026-W40",
+    "2026-W41"
   ],
   "weeksDisplay": [
     "Feb W1",
@@ -92,7 +97,12 @@
     "Aug W2",
     "Aug W3",
     "Aug W4",
-    "Sep W1"
+    "Sep W1",
+    "Sep W2",
+    "Sep W3",
+    "Sep W4",
+    "Oct W1",
+    "Oct W2"
   ],
   "weeksDateRange": [
     "Feb 02–08",
@@ -125,7 +135,12 @@
     "Aug 10–16",
     "Aug 17–23",
     "Aug 24–30",
-    "Aug 31 – Sep 06"
+    "Aug 31 – Sep 06",
+    "Sep 07–13",
+    "Sep 14–20",
+    "Sep 21–27",
+    "Sep 28 – Oct 04",
+    "Oct 05–11"
   ],
   "repoSeries": {
     "aerospike-py": [
@@ -159,7 +174,12 @@
       0,
       22,
       0,
-      10
+      10,
+      8,
+      7,
+      1,
+      1,
+      0
     ],
     "aerospike-cluster-manager": [
       0,
@@ -192,7 +212,12 @@
       0,
       37,
       2,
-      6
+      6,
+      8,
+      14,
+      2,
+      10,
+      0
     ],
     "aerospike-ce-kubernetes-operator": [
       0,
@@ -225,7 +250,12 @@
       0,
       32,
       1,
-      6
+      6,
+      11,
+      11,
+      1,
+      2,
+      0
     ],
     "ackoctl": [
       0,
@@ -258,6 +288,11 @@
       0,
       7,
       1,
+      0,
+      2,
+      2,
+      0,
+      0,
       0
     ],
     "project-hub": [
@@ -291,7 +326,12 @@
       0,
       12,
       1,
-      5
+      5,
+      9,
+      3,
+      1,
+      0,
+      1
     ],
     "aerospike-ce-ecosystem-plugins": [
       0,
@@ -324,6 +364,11 @@
       0,
       25,
       1,
+      0,
+      1,
+      4,
+      0,
+      0,
       0
     ],
     "workspace": [
@@ -357,7 +402,12 @@
       0,
       7,
       1,
-      5
+      5,
+      1,
+      2,
+      0,
+      0,
+      0
     ],
     "aerospike-py-performance-report": [
       0,
@@ -390,7 +440,12 @@
       0,
       7,
       1,
-      2
+      2,
+      3,
+      0,
+      0,
+      1,
+      0
     ],
     "homebrew-tap": [
       0,
@@ -422,6 +477,11 @@
       0,
       0,
       1,
+      0,
+      0,
+      0,
+      0,
+      0,
       0,
       0
     ],
@@ -455,6 +515,11 @@
       0,
       0,
       3,
+      0,
+      0,
+      0,
+      0,
+      0,
       0,
       0
     ]
@@ -490,38 +555,43 @@
     0,
     153,
     8,
-    34
+    34,
+    43,
+    43,
+    5,
+    14,
+    1
   ],
   "recent4Weeks": [
-    "2026-W33",
-    "2026-W34",
-    "2026-W35",
-    "2026-W36"
+    "2026-W38",
+    "2026-W39",
+    "2026-W40",
+    "2026-W41"
   ],
-  "recent4Total": 195,
+  "recent4Total": 63,
   "peakWeek": {
     "week": "2026-W34",
     "display": "Aug W3",
     "count": 153
   },
-  "avgPerWeek": 45.74,
+  "avgPerWeek": 42.33,
   "stateCounts": {
-    "MERGED": 1251,
-    "CLOSED": 116,
-    "OPEN": 51
+    "MERGED": 1327,
+    "CLOSED": 131,
+    "OPEN": 66
   },
   "topContributors": [
     {
       "name": "KimSoungRyoul",
-      "count": 1160
+      "count": 1179
     },
     {
       "name": "app/dependabot",
-      "count": 245
+      "count": 328
     },
     {
       "name": "app/github-actions",
-      "count": 12
+      "count": 16
     },
     {
       "name": "app/claude",
@@ -559,278 +629,282 @@
     },
     {
       "month": "2026-09",
-      "count": 32
+      "count": 128
+    },
+    {
+      "month": "2026-10",
+      "count": 10
     }
   ],
   "recentPrs": [
     {
-      "repo": "workspace",
-      "number": 56,
-      "title": "chore(submodules): bump aerospike-ce-ecosystem-plugins to af8d20e",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/56",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-09-06T10:55:34Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-py-performance-report",
-      "number": 10,
-      "title": "build(deps): bump nanoid from 3.3.11 to 3.3.18",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py-performance-report/pull/10",
+      "repo": "project-hub",
+      "number": 218,
+      "title": "chore(deps): bump dompurify from 3.4.14 to 3.4.16 in /docs",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/218",
       "author": "app/dependabot",
-      "createdAt": "2026-09-05T23:48:44Z",
+      "createdAt": "2026-10-05T00:21:26Z",
       "state": "OPEN"
     },
     {
-      "repo": "workspace",
-      "number": 55,
-      "title": "chore(submodules): bump ackoctl to 5f74cfb",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/55",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-09-05T10:34:33Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "workspace",
-      "number": 54,
-      "title": "chore(submodules): bump aerospike-cluster-manager to baddd41",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/54",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-09-04T11:17:15Z",
-      "state": "MERGED"
+      "repo": "aerospike-cluster-manager",
+      "number": 557,
+      "title": "chore(deps): bump @a2ui/web_core and @copilotkit/react-core in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/557",
+      "author": "app/dependabot",
+      "createdAt": "2026-10-03T18:47:03Z",
+      "state": "OPEN"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 523,
-      "title": "chore(deps): bump phoenix from 1.8.8 to 1.8.13 in /ui",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/523",
+      "number": 556,
+      "title": "chore(deps): bump @fastify/busboy from 3.2.0 to 3.2.2 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/556",
       "author": "app/dependabot",
-      "createdAt": "2026-09-03T22:54:51Z",
+      "createdAt": "2026-10-03T18:46:58Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-py-performance-report",
-      "number": 9,
-      "title": "build(deps-dev): bump @humanfs/node from 0.16.7 to 0.16.8",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py-performance-report/pull/9",
+      "number": 14,
+      "title": "build(deps): bump brace-expansion",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py-performance-report/pull/14",
       "author": "app/dependabot",
-      "createdAt": "2026-09-03T15:43:53Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "project-hub",
-      "number": 199,
-      "title": "chore(deps): bump fast-uri from 3.1.0 to 3.1.7 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/199",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-03T14:50:06Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 467,
-      "title": "chore(deps): bump fast-uri from 3.1.0 to 3.1.7 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/467",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-03T14:17:22Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "workspace",
-      "number": 53,
-      "title": "chore(submodules): bump aerospike-ce-kubernetes-operator to aff5807",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/53",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-09-03T11:13:36Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-cluster-manager",
-      "number": 522,
-      "title": "chore(deps): bump cryptography from 48.0.0 to 50.0.0 in /api",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/522",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-03T03:45:25Z",
+      "createdAt": "2026-10-02T16:11:52Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 521,
-      "title": "chore(deps): bump fast-uri from 3.1.2 to 3.1.7 in /ui",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/521",
+      "number": 555,
+      "title": "chore(deps): bump ip-address from 10.2.0 to 10.7.2 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/555",
       "author": "app/dependabot",
-      "createdAt": "2026-09-03T02:49:59Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 388,
-      "title": "chore(deps): bump fast-uri from 3.1.5 to 3.1.7 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/388",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-03T02:46:15Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "project-hub",
-      "number": 198,
-      "title": "docs(release-matrix): refresh current releases",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/198",
-      "author": "app/github-actions",
-      "createdAt": "2026-09-03T00:25:40Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "workspace",
-      "number": 52,
-      "title": "chore(submodules): bump aerospike-py to 46b27d3",
-      "url": "https://github.com/aerospike-ce-ecosystem/workspace/pull/52",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-09-02T11:17:29Z",
-      "state": "MERGED"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 465,
-      "title": "chore(deps): bump pytest from 9.0.2 to 9.0.3 in /examples/sample-fastapi",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/465",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:15:00Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 464,
-      "title": "chore(deps): bump pygments from 2.19.2 to 2.20.0 in /examples/sample-fastapi",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/464",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:14:39Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 463,
-      "title": "chore(deps): bump python-dotenv from 1.2.1 to 1.2.2 in /examples/sample-fastapi",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/463",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:14:37Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 462,
-      "title": "chore(deps): bump urllib3 from 2.6.3 to 2.7.0 in /examples/sample-fastapi",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/462",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:14:29Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 461,
-      "title": "chore(deps): bump requests from 2.32.5 to 2.33.0 in /examples/sample-fastapi",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/461",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:13:46Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-py",
-      "number": 460,
-      "title": "chore(deps): bump idna from 3.11 to 3.15 in /examples/sample-fastapi",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/460",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:12:25Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 387,
-      "title": "chore(deps): bump brace-expansion from 1.1.12 to 1.1.18 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/387",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:09:25Z",
-      "state": "OPEN"
-    },
-    {
-      "repo": "aerospike-ce-kubernetes-operator",
-      "number": 386,
-      "title": "chore(deps): bump postcss from 8.5.6 to 8.5.26 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/386",
-      "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:05:47Z",
+      "createdAt": "2026-10-01T03:41:44Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-cluster-manager",
-      "number": 520,
-      "title": "chore(deps-dev): bump browserslist from 4.28.2 to 4.28.8 in /ui",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/520",
+      "number": 554,
+      "title": "chore(deps-dev): bump brace-expansion from 1.1.16 to 1.1.21 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/554",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:04:35Z",
+      "createdAt": "2026-10-01T03:41:42Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 553,
+      "title": "chore(deps): bump fast-uri from 3.1.7 to 3.1.8 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/553",
+      "author": "app/dependabot",
+      "createdAt": "2026-10-01T03:41:38Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 552,
+      "title": "chore(deps): bump dompurify from 3.4.13 to 3.4.16 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/552",
+      "author": "app/dependabot",
+      "createdAt": "2026-10-01T03:41:34Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-py",
-      "number": 459,
-      "title": "chore(deps): bump nanoid from 3.3.11 to 3.3.18 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/459",
+      "number": 484,
+      "title": "chore(deps): bump the rust-deps group across 1 directory with 4 updates",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/484",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:03:37Z",
+      "createdAt": "2026-10-01T02:55:35Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 551,
+      "title": "chore(deps): bump pyjwt from 2.12.1 to 2.15.0 in /api",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/551",
+      "author": "app/dependabot",
+      "createdAt": "2026-10-01T00:03:20Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-ce-kubernetes-operator",
-      "number": 385,
-      "title": "chore(deps): bump browserslist from 4.28.1 to 4.28.8 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/385",
+      "number": 413,
+      "title": "chore(deps): bump go.opentelemetry.io/otel/sdk/log from 0.19.0 to 0.21.0",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/413",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:03:35Z",
+      "createdAt": "2026-09-29T19:30:32Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 412,
+      "title": "chore(deps): bump github.com/aerospike/aerospike-client-go/v8 from 8.8.0 to 8.9.0 in /test/client-test in the gomod-deps group",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/412",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-29T13:34:21Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 550,
+      "title": "chore(deps): bump undici from 6.28.0 to 6.29.0 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/550",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-29T05:53:36Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 549,
+      "title": "chore(deps): bump github/codeql-action/init from 4.37.9 to 4.38.2",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/549",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-28T10:57:50Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 548,
+      "title": "chore(deps): bump github/codeql-action/analyze from 4.37.9 to 4.38.2",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/548",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-28T10:56:54Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 411,
+      "title": "chore(deps): bump image-size from 2.0.2 to 2.0.4 in /docs",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/411",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-24T21:22:35Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "project-hub",
+      "number": 217,
+      "title": "chore(deps): bump image-size from 2.0.2 to 2.0.4 in /docs",
+      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/217",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-24T21:20:21Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-py",
-      "number": 458,
-      "title": "chore(deps): bump browserslist from 4.28.1 to 4.28.8 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/458",
+      "number": 483,
+      "title": "chore(deps): bump image-size from 2.0.2 to 2.0.4 in /docs",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/483",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T08:02:47Z",
+      "createdAt": "2026-09-24T21:10:55Z",
       "state": "OPEN"
     },
     {
-      "repo": "project-hub",
-      "number": 197,
-      "title": "docs(intro): rewrite the hub introduction in English",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/197",
-      "author": "KimSoungRyoul",
-      "createdAt": "2026-09-02T08:01:44Z",
-      "state": "MERGED"
+      "repo": "aerospike-cluster-manager",
+      "number": 547,
+      "title": "chore(deps): bump github/codeql-action/analyze from 4.37.9 to 4.38.1",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/547",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-21T10:56:50Z",
+      "state": "CLOSED"
     },
     {
-      "repo": "project-hub",
-      "number": 196,
-      "title": "chore(deps): bump browserslist from 4.28.1 to 4.28.8 in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/196",
+      "repo": "aerospike-cluster-manager",
+      "number": 546,
+      "title": "chore(deps): bump github/codeql-action/init from 4.37.9 to 4.38.1",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/546",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T07:59:26Z",
+      "createdAt": "2026-09-21T10:55:11Z",
+      "state": "CLOSED"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 545,
+      "title": "chore(deps): bump @hono/node-server from 1.19.14 to 1.19.17 in /ui",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/545",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-19T02:53:43Z",
       "state": "OPEN"
     },
     {
-      "repo": "project-hub",
-      "number": 195,
-      "title": "chore(deps): bump postcss-selector-parser in /docs",
-      "url": "https://github.com/aerospike-ce-ecosystem/project-hub/pull/195",
+      "repo": "aerospike-ce-ecosystem-plugins",
+      "number": 137,
+      "title": "chore(deps): bump anyio from 4.13.0 to 4.14.2 in /skills/acko-e2e-test/e2e_pytest",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-ecosystem-plugins/pull/137",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T07:59:25Z",
+      "createdAt": "2026-09-19T01:40:59Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-py",
+      "number": 482,
+      "title": "chore(deps): bump anyio from 4.12.1 to 4.14.2",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/482",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-18T22:52:18Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-cluster-manager",
+      "number": 544,
+      "title": "chore(deps): bump anyio from 4.12.1 to 4.14.2 in /api",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-cluster-manager/pull/544",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-18T22:50:12Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-py",
+      "number": 481,
+      "title": "chore(deps): bump anyio from 4.12.1 to 4.14.2 in /examples/sample-fastapi",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-py/pull/481",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-18T22:49:05Z",
       "state": "OPEN"
     },
     {
       "repo": "aerospike-ce-kubernetes-operator",
-      "number": 384,
-      "title": "chore(deps): bump google.golang.org/grpc from 1.80.0 to 1.83.1",
-      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/384",
+      "number": 410,
+      "title": "chore(deps): bump go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc from 1.43.0 to 1.45.0",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/410",
       "author": "app/dependabot",
-      "createdAt": "2026-09-02T07:44:46Z",
+      "createdAt": "2026-09-17T21:04:40Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 409,
+      "title": "chore(deps): bump go.opentelemetry.io/otel/sdk from 1.44.0 to 1.45.0",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/409",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-17T21:04:37Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 408,
+      "title": "chore(deps): bump go.opentelemetry.io/otel/exporters/otlp/otlptrace from 1.43.0 to 1.45.0",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/408",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-17T21:04:29Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "aerospike-ce-kubernetes-operator",
+      "number": 407,
+      "title": "chore(deps): bump go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc from 0.19.0 to 0.21.0",
+      "url": "https://github.com/aerospike-ce-ecosystem/aerospike-ce-kubernetes-operator/pull/407",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-17T21:02:00Z",
+      "state": "OPEN"
+    },
+    {
+      "repo": "ackoctl",
+      "number": 104,
+      "title": "chore(deps): bump the github-actions-deps group with 2 updates",
+      "url": "https://github.com/aerospike-ce-ecosystem/ackoctl/pull/104",
+      "author": "app/dependabot",
+      "createdAt": "2026-09-15T19:36:40Z",
       "state": "OPEN"
     }
   ]
